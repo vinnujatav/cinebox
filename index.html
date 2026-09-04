@@ -1,166 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CineBox - Movies</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<title>CineBox - Movies</title>
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0b0b0f;
-      color: white;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-    header {
-      padding: 18px;
-      background: #14141c;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-    }
+body{
+  font-family:Arial,sans-serif;
+  background:#0b0b0f;
+  color:white;
+}
 
-    .logo {
-      font-size: 25px;
-      font-weight: bold;
-    }
+header{
+  padding:16px 20px;
+  background:#14141c;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
 
-    .search {
-      width: 45%;
-      padding: 11px 15px;
-      border-radius: 25px;
-      border: none;
-      outline: none;
-    }
+.logo{
+  font-size:25px;
+  font-weight:bold;
+}
 
-    .hero {
-      padding: 55px 20px;
-      text-align: center;
-      background: linear-gradient(135deg, #191927, #09090c);
-    }
+.search{
+  width:45%;
+  padding:12px 16px;
+  border-radius:25px;
+  border:none;
+  outline:none;
+  font-size:15px;
+}
 
-    .hero h1 {
-      font-size: 38px;
-      margin-bottom: 12px;
-    }
+.hero{
+  padding:55px 20px;
+  text-align:center;
+  background:linear-gradient(135deg,#191927,#09090c);
+}
 
-    .hero p {
-      color: #bbb;
-    }
+.hero h1{
+  font-size:38px;
+  margin-bottom:12px;
+}
 
-    .container {
-      padding: 25px;
-      max-width: 1200px;
-      margin: auto;
-    }
+.hero p{
+  color:#bbb;
+}
 
-    .section-title {
-      margin-bottom: 20px;
-      font-size: 24px;
-    }
+.container{
+  padding:25px;
+  max-width:1200px;
+  margin:auto;
+}
 
-    .movies {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 18px;
-    }
+.categories{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
 
-    .movie {
-      background: #16161f;
-      border-radius: 12px;
-      overflow: hidden;
-      transition: 0.2s;
-    }
+.category{
+  border:1px solid #333;
+  background:#171720;
+  color:white;
+  padding:9px 15px;
+  border-radius:20px;
+  cursor:pointer;
+}
 
-    .movie:hover {
-      transform: translateY(-4px);
-    }
+.category:hover,
+.category.active{
+  background:#e50914;
+  border-color:#e50914;
+}
 
-    .movie img {
-      width: 100%;
-      height: 240px;
-      object-fit: cover;
-      display: block;
-    }
+.section-title{
+  margin-bottom:20px;
+  font-size:24px;
+}
 
-    .movie-info {
-      padding: 13px;
-    }
+.movies{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:18px;
+}
 
-    .movie-info h3 {
-      margin-bottom: 6px;
-    }
+.movie{
+  background:#16161f;
+  border-radius:12px;
+  overflow:hidden;
+  transition:.2s;
+}
 
-    .movie-info p {
-      color: #aaa;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
+.movie:hover{
+  transform:translateY(-4px);
+}
 
-    .btn {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      padding: 10px;
-      border-radius: 7px;
-      background: #e50914;
-      color: white;
-      font-weight: bold;
-    }
+.movie img{
+  width:100%;
+  height:240px;
+  object-fit:cover;
+  display:block;
+}
 
-    .ad {
-      margin: 25px 0;
-      min-height: 90px;
-      border: 1px dashed #444;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #777;
-    }
+.movie-info{
+  padding:13px;
+}
 
-    footer {
-      margin-top: 40px;
-      padding: 25px;
-      text-align: center;
-      background: #14141c;
-      color: #888;
-    }
+.movie-info h3{
+  margin-bottom:6px;
+}
 
-    @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-      }
+.movie-info p{
+  color:#aaa;
+  font-size:14px;
+  margin-bottom:12px;
+}
 
-      .search {
-        width: 100%;
-      }
+.btn{
+  display:block;
+  text-align:center;
+  text-decoration:none;
+  padding:10px;
+  border-radius:7px;
+  background:#e50914;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  border:0;
+  width:100%;
+}
 
-      .hero h1 {
-        font-size: 30px;
-      }
+.ad{
+  margin:25px 0;
+  min-height:90px;
+  border:1px dashed #444;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#777;
+}
 
-      .movies {
-        grid-template-columns: repeat(2, 1fr);
-      }
+footer{
+  margin-top:40px;
+  padding:25px;
+  text-align:center;
+  background:#14141c;
+  color:#888;
+}
 
-      .movie img {
-        height: 210px;
-      }
-    }
-  </style>
+/* POPUP */
+
+.modal{
+  display:none;
+  position:fixed;
+  z-index:100;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.85);
+  padding:20px;
+  overflow:auto;
+}
+
+.modal-content{
+  max-width:500px;
+  margin:5% auto;
+  background:#181820;
+  border-radius:15px;
+  overflow:hidden;
+  position:relative;
+}
+
+.modal-content img{
+  width:100%;
+  height:300px;
+  object-fit:cover;
+}
+
+.modal-info{
+  padding:20px;
+}
+
+.modal-info h2{
+  margin-bottom:10px;
+}
+
+.modal-info p{
+  color:#bbb;
+  line-height:1.6;
+  margin-bottom:15px;
+}
+
+.close{
+  position:absolute;
+  right:15px;
+  top:10px;
+  font-size:30px;
+  cursor:pointer;
+  background:rgba(0,0,0,.6);
+  width:40px;
+  height:40px;
+  text-align:center;
+  border-radius:50%;
+}
+
+.download{
+  margin-top:10px;
+  background:#333;
+}
+
+@media(max-width:600px){
+
+  header{
+    flex-direction:column;
+  }
+
+  .search{
+    width:100%;
+  }
+
+  .hero h1{
+    font-size:30px;
+  }
+
+  .movies{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .movie img{
+    height:210px;
+  }
+
+  .container{
+    padding:18px;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <header>
   <div class="logo">🎬 CineBox</div>
+
   <input
     type="text"
     class="search"
@@ -176,39 +274,121 @@
 
 <div class="container">
 
-  <!-- Google AdSense placeholder -->
   <div class="ad">
     Advertisement
+  </div>
+
+  <div class="categories">
+    <button class="category active" onclick="filterCategory('All',this)">
+      All
+    </button>
+
+    <button class="category" onclick="filterCategory('Action',this)">
+      Action
+    </button>
+
+    <button class="category" onclick="filterCategory('Comedy',this)">
+      Comedy
+    </button>
+
+    <button class="category" onclick="filterCategory('Drama',this)">
+      Drama
+    </button>
   </div>
 
   <h2 class="section-title">Latest Movies</h2>
 
   <div class="movies" id="movies">
 
-    <div class="movie">
-      <img src="https://via.placeholder.com/300x450?text=Movie+1" alt="Movie 1">
+    <!-- MOVIE 1 -->
+
+    <div class="movie" data-category="Action">
+
+      <img
+        src="https://via.placeholder.com/300x450?text=Movie+1"
+        alt="My Movie 1"
+      >
+
       <div class="movie-info">
+
         <h3>My Movie 1</h3>
+
         <p>2026 • Action</p>
-        <a href="#" class="btn">Watch / Download</a>
+
+        <button
+          class="btn"
+          onclick="openMovie(
+            'My Movie 1',
+            'https://via.placeholder.com/300x450?text=Movie+1',
+            '2026 • Action',
+            'यह मेरी पहली authorized movie है। यहाँ अपनी movie की जानकारी लिखें।'
+          )"
+        >
+          View Details
+        </button>
+
       </div>
     </div>
 
-    <div class="movie">
-      <img src="https://via.placeholder.com/300x450?text=Movie+2" alt="Movie 2">
+
+    <!-- MOVIE 2 -->
+
+    <div class="movie" data-category="Comedy">
+
+      <img
+        src="https://via.placeholder.com/300x450?text=Movie+2"
+        alt="My Movie 2"
+      >
+
       <div class="movie-info">
+
         <h3>My Movie 2</h3>
+
         <p>2026 • Comedy</p>
-        <a href="#" class="btn">Watch / Download</a>
+
+        <button
+          class="btn"
+          onclick="openMovie(
+            'My Movie 2',
+            'https://via.placeholder.com/300x450?text=Movie+2',
+            '2026 • Comedy',
+            'यह दूसरी movie की description है।'
+          )"
+        >
+          View Details
+        </button>
+
       </div>
     </div>
 
-    <div class="movie">
-      <img src="https://via.placeholder.com/300x450?text=Movie+3" alt="Movie 3">
+
+    <!-- MOVIE 3 -->
+
+    <div class="movie" data-category="Drama">
+
+      <img
+        src="https://via.placeholder.com/300x450?text=Movie+3"
+        alt="My Movie 3"
+      >
+
       <div class="movie-info">
+
         <h3>My Movie 3</h3>
+
         <p>2026 • Drama</p>
-        <a href="#" class="btn">Watch / Download</a>
+
+        <button
+          class="btn"
+          onclick="openMovie(
+            'My Movie 3',
+            'https://via.placeholder.com/300x450?text=Movie+3',
+            '2026 • Drama',
+            'यह तीसरी movie की description है।'
+          )"
+        >
+          View Details
+        </button>
+
       </div>
     </div>
 
@@ -220,25 +400,147 @@
 
 </div>
 
+
+<!-- MOVIE DETAILS POPUP -->
+
+<div class="modal" id="movieModal">
+
+  <div class="modal-content">
+
+    <span class="close" onclick="closeMovie()">×</span>
+
+    <img id="modalImage" src="" alt="Movie">
+
+    <div class="modal-info">
+
+      <h2 id="modalTitle"></h2>
+
+      <p id="modalMeta"></p>
+
+      <p id="modalDescription"></p>
+
+      <!-- अपनी authorized movie की URL यहाँ डालें -->
+
+      <a
+        id="watchButton"
+        class="btn"
+        href="#"
+        target="_blank"
+      >
+        ▶ Watch Now
+      </a>
+
+      <a
+        id="downloadButton"
+        class="btn download"
+        href="#"
+        target="_blank"
+      >
+        📥 Download
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+
+
 <footer>
   © 2026 CineBox • All Rights Reserved
 </footer>
 
+
 <script>
-  const search = document.getElementById("search");
-  const movies = document.querySelectorAll(".movie");
 
-  search.addEventListener("input", function () {
-    const value = this.value.toLowerCase();
+const search = document.getElementById("search");
 
-    movies.forEach(movie => {
-      const title = movie.querySelector("h3").innerText.toLowerCase();
+search.addEventListener("input", function(){
 
-      movie.style.display =
-        title.includes(value) ? "block" : "none";
-    });
+  const value = this.value.toLowerCase();
+
+  document.querySelectorAll(".movie").forEach(movie => {
+
+    const title =
+      movie.querySelector("h3").innerText.toLowerCase();
+
+    movie.style.display =
+      title.includes(value) ? "" : "none";
+
   });
+
+});
+
+
+function filterCategory(category, button){
+
+  document.querySelectorAll(".category")
+    .forEach(btn => btn.classList.remove("active"));
+
+  button.classList.add("active");
+
+  document.querySelectorAll(".movie").forEach(movie => {
+
+    if(category === "All" ||
+       movie.dataset.category === category){
+
+      movie.style.display = "";
+
+    }else{
+
+      movie.style.display = "none";
+
+    }
+
+  });
+
+}
+
+
+function openMovie(title,image,meta,description){
+
+  document.getElementById("modalTitle").innerText = title;
+
+  document.getElementById("modalImage").src = image;
+
+  document.getElementById("modalMeta").innerText = meta;
+
+  document.getElementById("modalDescription").innerText = description;
+
+  /*
+    IMPORTANT:
+    नीचे अपनी authorized movie/video की URL डालें।
+  */
+
+  document.getElementById("watchButton").href = "#";
+
+  document.getElementById("downloadButton").href = "#";
+
+  document.getElementById("movieModal").style.display = "block";
+
+}
+
+
+function closeMovie(){
+
+  document.getElementById("movieModal").style.display = "none";
+
+}
+
+
+window.onclick = function(event){
+
+  const modal = document.getElementById("movieModal");
+
+  if(event.target === modal){
+
+    closeMovie();
+
+  }
+
+}
+
 </script>
 
 </body>
-          </html>
+</html>
