@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
 <title>CineBox Admin</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+box-sizing:border-box
+}
 
 body{
 margin:0;
@@ -20,7 +27,9 @@ border:0;
 cursor:pointer
 }
 
-input,textarea,select{
+input,
+textarea,
+select{
 width:100%;
 padding:12px;
 margin:7px 0 14px;
@@ -156,6 +165,12 @@ border:1px solid #292932
 margin-top:0
 }
 
+.card h3{
+margin-top:25px;
+padding-bottom:8px;
+border-bottom:1px solid #333
+}
+
 .stats{
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -203,7 +218,9 @@ flex:1
 }
 
 .movie-info h3{
-margin:0 0 7px
+margin:0 0 7px;
+border:0;
+padding:0
 }
 
 .movie-actions{
@@ -249,6 +266,19 @@ background:#123d22
 .error{
 display:block;
 background:#45141a
+}
+
+.ad-box{
+border:1px solid #333;
+padding:15px;
+border-radius:10px;
+margin-top:15px;
+background:#101017
+}
+
+.ad-box h4{
+margin-top:0;
+font-size:18px
 }
 
 .editor-toolbar{
@@ -303,9 +333,11 @@ grid-template-columns:1fr
 
 }
 </style>
+
 </head>
 
 <body>
+
 
 <!-- LOGIN -->
 
@@ -329,11 +361,16 @@ id="password"
 placeholder="Password"
 >
 
-<button class="primary" onclick="login()">
+<button
+class="primary"
+onclick="login()">
 🔐 Login
 </button>
 
-<div id="loginStatus" class="status"></div>
+<div
+id="loginStatus"
+class="status">
+</div>
 
 </div>
 
@@ -346,7 +383,9 @@ placeholder="Password"
 
 <h2>🎬 CineBox Admin</h2>
 
-<button class="logout" onclick="logout()">
+<button
+class="logout"
+onclick="logout()">
 Logout
 </button>
 
@@ -355,8 +394,6 @@ Logout
 
 <div class="layout">
 
-
-<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
@@ -386,8 +423,6 @@ onclick="showSection('ads',this)">
 
 </aside>
 
-
-<!-- CONTENT -->
 
 <main class="content">
 
@@ -424,7 +459,9 @@ class="section active">
 
 <!-- MOVIES -->
 
-<section id="movies" class="section">
+<section
+id="movies"
+class="section">
 
 <div class="card">
 
@@ -466,6 +503,7 @@ placeholder="2026"
 >
 
 </div>
+
 
 <div>
 
@@ -510,6 +548,7 @@ placeholder="2026"
 
 </div>
 
+
 <div>
 
 <label>Quality</label>
@@ -537,9 +576,7 @@ placeholder="Movie description..."
 ></textarea>
 
 
-<label>
-Authorized Download URL
-</label>
+<label>Authorized Download URL</label>
 
 <input
 type="url"
@@ -585,8 +622,6 @@ class="status">
 </div>
 
 
-<!-- MOVIE LIST -->
-
 <div class="card">
 
 <h2>🎬 Movie List</h2>
@@ -619,6 +654,7 @@ class="section">
 
 <h2>🌐 Website Settings</h2>
 
+
 <label>Website Name</label>
 
 <input
@@ -626,12 +662,14 @@ id="siteName"
 placeholder="CineBox"
 >
 
+
 <label>Logo URL</label>
 
 <input
 id="logoUrl"
 placeholder="https://example.com/logo.png"
 >
+
 
 <div class="row">
 
@@ -646,6 +684,7 @@ value="#e50914"
 >
 
 </div>
+
 
 <div>
 
@@ -668,6 +707,7 @@ value="#0b0b0f"
 id="homeTitle"
 placeholder="Watch & Download Movies"
 >
+
 
 <label>Homepage Subtitle</label>
 
@@ -697,19 +737,23 @@ placeholder="© 2026 CineBox"
 
 <div class="editor-toolbar">
 
-<button onclick="formatText('bold')">
+<button
+onclick="formatText('bold')">
 <b>B</b>
 </button>
 
-<button onclick="formatText('italic')">
+<button
+onclick="formatText('italic')">
 <i>I</i>
 </button>
 
-<button onclick="formatText('underline')">
+<button
+onclick="formatText('underline')">
 <u>U</u>
 </button>
 
 </div>
+
 
 <div
 id="aboutText"
@@ -736,6 +780,7 @@ onclick="saveWebsiteSettings()">
 💾 Save Website Settings
 </button>
 
+
 <div
 id="websiteStatus"
 class="status">
@@ -744,22 +789,236 @@ class="status">
 </div>
 
 </section>
+<!-- ADVERTISEMENT SETTINGS -->
 
-
-<!-- ADS -->
-
-<section
-id="ads"
-class="section">
+<section id="ads" class="section">
 
 <div class="card">
 
 <h2>📢 Advertisement Settings</h2>
 
 <p style="color:#aaa">
-Sirf authorized ad network ka code paste karein.
+Top, Middle aur Bottom ke ads alag-alag manage karein.
 </p>
 
+
+<!-- TOP AD -->
+
+<div class="ad-box">
+
+<h3>🔝 Top Advertisement</h3>
+
+<h4>🖼️ Top Image Ad</h4>
+
+<label class="checkbox">
+
+<input
+type="checkbox"
+id="topImageAdEnabled"
+>
+
+Enable Top Image Ad
+
+</label>
+
+
+<label>Top Image URL</label>
+
+<input
+type="url"
+id="topImageAdUrl"
+placeholder="https://example.com/top-ad.jpg"
+>
+
+
+<label>Top Image Click URL</label>
+
+<input
+type="url"
+id="topImageAdClickUrl"
+placeholder="https://example.com"
+>
+
+
+<h4>🎥 Top Video Ad</h4>
+
+<label class="checkbox">
+
+<input
+type="checkbox"
+id="topVideoAdEnabled"
+>
+
+Enable Top Video Ad
+
+</label>
+
+
+<label>Top Video URL</label>
+
+<input
+type="url"
+id="topVideoAdUrl"
+placeholder="https://example.com/top-ad.mp4"
+>
+
+
+<label>Top Video Click URL</label>
+
+<input
+type="url"
+id="topVideoAdClickUrl"
+placeholder="https://example.com"
+>
+
+</div>
+
+
+<!-- MIDDLE AD -->
+
+<div class="ad-box">
+
+<h3>📍 Middle Advertisement</h3>
+
+<h4>🖼️ Middle Image Ad</h4>
+
+<label class="checkbox">
+
+<input
+type="checkbox"
+id="middleImageAdEnabled"
+>
+
+Enable Middle Image Ad
+
+</label>
+
+
+<label>Middle Image URL</label>
+
+<input
+type="url"
+id="middleImageAdUrl"
+placeholder="https://example.com/middle-ad.jpg"
+>
+
+
+<label>Middle Image Click URL</label>
+
+<input
+type="url"
+id="middleImageAdClickUrl"
+placeholder="https://example.com"
+>
+
+
+<h4>🎥 Middle Video Ad</h4>
+
+<label class="checkbox">
+
+<input
+type="checkbox"
+id="middleVideoAdEnabled"
+>
+
+Enable Middle Video Ad
+
+</label>
+
+
+<label>Middle Video URL</label>
+
+<input
+type="url"
+id="middleVideoAdUrl"
+placeholder="https://example.com/middle-ad.mp4"
+>
+
+
+<label>Middle Video Click URL</label>
+
+<input
+type="url"
+id="middleVideoAdClickUrl"
+placeholder="https://example.com"
+>
+
+</div>
+
+
+<!-- BOTTOM AD -->
+
+<div class="ad-box">
+
+<h3>🔻 Bottom Advertisement</h3>
+
+<h4>🖼️ Bottom Image Ad</h4>
+
+<label class="checkbox">
+
+<input
+type="checkbox"
+id="bottomImageAdEnabled"
+>
+
+Enable Bottom Image Ad
+
+</label>
+
+
+<label>Bottom Image URL</label>
+
+<input
+type="url"
+id="bottomImageAdUrl"
+placeholder="https://example.com/bottom-ad.jpg"
+>
+
+
+<label>Bottom Image Click URL</label>
+
+<input
+type="url"
+id="bottomImageAdClickUrl"
+placeholder="https://example.com"
+>
+
+
+<h4>🎥 Bottom Video Ad</h4>
+
+<label class="checkbox">
+
+<input
+type="checkbox"
+id="bottomVideoAdEnabled"
+>
+
+Enable Bottom Video Ad
+
+</label>
+
+
+<label>Bottom Video URL</label>
+
+<input
+type="url"
+id="bottomVideoAdUrl"
+placeholder="https://example.com/bottom-ad.mp4"
+>
+
+
+<label>Bottom Video Click URL</label>
+
+<input
+type="url"
+id="bottomVideoAdClickUrl"
+placeholder="https://example.com"
+>
+
+</div>
+
+
+<!-- MAIN ADS SWITCH -->
 
 <label class="checkbox">
 
@@ -768,40 +1027,19 @@ type="checkbox"
 id="adsEnabled"
 >
 
-Enable Ads
+Enable All Advertisements
 
 </label>
-
-
-<label>Top Advertisement Code</label>
-
-<textarea
-id="topAd"
-placeholder="Paste official ad code here..."
-></textarea>
-
-
-<label>Middle Advertisement Code</label>
-
-<textarea
-id="middleAd"
-placeholder="Paste official ad code here..."
-></textarea>
-
-
-<label>Bottom Advertisement Code</label>
-
-<textarea
-id="bottomAd"
-placeholder="Paste official ad code here..."
-></textarea>
 
 
 <button
 class="primary"
 onclick="saveAdSettings()">
-💾 Save Ads Settings
+
+💾 Save Advertisement Settings
+
 </button>
+
 
 <div
 id="adsStatus"
@@ -819,39 +1057,34 @@ class="status">
 
 </div>
 
-<script type="module">
-
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  <script type="module">
 
 import {
-  getAuth,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  setDoc,
-  serverTimestamp
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+getAuth,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-// =====================================
-// FIREBASE CONFIG
-// =====================================
-// YAHAN APNE PURANE admin.html WALA
-// EXACT firebaseConfig OBJECT PASTE KARO.
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+doc,
+getDoc,
+updateDoc,
+deleteDoc,
+setDoc,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
@@ -863,880 +1096,1261 @@ const firebaseConfig = {
 };
 
 
-// =====================================
-// ADMIN UID
-// =====================================
-// Firebase Authentication se mila
-// apna Admin UID yahan paste karo.
-
-const ADMIN_UID = "tZRY6ChN91Z3AC4HPbkfi78OXOC3";
+const ADMIN_UID =
+"tZRY6ChN91Z3AC4HPbkfi78OXOC3";
 
 
-// FIREBASE START
+const app =
+initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
+const auth =
+getAuth(app);
 
-const auth = getAuth(app);
+const db =
+getFirestore(app);
 
-const db = getFirestore(app);
 
 
-// =====================================
-// AUTH CHECK
-// =====================================
+/* AUTH */
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(
+auth,
+async (user) => {
 
-  if (user && user.uid === ADMIN_UID) {
+if(
+user &&
+user.uid === ADMIN_UID
+){
 
-    document.getElementById("loginBox").style.display = "none";
+document.getElementById(
+"loginBox"
+).style.display="none";
 
-    document.getElementById("adminApp").style.display = "block";
+document.getElementById(
+"adminApp"
+).style.display="block";
 
-    await loadMovies();
 
-    await loadWebsiteSettings();
+await loadMovies();
 
-    await loadAdSettings();
+await loadWebsiteSettings();
 
-  } else {
+await loadAdSettings();
 
-    document.getElementById("loginBox").style.display = "block";
+}else{
 
-    document.getElementById("adminApp").style.display = "none";
+document.getElementById(
+"loginBox"
+).style.display="block";
 
-  }
+document.getElementById(
+"adminApp"
+).style.display="none";
+
+}
 
 });
 
 
-// =====================================
-// LOGIN
-// =====================================
 
-window.login = async function () {
+/* LOGIN */
 
-  const email =
-    document.getElementById("email").value.trim();
+window.login = async function(){
 
-  const password =
-    document.getElementById("password").value;
+const email =
+document.getElementById(
+"email"
+).value.trim();
 
-  const status =
-    document.getElementById("loginStatus");
+const password =
+document.getElementById(
+"password"
+).value;
 
-  try {
+const status =
+document.getElementById(
+"loginStatus"
+);
 
-    const result =
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+try{
 
-    if (result.user.uid !== ADMIN_UID) {
-
-      await signOut(auth);
-
-      status.innerText =
-        "❌ Ye account admin nahi hai.";
-
-      status.className =
-        "status error";
-
-      return;
-    }
-
-    status.innerText = "✅ Login successful!";
-
-    status.className =
-      "status success";
-
-  } catch (error) {
-
-    status.innerText =
-      "❌ Login failed: " + error.message;
-
-    status.className =
-      "status error";
-
-  }
-
-};
+const result =
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
 
 
-// =====================================
-// LOGOUT
-// =====================================
+if(
+result.user.uid !== ADMIN_UID
+){
 
-window.logout = async function () {
+await signOut(auth);
 
-  await signOut(auth);
+status.innerText =
+"❌ Ye account admin nahi hai.";
 
-  location.reload();
+status.className =
+"status error";
 
-};
-
-
-// =====================================
-// SECTION SWITCH
-// =====================================
-
-window.showSection = function (sectionId, button) {
-
-  document
-    .querySelectorAll(".section")
-    .forEach(section => {
-
-      section.classList.remove("active");
-
-    });
-
-  document
-    .getElementById(sectionId)
-    .classList.add("active");
-
-
-  document
-    .querySelectorAll(".nav")
-    .forEach(nav => {
-
-      nav.classList.remove("active");
-
-    });
-
-  button.classList.add("active");
-
-};
-
-
-// =====================================
-// STATUS MESSAGE
-// =====================================
-
-function showStatus(id, message, success = true) {
-
-  const box =
-    document.getElementById(id);
-
-  box.innerText = message;
-
-  box.className =
-    success
-      ? "status success"
-      : "status error";
+return;
 
 }
 
 
-// =====================================
-// ADD / UPDATE MOVIE
-// =====================================
+status.innerText =
+"✅ Login successful!";
 
-window.saveMovie = async function () {
-
-  const movieId =
-    document.getElementById("movieId").value;
-
-  const movieData = {
-
-    name:
-      document.getElementById("movieName").value.trim(),
-
-    poster:
-      document.getElementById("poster").value.trim(),
-
-    year:
-      document.getElementById("year").value.trim(),
-
-    genre:
-      document.getElementById("genre").value,
-
-    language:
-      document.getElementById("language").value,
-
-    quality:
-      document.getElementById("quality").value,
-
-    description:
-      document.getElementById("description").value.trim(),
-
-    downloadUrl:
-      document.getElementById("downloadUrl").value.trim(),
-
-    featured:
-      document.getElementById("featured").checked
-
-  };
+status.className =
+"status success";
 
 
-  if (!movieData.name) {
+}catch(error){
 
-    showStatus(
-      "movieStatus",
-      "❌ Movie Name required.",
-      false
-    );
+status.innerText =
+"❌ Login failed: "
++ error.message;
 
-    return;
+status.className =
+"status error";
 
-  }
-
-
-  if (!movieData.poster) {
-
-    showStatus(
-      "movieStatus",
-      "❌ Poster URL required.",
-      false
-    );
-
-    return;
-
-  }
-
-
-  if (!movieData.downloadUrl) {
-
-    showStatus(
-      "movieStatus",
-      "❌ Authorized Download URL required.",
-      false
-    );
-
-    return;
-
-  }
-
-
-  try {
-
-    if (movieId) {
-
-      await updateDoc(
-        doc(db, "movies", movieId),
-        movieData
-      );
-
-      showStatus(
-        "movieStatus",
-        "✅ Movie updated successfully!"
-      );
-
-    } else {
-
-      await addDoc(
-        collection(db, "movies"),
-        {
-          ...movieData,
-          createdAt: serverTimestamp()
-        }
-      );
-
-      showStatus(
-        "movieStatus",
-        "✅ Movie added successfully!"
-      );
-
-    }
-
-
-    clearMovieForm();
-
-    await loadMovies();
-
-  } catch (error) {
-
-    showStatus(
-      "movieStatus",
-      "❌ Error: " + error.message,
-      false
-    );
-
-  }
+}
 
 };
 
 
-// =====================================
-// LOAD MOVIES
-// =====================================
 
-let movies = [];
+/* LOGOUT */
+
+window.logout = async function(){
+
+await signOut(auth);
+
+location.reload();
+
+};
 
 
-async function loadMovies() {
 
-  try {
+/* SECTION */
 
-    const snapshot =
-      await getDocs(
-        collection(db, "movies")
-      );
+window.showSection =
+function(sectionId,button){
 
-    movies = [];
+document
+.querySelectorAll(".section")
+.forEach(section =>
+section.classList.remove("active")
+);
 
-    snapshot.forEach(item => {
 
-      movies.push({
-        id: item.id,
-        ...item.data()
-      });
+document
+.getElementById(sectionId)
+.classList.add("active");
 
-    });
 
-    renderMovies();
+document
+.querySelectorAll(".nav")
+.forEach(nav =>
+nav.classList.remove("active")
+);
 
-    updateDashboard();
 
-  } catch (error) {
+button.classList.add("active");
 
-    console.error(
-      "Movie loading error:",
-      error
-    );
+};
 
-  }
+
+
+/* STATUS */
+
+function showStatus(
+id,
+message,
+success=true
+){
+
+const box =
+document.getElementById(id);
+
+box.innerText =
+message;
+
+box.className =
+success
+? "status success"
+: "status error";
 
 }
 
 
-// =====================================
-// RENDER MOVIE LIST
-// =====================================
 
-window.renderMovies = function () {
+/* ADD / UPDATE MOVIE */
 
-  const list =
-    document.getElementById("movieList");
+window.saveMovie =
+async function(){
 
-  const search =
-    document
-      .getElementById("movieSearch")
-      .value
-      .toLowerCase()
-      .trim();
+try{
 
+const movieId =
+document.getElementById(
+"movieId"
+).value;
 
-  const filtered =
-    movies.filter(movie =>
+const movieData = {
 
-      (movie.name || "")
-        .toLowerCase()
-        .includes(search)
+title:
+document.getElementById(
+"movieName"
+).value.trim(),
 
-    );
+poster:
+document.getElementById(
+"poster"
+).value.trim(),
 
+year:
+document.getElementById(
+"year"
+).value,
 
-  if (!filtered.length) {
+genre:
+document.getElementById(
+"genre"
+).value,
 
-    list.innerHTML =
-      "<p style='color:#aaa'>No movies found.</p>";
+language:
+document.getElementById(
+"language"
+).value,
 
-    return;
+quality:
+document.getElementById(
+"quality"
+).value,
 
-  }
+description:
+document.getElementById(
+"description"
+).value.trim(),
 
+downloadUrl:
+document.getElementById(
+"downloadUrl"
+).value.trim(),
 
-  list.innerHTML = "";
-
-
-  filtered.forEach(movie => {
-
-    const item =
-      document.createElement("div");
-
-    item.className = "movie";
-
-
-    item.innerHTML = `
-
-      <img
-        src="${escapeHtml(movie.poster || "")}"
-        alt=""
-        onerror="this.src='';this.style.background='#222'"
-      >
-
-      <div class="movie-info">
-
-        <h3>
-          ${escapeHtml(movie.name || "Untitled")}
-        </h3>
-
-        <div style="color:#aaa;font-size:13px">
-          ${escapeHtml(movie.year || "")}
-          •
-          ${escapeHtml(movie.genre || "")}
-          •
-          ${escapeHtml(movie.language || "")}
-          •
-          ${escapeHtml(movie.quality || "")}
-        </div>
-
-        <div class="movie-actions">
-
-          <button
-            class="edit"
-            onclick="editMovie('${movie.id}')">
-            ✏️ Edit
-          </button>
-
-          <button
-            class="danger"
-            onclick="deleteMovie('${movie.id}')">
-            🗑️ Delete
-          </button>
-
-        </div>
-
-      </div>
-
-    `;
-
-
-    list.appendChild(item);
-
-  });
+featured:
+document.getElementById(
+"featured"
+).checked
 
 };
 
 
-// =====================================
-// ESCAPE HTML
-// =====================================
+if(!movieData.title){
 
-function escapeHtml(value) {
+showStatus(
+"movieStatus",
+"❌ Movie name required.",
+false
+);
 
-  return String(value)
-
-    .replace(/&/g, "&amp;")
-
-    .replace(/</g, "&lt;")
-
-    .replace(/>/g, "&gt;")
-
-    .replace(/"/g, "&quot;")
-
-    .replace(/'/g, "&#039;");
+return;
 
 }
 
 
-// =====================================
-// EDIT MOVIE
-// =====================================
+if(movieId){
 
-window.editMovie = function (id) {
+await updateDoc(
+doc(db,"movies",movieId),
+movieData
+);
 
-  const movie =
-    movies.find(item => item.id === id);
+showStatus(
+"movieStatus",
+"✅ Movie updated!"
+);
 
-  if (!movie) return;
+}else{
 
+movieData.createdAt =
+serverTimestamp();
 
-  document.getElementById("movieId").value =
-    movie.id;
+await addDoc(
+collection(db,"movies"),
+movieData
+);
 
-  document.getElementById("movieName").value =
-    movie.name || "";
-
-  document.getElementById("poster").value =
-    movie.poster || "";
-
-  document.getElementById("year").value =
-    movie.year || "";
-
-  document.getElementById("genre").value =
-    movie.genre || "Action";
-
-  document.getElementById("language").value =
-    movie.language || "Hindi";
-
-  document.getElementById("quality").value =
-    movie.quality || "480p";
-
-  document.getElementById("description").value =
-    movie.description || "";
-
-  document.getElementById("downloadUrl").value =
-    movie.downloadUrl || "";
-
-  document.getElementById("featured").checked =
-    movie.featured === true;
-
-
-  document.getElementById("movieFormTitle").innerText =
-    "✏️ Edit Movie";
-
-  document.getElementById("saveMovieBtn").innerText =
-    "💾 Update Movie";
-
-  document.getElementById("cancelEditBtn").style.display =
-    "block";
-
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-};
-
-
-// =====================================
-// CANCEL EDIT
-// =====================================
-
-window.cancelEdit = function () {
-
-  clearMovieForm();
-
-};
-
-
-// =====================================
-// CLEAR MOVIE FORM
-// =====================================
-
-function clearMovieForm() {
-
-  document.getElementById("movieId").value = "";
-
-  document.getElementById("movieName").value = "";
-
-  document.getElementById("poster").value = "";
-
-  document.getElementById("year").value = "";
-
-  document.getElementById("description").value = "";
-
-  document.getElementById("downloadUrl").value = "";
-
-  document.getElementById("featured").checked = false;
-
-
-  document.getElementById("movieFormTitle").innerText =
-    "➕ Add Movie";
-
-  document.getElementById("saveMovieBtn").innerText =
-    "➕ Add Movie";
-
-  document.getElementById("cancelEditBtn").style.display =
-    "none";
+showStatus(
+"movieStatus",
+"✅ Movie added!"
+);
 
 }
 
 
-// =====================================
-// DELETE MOVIE
-// =====================================
+clearMovieForm();
 
-window.deleteMovie = async function (id) {
-
-  const movie =
-    movies.find(item => item.id === id);
-
-  if (!movie) return;
+await loadMovies();
 
 
-  const confirmDelete =
-    confirm(
-      "Kya aap '" +
-      movie.name +
-      "' delete karna chahte hain?"
-    );
+}catch(error){
 
+showStatus(
+"movieStatus",
+"❌ Error: "
++ error.message,
+false
+);
 
-  if (!confirmDelete) return;
-
-
-  try {
-
-    await deleteDoc(
-      doc(db, "movies", id)
-    );
-
-    showStatus(
-      "movieStatus",
-      "✅ Movie deleted successfully!"
-    );
-
-    await loadMovies();
-
-  } catch (error) {
-
-    showStatus(
-      "movieStatus",
-      "❌ Delete error: " + error.message,
-      false
-    );
-
-  }
+}
 
 };
 
 
-// =====================================
-// DASHBOARD
-// =====================================
 
-function updateDashboard() {
+/* MOVIES */
 
-  document.getElementById("totalMovies").innerText =
-    movies.length;
+let movies=[];
 
 
-  document.getElementById("featuredMovies").innerText =
-    movies.filter(
-      movie => movie.featured === true
-    ).length;
+async function loadMovies(){
+
+try{
+
+const snapshot =
+await getDocs(
+collection(db,"movies")
+);
 
 
-  const categories =
-    new Set(
-      movies
-        .map(movie => movie.genre)
-        .filter(Boolean)
-    );
+movies =
+snapshot.docs.map(
+item => ({
+
+id:item.id,
+...item.data()
+
+})
+);
 
 
-  document.getElementById("totalCategories").innerText =
-    categories.size;
+movies.sort(
+(a,b)=>{
+
+const aTime =
+a.createdAt?.seconds || 0;
+
+const bTime =
+b.createdAt?.seconds || 0;
+
+return bTime-aTime;
+
+}
+);
+
+
+renderMovies();
+
+updateDashboard();
+
+
+}catch(error){
+
+console.log(
+"Movies load error:",
+error
+);
+
+}
 
 }
 
 
-// =====================================
-// WEBSITE SETTINGS LOAD
-// =====================================
 
-async function loadWebsiteSettings() {
+/* RENDER MOVIES */
 
-  try {
+window.renderMovies =
+function(){
 
-    const snap =
-      await getDoc(
-        doc(db, "settings", "website")
-      );
+const list =
+document.getElementById(
+"movieList"
+);
 
-    if (!snap.exists()) return;
+const search =
+document.getElementById(
+"movieSearch"
+).value
+.toLowerCase();
 
-    const data = snap.data();
+
+const filtered =
+movies.filter(movie =>
+(movie.title || movie.name || "")
+.toLowerCase()
+.includes(search)
+);
 
 
-    document.getElementById("siteName").value =
-      data.siteName || "CineBox";
+if(!filtered.length){
 
-    document.getElementById("logoUrl").value =
-      data.logoUrl || "";
+list.innerHTML =
+"<p>No movies found.</p>";
 
-    document.getElementById("accentColor").value =
-      data.accentColor || "#e50914";
-
-    document.getElementById("backgroundColor").value =
-      data.backgroundColor || "#0b0b0f";
-
-    document.getElementById("homeTitle").value =
-      data.homeTitle || "";
-
-    document.getElementById("homeSubtitle").value =
-      data.homeSubtitle || "";
-
-    document.getElementById("categories").value =
-      data.categories || "";
-
-    document.getElementById("footerText").value =
-      data.footerText || "";
-
-    document.getElementById("aboutText").innerHTML =
-      data.aboutText || "";
-
-    document.getElementById("maintenance").checked =
-      data.maintenance === true;
-
-  } catch (error) {
-
-    console.log(
-      "Website settings not loaded yet."
-    );
-
-  }
+return;
 
 }
 
 
-// =====================================
-// SAVE WEBSITE SETTINGS
-// =====================================
+list.innerHTML =
+filtered.map(movie => {
 
-window.saveWebsiteSettings = async function () {
-
-  try {
-
-    await setDoc(
-      doc(db, "settings", "website"),
-      {
-
-        siteName:
-          document.getElementById("siteName").value.trim(),
-
-        logoUrl:
-          document.getElementById("logoUrl").value.trim(),
-
-        accentColor:
-          document.getElementById("accentColor").value,
-
-        backgroundColor:
-          document.getElementById("backgroundColor").value,
-
-        homeTitle:
-          document.getElementById("homeTitle").value.trim(),
-
-        homeSubtitle:
-          document.getElementById("homeSubtitle").value.trim(),
-
-        categories:
-          document.getElementById("categories").value.trim(),
-
-        footerText:
-          document.getElementById("footerText").value.trim(),
-
-        aboutText:
-          document.getElementById("aboutText").innerHTML,
-
-        maintenance:
-          document.getElementById("maintenance").checked,
-
-        updatedAt:
-          serverTimestamp()
-
-      },
-      { merge: true }
-    );
+const title =
+movie.title ||
+movie.name ||
+"Untitled";
 
 
-    showStatus(
-      "websiteStatus",
-      "✅ Website settings saved!"
-    );
+const poster =
+movie.poster ||
+movie.posterUrl ||
+movie.image ||
+"";
 
-  } catch (error) {
 
-    showStatus(
-      "websiteStatus",
-      "❌ Error: " + error.message,
-      false
-    );
+return `
 
-  }
+<div class="movie">
+
+<img
+src="${escapeHtml(poster)}"
+onerror="this.style.display='none'"
+>
+
+<div class="movie-info">
+
+<h3>
+${escapeHtml(title)}
+</h3>
+
+<div>
+${escapeHtml(movie.year || "")}
+•
+${escapeHtml(movie.genre || "")}
+</div>
+
+<div>
+${escapeHtml(movie.language || "")}
+•
+${escapeHtml(movie.quality || "")}
+</div>
+
+<div class="movie-actions">
+
+<button
+class="edit"
+onclick="editMovie('${movie.id}')">
+✏️ Edit
+</button>
+
+<button
+class="danger"
+onclick="deleteMovie('${movie.id}')">
+🗑️ Delete
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}).join("");
+
+}
+
+
+
+/* ESCAPE HTML */
+
+function escapeHtml(value){
+
+return String(value || "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+
+/* EDIT MOVIE */
+
+window.editMovie =
+function(id){
+
+const movie =
+movies.find(
+item => item.id === id
+);
+
+if(!movie) return;
+
+
+document.getElementById(
+"movieId"
+).value =
+id;
+
+
+document.getElementById(
+"movieName"
+).value =
+movie.title ||
+movie.name ||
+"";
+
+
+document.getElementById(
+"poster"
+).value =
+movie.poster ||
+movie.posterUrl ||
+movie.image ||
+"";
+
+
+document.getElementById(
+"year"
+).value =
+movie.year || "";
+
+
+document.getElementById(
+"genre"
+).value =
+movie.genre || "Action";
+
+
+document.getElementById(
+"language"
+).value =
+movie.language || "Hindi";
+
+
+document.getElementById(
+"quality"
+).value =
+movie.quality || "720p";
+
+
+document.getElementById(
+"description"
+).value =
+movie.description || "";
+
+
+document.getElementById(
+"downloadUrl"
+).value =
+movie.downloadUrl ||
+movie.downloadURL ||
+movie.download ||
+"";
+
+
+document.getElementById(
+"featured"
+).checked =
+movie.featured === true;
+
+
+document.getElementById(
+"movieFormTitle"
+).innerText =
+"✏️ Edit Movie";
+
+
+document.getElementById(
+"saveMovieBtn"
+).innerText =
+"💾 Update Movie";
+
+
+document.getElementById(
+"cancelEditBtn"
+).style.display =
+"block";
+
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
 
 };
 
 
-// =====================================
-// ADS SETTINGS LOAD
-// =====================================
 
-async function loadAdSettings() {
+/* CANCEL EDIT */
 
-  try {
+window.cancelEdit =
+function(){
 
-    const snap =
-      await getDoc(
-        doc(db, "settings", "ads")
-      );
-
-    if (!snap.exists()) return;
-
-    const data = snap.data();
-
-
-    document.getElementById("adsEnabled").checked =
-      data.enabled === true;
-
-    document.getElementById("topAd").value =
-      data.topAd || "";
-
-    document.getElementById("middleAd").value =
-      data.middleAd || "";
-
-    document.getElementById("bottomAd").value =
-      data.bottomAd || "";
-
-  } catch (error) {
-
-    console.log(
-      "Ads settings not loaded yet."
-    );
-
-  }
-
-}
-
-
-// =====================================
-// SAVE ADS SETTINGS
-// =====================================
-
-window.saveAdSettings = async function () {
-
-  try {
-
-    await setDoc(
-      doc(db, "settings", "ads"),
-      {
-
-        enabled:
-          document.getElementById("adsEnabled").checked,
-
-        topAd:
-          document.getElementById("topAd").value,
-
-        middleAd:
-          document.getElementById("middleAd").value,
-
-        bottomAd:
-          document.getElementById("bottomAd").value,
-
-        updatedAt:
-          serverTimestamp()
-
-      },
-      { merge: true }
-    );
-
-
-    showStatus(
-      "adsStatus",
-      "✅ Advertisement settings saved!"
-    );
-
-  } catch (error) {
-
-    showStatus(
-      "adsStatus",
-      "❌ Error: " + error.message,
-      false
-    );
-
-  }
+clearMovieForm();
 
 };
 
 
-// =====================================
-// TEXT EDITOR
-// =====================================
 
-window.formatText = function (command) {
+/* CLEAR FORM */
 
-  document.execCommand(
-    command,
-    false,
-    null
-  );
+function clearMovieForm(){
 
-  document.getElementById("aboutText").focus();
+document.getElementById(
+"movieId"
+).value="";
+
+
+document.getElementById(
+"movieName"
+).value="";
+
+
+document.getElementById(
+"poster"
+).value="";
+
+
+document.getElementById(
+"year"
+).value="";
+
+
+document.getElementById(
+"description"
+).value="";
+
+
+document.getElementById(
+"downloadUrl"
+).value="";
+
+
+document.getElementById(
+"featured"
+).checked=false;
+
+
+document.getElementById(
+"movieFormTitle"
+).innerText =
+"➕ Add Movie";
+
+
+document.getElementById(
+"saveMovieBtn"
+).innerText =
+"➕ Add Movie";
+
+
+document.getElementById(
+"cancelEditBtn"
+).style.display =
+"none";
+
+}
+
+
+
+/* DELETE MOVIE */
+
+window.deleteMovie =
+async function(id){
+
+if(
+!confirm(
+"Is movie ko delete karna hai?"
+)
+){
+
+return;
+
+}
+
+
+try{
+
+await deleteDoc(
+doc(db,"movies",id)
+);
+
+
+showStatus(
+"movieStatus",
+"✅ Movie deleted!"
+);
+
+
+await loadMovies();
+
+
+}catch(error){
+
+showStatus(
+"movieStatus",
+"❌ Delete error: "
++ error.message,
+false
+);
+
+}
+
+};
+
+
+
+/* DASHBOARD */
+
+function updateDashboard(){
+
+document.getElementById(
+"totalMovies"
+).innerText =
+movies.length;
+
+
+document.getElementById(
+"featuredMovies"
+).innerText =
+movies.filter(
+movie => movie.featured === true
+).length;
+
+
+const categories =
+new Set(
+movies.map(
+movie => movie.genre
+).filter(Boolean)
+);
+
+
+document.getElementById(
+"totalCategories"
+).innerText =
+categories.size;
+
+}
+
+
+
+/* WEBSITE SETTINGS */
+
+async function loadWebsiteSettings(){
+
+try{
+
+const snap =
+await getDoc(
+doc(db,"settings","website")
+);
+
+
+if(!snap.exists()) return;
+
+const data =
+snap.data();
+
+
+document.getElementById(
+"siteName"
+).value =
+data.siteName || "";
+
+
+document.getElementById(
+"logoUrl"
+).value =
+data.logoUrl || "";
+
+
+document.getElementById(
+"accentColor"
+).value =
+data.accentColor || "#e50914";
+
+
+document.getElementById(
+"backgroundColor"
+).value =
+data.backgroundColor || "#0b0b0f";
+
+
+document.getElementById(
+"homeTitle"
+).value =
+data.homeTitle || "";
+
+
+document.getElementById(
+"homeSubtitle"
+).value =
+data.homeSubtitle || "";
+
+
+document.getElementById(
+"categories"
+).value =
+data.categories || "";
+
+
+document.getElementById(
+"footerText"
+).value =
+data.footerText || "";
+
+
+document.getElementById(
+"aboutText"
+).innerHTML =
+data.aboutText || "";
+
+
+document.getElementById(
+"maintenance"
+).checked =
+data.maintenance === true;
+
+
+}catch(error){
+
+console.log(
+"Website settings error:",
+error
+);
+
+}
+
+}
+
+
+
+/* SAVE WEBSITE */
+
+window.saveWebsiteSettings =
+async function(){
+
+try{
+
+await setDoc(
+
+doc(db,"settings","website"),
+
+{
+
+siteName:
+document.getElementById(
+"siteName"
+).value.trim(),
+
+logoUrl:
+document.getElementById(
+"logoUrl"
+).value.trim(),
+
+accentColor:
+document.getElementById(
+"accentColor"
+).value,
+
+backgroundColor:
+document.getElementById(
+"backgroundColor"
+).value,
+
+homeTitle:
+document.getElementById(
+"homeTitle"
+).value.trim(),
+
+homeSubtitle:
+document.getElementById(
+"homeSubtitle"
+).value.trim(),
+
+categories:
+document.getElementById(
+"categories"
+).value.trim(),
+
+footerText:
+document.getElementById(
+"footerText"
+).value.trim(),
+
+aboutText:
+document.getElementById(
+"aboutText"
+).innerHTML,
+
+maintenance:
+document.getElementById(
+"maintenance"
+).checked,
+
+updatedAt:
+serverTimestamp()
+
+},
+
+{merge:true}
+
+);
+
+
+showStatus(
+"websiteStatus",
+"✅ Website settings saved!"
+);
+
+
+}catch(error){
+
+showStatus(
+"websiteStatus",
+"❌ Error: "
++ error.message,
+false
+);
+
+}
+
+}
+
+
+async function loadAdSettings(){
+
+try{
+
+const snap =
+await getDoc(
+doc(db,"settings","ads")
+);
+
+if(!snap.exists()) return;
+
+const data = snap.data();
+
+
+/* MAIN ADS SWITCH */
+
+document.getElementById(
+"adsEnabled"
+).checked =
+data.enabled === true;
+
+
+/* TOP IMAGE */
+
+document.getElementById(
+"topImageAdEnabled"
+).checked =
+data.topImageAdEnabled === true;
+
+document.getElementById(
+"topImageAdUrl"
+).value =
+data.topImageAdUrl || "";
+
+document.getElementById(
+"topImageAdClickUrl"
+).value =
+data.topImageAdClickUrl || "";
+
+
+/* TOP VIDEO */
+
+document.getElementById(
+"topVideoAdEnabled"
+).checked =
+data.topVideoAdEnabled === true;
+
+document.getElementById(
+"topVideoAdUrl"
+).value =
+data.topVideoAdUrl || "";
+
+document.getElementById(
+"topVideoAdClickUrl"
+).value =
+data.topVideoAdClickUrl || "";
+
+
+/* MIDDLE IMAGE */
+
+document.getElementById(
+"middleImageAdEnabled"
+).checked =
+data.middleImageAdEnabled === true;
+
+document.getElementById(
+"middleImageAdUrl"
+).value =
+data.middleImageAdUrl || "";
+
+document.getElementById(
+"middleImageAdClickUrl"
+).value =
+data.middleImageAdClickUrl || "";
+
+
+/* MIDDLE VIDEO */
+
+document.getElementById(
+"middleVideoAdEnabled"
+).checked =
+data.middleVideoAdEnabled === true;
+
+document.getElementById(
+"middleVideoAdUrl"
+).value =
+data.middleVideoAdUrl || "";
+
+document.getElementById(
+"middleVideoAdClickUrl"
+).value =
+data.middleVideoAdClickUrl || "";
+
+
+/* BOTTOM IMAGE */
+
+document.getElementById(
+"bottomImageAdEnabled"
+).checked =
+data.bottomImageAdEnabled === true;
+
+document.getElementById(
+"bottomImageAdUrl"
+).value =
+data.bottomImageAdUrl || "";
+
+document.getElementById(
+"bottomImageAdClickUrl"
+).value =
+data.bottomImageAdClickUrl || "";
+
+
+/* BOTTOM VIDEO */
+
+document.getElementById(
+"bottomVideoAdEnabled"
+).checked =
+data.bottomVideoAdEnabled === true;
+
+document.getElementById(
+"bottomVideoAdUrl"
+).value =
+data.bottomVideoAdUrl || "";
+
+document.getElementById(
+"bottomVideoAdClickUrl"
+).value =
+data.bottomVideoAdClickUrl || "";
+
+
+}catch(error){
+
+console.log(
+"Ads settings error:",
+error
+);
+
+}
+
+}
+
+
+
+/* SAVE AD SETTINGS */
+
+window.saveAdSettings =
+async function(){
+
+try{
+
+await setDoc(
+
+doc(db,"settings","ads"),
+
+{
+
+/* MAIN SWITCH */
+
+enabled:
+document.getElementById(
+"adsEnabled"
+).checked,
+
+
+/* TOP IMAGE */
+
+topImageAdEnabled:
+document.getElementById(
+"topImageAdEnabled"
+).checked,
+
+topImageAdUrl:
+document.getElementById(
+"topImageAdUrl"
+).value.trim(),
+
+topImageAdClickUrl:
+document.getElementById(
+"topImageAdClickUrl"
+).value.trim(),
+
+
+/* TOP VIDEO */
+
+topVideoAdEnabled:
+document.getElementById(
+"topVideoAdEnabled"
+).checked,
+
+topVideoAdUrl:
+document.getElementById(
+"topVideoAdUrl"
+).value.trim(),
+
+topVideoAdClickUrl:
+document.getElementById(
+"topVideoAdClickUrl"
+).value.trim(),
+
+
+/* MIDDLE IMAGE */
+
+middleImageAdEnabled:
+document.getElementById(
+"middleImageAdEnabled"
+).checked,
+
+middleImageAdUrl:
+document.getElementById(
+"middleImageAdUrl"
+).value.trim(),
+
+middleImageAdClickUrl:
+document.getElementById(
+"middleImageAdClickUrl"
+).value.trim(),
+
+
+/* MIDDLE VIDEO */
+
+middleVideoAdEnabled:
+document.getElementById(
+"middleVideoAdEnabled"
+).checked,
+
+middleVideoAdUrl:
+document.getElementById(
+"middleVideoAdUrl"
+).value.trim(),
+
+middleVideoAdClickUrl:
+document.getElementById(
+"middleVideoAdClickUrl"
+).value.trim(),
+
+
+/* BOTTOM IMAGE */
+
+bottomImageAdEnabled:
+document.getElementById(
+"bottomImageAdEnabled"
+).checked,
+
+bottomImageAdUrl:
+document.getElementById(
+"bottomImageAdUrl"
+).value.trim(),
+
+bottomImageAdClickUrl:
+document.getElementById(
+"bottomImageAdClickUrl"
+).value.trim(),
+
+
+/* BOTTOM VIDEO */
+
+bottomVideoAdEnabled:
+document.getElementById(
+"bottomVideoAdEnabled"
+).checked,
+
+bottomVideoAdUrl:
+document.getElementById(
+"bottomVideoAdUrl"
+).value.trim(),
+
+bottomVideoAdClickUrl:
+document.getElementById(
+"bottomVideoAdClickUrl"
+).value.trim(),
+
+
+updatedAt:
+serverTimestamp()
+
+},
+
+{merge:true}
+
+);
+
+
+showStatus(
+"adsStatus",
+"✅ Advertisement settings saved!"
+);
+
+
+}catch(error){
+
+showStatus(
+"adsStatus",
+"❌ Error: "
++ error.message,
+false
+);
+
+}
+
+
+
+/* TEXT EDITOR */
+
+window.formatText =
+function(command){
+
+document.execCommand(
+command,
+false,
+null
+);
+
+document.getElementById(
+"aboutText"
+).focus();
 
 };
 
@@ -1744,4 +2358,7 @@ window.formatText = function (command) {
 </script>
 
 </body>
+
 </html>
+    
+  
