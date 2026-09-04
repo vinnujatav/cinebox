@@ -1,1164 +1,1880 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>CineBox - Movies</title>
 
 <style>
+
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+box-sizing:border-box;
+margin:0;
+padding:0;
 }
 
 body{
-  font-family:Arial,sans-serif;
-  background:#0b0b0f;
-  color:white;
+font-family:Arial,sans-serif;
+background:#0b0b0f;
+color:white;
 }
 
-/* HEADER */
-
 header{
-  padding:16px 20px;
-  background:#14141c;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  position:sticky;
-  top:0;
-  z-index:10;
+padding:16px 20px;
+background:#14141c;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:15px;
+position:sticky;
+top:0;
+z-index:10;
 }
 
 .logo{
-  font-size:25px;
-  font-weight:bold;
-  white-space:nowrap;
+font-size:25px;
+font-weight:bold;
+white-space:nowrap;
 }
 
 .search-box{
-  position:relative;
-  width:45%;
+position:relative;
+width:45%;
 }
 
 .search{
-  width:100%;
-  padding:12px 45px 12px 16px;
-  border-radius:25px;
-  border:none;
-  outline:none;
-  font-size:15px;
+width:100%;
+padding:12px 45px 12px 16px;
+border-radius:25px;
+border:none;
+outline:none;
+font-size:15px;
 }
 
 .clear-search{
-  position:absolute;
-  right:14px;
-  top:50%;
-  transform:translateY(-50%);
-  border:none;
-  background:none;
-  color:#777;
-  font-size:20px;
-  cursor:pointer;
-  display:none;
+position:absolute;
+right:14px;
+top:50%;
+transform:translateY(-50%);
+border:none;
+background:none;
+color:#777;
+font-size:20px;
+cursor:pointer;
+display:none;
 }
 
-/* HERO */
-
 .hero{
-  padding:55px 20px;
-  text-align:center;
-  background:linear-gradient(135deg,#191927,#09090c);
+padding:55px 20px;
+text-align:center;
+background:linear-gradient(135deg,#191927,#09090c);
 }
 
 .hero h1{
-  font-size:38px;
-  margin-bottom:12px;
+font-size:38px;
+margin-bottom:12px;
 }
 
 .hero p{
-  color:#bbb;
+color:#bbb;
 }
-
-/* CONTAINER */
 
 .container{
-  padding:25px;
-  max-width:1200px;
-  margin:auto;
+padding:25px;
+max-width:1200px;
+margin:auto;
 }
 
-/* ADS */
 
-.ad{
-  margin:25px 0;
-  min-height:90px;
-  border:1px dashed #444;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#777;
+/* =========================
+   ADVERTISEMENT
+========================= */
+
+.ad-section{
+width:100%;
+margin:25px 0;
+display:none;
 }
 
-/* CATEGORIES */
+.ad-section.active{
+display:block;
+}
+
+.ad-title{
+font-size:12px;
+color:#777;
+text-align:center;
+margin-bottom:8px;
+}
+
+.ad-image{
+display:block;
+width:100%;
+max-width:100%;
+max-height:300px;
+object-fit:contain;
+border-radius:10px;
+margin:auto;
+cursor:pointer;
+}
+
+.ad-video{
+display:block;
+width:100%;
+max-height:350px;
+border-radius:10px;
+background:#000;
+margin:auto;
+}
+
+.ad-item{
+margin-bottom:15px;
+}
+
+.ad-item:last-child{
+margin-bottom:0;
+}
+
+
+/* =========================
+   CATEGORIES
+========================= */
 
 .categories{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:25px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:25px;
 }
 
 .category{
-  border:1px solid #333;
-  background:#171720;
-  color:white;
-  padding:9px 15px;
-  border-radius:20px;
-  cursor:pointer;
+border:1px solid #333;
+background:#171720;
+color:white;
+padding:9px 15px;
+border-radius:20px;
+cursor:pointer;
 }
 
 .category:hover,
 .category.active{
-  background:#e50914;
-  border-color:#e50914;
+background:#e50914;
+border-color:#e50914;
 }
 
-/* TITLE */
+
+/* =========================
+   TITLE
+========================= */
 
 .section-title{
-  margin-bottom:20px;
-  font-size:24px;
+margin-bottom:20px;
+font-size:24px;
 }
 
-/* MOVIES */
+
+/* =========================
+   MOVIES
+========================= */
 
 .movies{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-  gap:18px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+gap:18px;
 }
 
 .movie{
-  background:#16161f;
-  border-radius:12px;
-  overflow:hidden;
-  transition:.2s;
+background:#16161f;
+border-radius:12px;
+overflow:hidden;
+transition:.2s;
 }
 
 .movie:hover{
-  transform:translateY(-4px);
+transform:translateY(-4px);
 }
 
 .movie img{
-  width:100%;
-  height:240px;
-  object-fit:cover;
-  display:block;
+width:100%;
+height:240px;
+object-fit:cover;
+display:block;
 }
 
 .movie-info{
-  padding:13px;
+padding:13px;
 }
 
 .movie-info h3{
-  margin-bottom:6px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+margin-bottom:6px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
 .movie-info p{
-  color:#aaa;
-  font-size:14px;
-  margin-bottom:12px;
+color:#aaa;
+font-size:14px;
+margin-bottom:12px;
 }
 
 .btn{
-  display:block;
-  text-align:center;
-  text-decoration:none;
-  padding:10px;
-  border-radius:7px;
-  background:#e50914;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  border:0;
-  width:100%;
+display:block;
+text-align:center;
+text-decoration:none;
+padding:10px;
+border-radius:7px;
+background:#e50914;
+color:white;
+font-weight:bold;
+cursor:pointer;
+border:0;
+width:100%;
 }
-
-/* LOADING */
 
 .loading{
-  text-align:center;
-  padding:40px;
-  color:#aaa;
-  grid-column:1/-1;
+text-align:center;
+padding:40px;
+color:#aaa;
+grid-column:1/-1;
 }
 
-/* NO RESULT */
-
 .no-results{
-  text-align:center;
-  padding:40px 20px;
-  color:#aaa;
-  display:none;
-  grid-column:1/-1;
+text-align:center;
+padding:40px 20px;
+color:#aaa;
+display:none;
+grid-column:1/-1;
 }
 
 .no-results h3{
-  color:white;
-  margin-bottom:8px;
+color:white;
+margin-bottom:8px;
 }
 
-/* POPUP */
+
+/* =========================
+   POPUP
+========================= */
 
 .modal{
-  display:none;
-  position:fixed;
-  z-index:100;
-  left:0;
-  top:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,.85);
-  padding:20px;
-  overflow:auto;
+display:none;
+position:fixed;
+z-index:100;
+left:0;
+top:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.85);
+padding:20px;
+overflow:auto;
 }
 
 .modal-content{
-  max-width:500px;
-  margin:5% auto;
-  background:#181820;
-  border-radius:15px;
-  overflow:hidden;
-  position:relative;
+max-width:500px;
+margin:5% auto;
+background:#181820;
+border-radius:15px;
+overflow:hidden;
+position:relative;
 }
 
 .modal-content img{
-  width:100%;
-  height:300px;
-  object-fit:cover;
+width:100%;
+height:300px;
+object-fit:cover;
 }
 
 .modal-info{
-  padding:20px;
+padding:20px;
 }
 
 .modal-info h2{
-  margin-bottom:10px;
+margin-bottom:10px;
 }
 
 .modal-info p{
-  color:#bbb;
-  line-height:1.6;
-  margin-bottom:15px;
+color:#bbb;
+line-height:1.6;
+margin-bottom:15px;
 }
 
 .close{
-  position:absolute;
-  right:15px;
-  top:10px;
-  font-size:30px;
-  cursor:pointer;
-  background:rgba(0,0,0,.6);
-  width:40px;
-  height:40px;
-  text-align:center;
-  border-radius:50%;
+position:absolute;
+right:15px;
+top:10px;
+font-size:30px;
+cursor:pointer;
+background:rgba(0,0,0,.6);
+width:40px;
+height:40px;
+text-align:center;
+border-radius:50%;
 }
 
 .download{
-  margin-top:10px;
+margin-top:10px;
 }
 
-/* FOOTER */
+
+/* =========================
+   FOOTER
+========================= */
 
 footer{
-  margin-top:40px;
-  padding:25px;
-  text-align:center;
-  background:#14141c;
-  color:#888;
+margin-top:40px;
+padding:25px;
+text-align:center;
+background:#14141c;
+color:#888;
 }
 
-/* MOBILE */
+
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:600px){
 
-  header{
-    flex-direction:column;
-  }
-
-  .logo{
-    width:100%;
-    text-align:center;
-  }
-
-  .search-box{
-    width:100%;
-  }
-
-  .hero h1{
-    font-size:30px;
-  }
-
-  .movies{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .movie img{
-    height:210px;
-  }
-
-  .container{
-    padding:18px;
-  }
+header{
+flex-direction:column;
 }
+
+.logo{
+width:100%;
+text-align:center;
+}
+
+.search-box{
+width:100%;
+}
+
+.hero h1{
+font-size:30px;
+}
+
+.movies{
+grid-template-columns:repeat(2,1fr);
+}
+
+.movie img{
+height:210px;
+}
+
+.container{
+padding:18px;
+}
+
+.ad-video{
+max-height:250px;
+}
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- =========================
+     HEADER
+========================= -->
+
 <header>
 
-  <div class="logo">
-    🎬 CineBox
-  </div>
+<div class="logo" id="siteLogo">
+🎬 CineBox
+</div>
 
-  <div class="search-box">
+<div class="search-box">
 
-    <input
-      type="text"
-      class="search"
-      id="search"
-      placeholder="Search movies..."
-      autocomplete="off"
-    >
+<input
+type="text"
+class="search"
+id="search"
+placeholder="Search movies..."
+autocomplete="off"
+>
 
-    <button
-      class="clear-search"
-      id="clearSearch"
-      onclick="clearSearch()"
-    >
-      ×
-    </button>
+<button
+class="clear-search"
+id="clearSearch"
+onclick="clearSearch()"
+>
+×
+</button>
 
-  </div>
+</div>
 
 </header>
 
 
+<!-- =========================
+     HERO
+========================= -->
+
 <section class="hero">
 
-  <h1>Welcome to CineBox</h1>
+<h1 id="homeTitle">
+Welcome to CineBox
+</h1>
 
-  <p>
-    Discover your favorite movies
-  </p>
+<p id="homeSubtitle">
+Discover your favorite movies
+</p>
 
 </section>
 
 
 <div class="container">
 
-  <div class="ad">
-    Advertisement
-  </div>
 
-
-  <!-- CATEGORIES -->
-
-  <div class="categories">
-
-    <button
-      class="category active"
-      onclick="filterCategory('All',this)"
-    >
-      All
-    </button>
-
-    <button
-      class="category"
-      onclick="filterCategory('Action',this)"
-    >
-      Action
-    </button>
-
-    <button
-      class="category"
-      onclick="filterCategory('Comedy',this)"
-    >
-      Comedy
-    </button>
-
-    <button
-      class="category"
-      onclick="filterCategory('Drama',this)"
-    >
-      Drama
-    </button>
-
-  </div>
-
-
-  <h2 class="section-title">
-    Latest Movies
-  </h2>
-
-
-  <!-- FIREBASE MOVIES -->
-
-  <div
-    class="movies"
-    id="movies"
-  >
-
-    <div class="loading" id="loading">
-      Loading movies...
-    </div>
-
-    <div
-      class="no-results"
-      id="noResults"
-    >
-
-      <h3>No movies found</h3>
-
-      <p>
-        Try another movie name or category.
-      </p>
-
-    </div>
-
-  </div>
-
-
-  <div class="ad">
-    Advertisement
-  </div>
-
-</div>
-
-
-<!-- MOVIE DETAILS POPUP -->
+<!-- =========================
+     TOP AD
+========================= -->
 
 <div
-  class="modal"
-  id="movieModal"
+class="ad-section"
+id="topAd"
 >
 
-  <div class="modal-content">
+<div class="ad-title">
+Advertisement
+</div>
 
-    <span
-      class="close"
-      onclick="closeMovie()"
-    >
-      ×
-    </span>
-
-    <img
-      id="modalImage"
-      src=""
-      alt="Movie"
-    >
-
-    <div class="modal-info">
-
-      <h2 id="modalTitle"></h2>
-
-      <p id="modalMeta"></p>
-
-      <p id="modalDescription"></p>
-
-      <!-- ONLY DOWNLOAD -->
-
-      <a
-        id="downloadButton"
-        class="btn download"
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        📥 Download
-      </a>
-
-    </div>
-
-  </div>
+<div id="topAdContent"></div>
 
 </div>
 
+
+<!-- =========================
+     CATEGORIES
+========================= -->
+
+<div
+class="categories"
+id="categories"
+>
+
+<button
+class="category active"
+onclick="filterCategory('All',this)"
+>
+All
+</button>
+
+<button
+class="category"
+onclick="filterCategory('Action',this)"
+>
+Action
+</button>
+
+<button
+class="category"
+onclick="filterCategory('Comedy',this)"
+>
+Comedy
+</button>
+
+<button
+class="category"
+onclick="filterCategory('Drama',this)"
+>
+Drama
+</button>
+
+</div>
+
+
+<h2 class="section-title">
+Latest Movies
+</h2>
+
+
+<!-- =========================
+     MOVIES
+========================= -->
+
+<div
+class="movies"
+id="movies"
+>
+
+<div
+class="loading"
+id="loading"
+>
+Loading movies...
+</div>
+
+<div
+class="no-results"
+id="noResults"
+>
+
+<h3>
+No movies found
+</h3>
+
+<p>
+Try another movie name or category.
+</p>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     MIDDLE AD
+========================= -->
+
+<div
+class="ad-section"
+id="middleAd"
+>
+
+<div class="ad-title">
+Advertisement
+</div>
+
+<div id="middleAdContent"></div>
+
+</div>
+
+
+<!-- =========================
+     BOTTOM AD
+========================= -->
+
+<div
+class="ad-section"
+id="bottomAd"
+>
+
+<div class="ad-title">
+Advertisement
+</div>
+
+<div id="bottomAdContent"></div>
+
+</div>
+
+
+</div>
+
+
+<!-- =========================
+     MOVIE MODAL
+========================= -->
+
+<div
+class="modal"
+id="movieModal"
+>
+
+<div class="modal-content">
+
+<span
+class="close"
+onclick="closeMovie()"
+>
+×
+</span>
+
+<img
+id="modalImage"
+src=""
+alt="Movie"
+>
+
+<div class="modal-info">
+
+<h2 id="modalTitle"></h2>
+
+<p id="modalMeta"></p>
+
+<p id="modalDescription"></p>
+
+<a
+id="downloadButton"
+class="btn download"
+href="#"
+target="_blank"
+rel="noopener noreferrer"
+>
+📥 Download
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
 
 <footer>
 
-  © 2026 CineBox • All Rights Reserved
+<span id="footerText">
+© 2026 CineBox • All Rights Reserved
+</span>
 
 </footer>
 
 
-<!-- FIREBASE -->
+<!-- =========================
+     FIREBASE
+========================= -->
 
 <script type="module">
 
-import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  orderBy,
-  limit
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+initializeApp
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
-/* ==================================================
-   IMPORTANT:
-   YAHAN APNE ADMIN PANEL WALA SAME FIREBASE CONFIG
-   PASTE KARO
-   ================================================== */
+import {
+getFirestore,
+collection,
+getDocs,
+query,
+orderBy,
+limit,
+doc,
+getDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+/* =========================
+   FIREBASE CONFIG
+========================= */
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
+apiKey:
+"AIzaSyCdrs9-P25DinFz0xRZc0mqQeBiu5Gk4l2M",
 
-  authDomain: "cinebox-9011f.firebaseapp.com",
+authDomain:
+"cinebox-9011f.firebaseapp.com",
 
-  projectId: "cinebox-9011f",
+projectId:
+"cinebox-9011f",
 
-  storageBucket: "cinebox-9011f.firebasestorage.app",
+storageBucket:
+"cinebox-9011f.firebasestorage.app",
 
-  messagingSenderId: "134449166678",
+messagingSenderId:
+"134449166678",
 
-  appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
+appId:
+"1:134449166678:web:6370c97d19b27c48a83ef7"
 
 };
 
 
-/* FIREBASE START */
+const app =
+initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
+const db =
+getFirestore(app);
 
-const db = getFirestore(app);
-
-
-/* GLOBAL DATA */
 
 let allMovies = [];
 
 let currentCategory = "All";
 
 
+/* =========================
+   LOAD WEBSITE SETTINGS
+========================= */
 
-/* ==================================================
-   LOAD LATEST 10 MOVIES
-   ================================================== */
+async function loadWebsiteSettings(){
 
-async function loadMovies(){
+try{
 
-  const moviesContainer =
-    document.getElementById("movies");
+const snap =
+await getDoc(
+doc(db,"settings","website")
+);
 
-  const loading =
-    document.getElementById("loading");
+if(!snap.exists()){
+return;
+}
 
-  const noResults =
-    document.getElementById("noResults");
-
-
-  try{
-
-    loading.style.display = "block";
-
-    noResults.style.display = "none";
+const data =
+snap.data();
 
 
-    /*
-      createdAt ke according se newest movies
-      pehle aayengi aur maximum 10 movies load hongi.
-    */
+if(data.siteName){
 
-    const moviesQuery = query(
+document.title =
+data.siteName + " - Movies";
 
-      collection(db,"movies"),
-
-      orderBy("createdAt","desc"),
-
-      limit(10)
-
-    );
-
-
-    const snapshot =
-      await getDocs(moviesQuery);
-
-
-    allMovies = [];
-
-
-    snapshot.forEach((doc) => {
-
-      allMovies.push({
-
-        id:doc.id,
-
-        ...doc.data()
-
-      });
-
-    });
-
-
-    loading.style.display = "none";
-
-
-    renderMovies();
-
-
-  }catch(error){
-
-    console.error("Firebase Error:",error);
-
-    loading.style.display = "none";
-
-    moviesContainer.innerHTML = `
-
-      <div class="loading">
-
-        ❌ Movies load nahi ho rahi.
-
-        <br><br>
-
-        Firebase configuration ya Firestore
-        rules check karo.
-
-      </div>
-
-    `;
-
-  }
+document.getElementById(
+"siteLogo"
+).innerText =
+"🎬 " + data.siteName;
 
 }
 
 
+if(data.logoUrl){
 
-/* ==================================================
-   RENDER MOVIES
-   ================================================== */
+document.getElementById(
+"siteLogo"
+).innerHTML = `
 
-function renderMovies(){
+<img
+src="${escapeHTML(data.logoUrl)}"
+style="
+height:32px;
+max-width:160px;
+object-fit:contain;
+vertical-align:middle;
+"
+alt="Logo"
+>
 
-  const moviesContainer =
-    document.getElementById("movies");
-
-  const noResults =
-    document.getElementById("noResults");
-
-
-  /*
-    Purane cards remove
-  */
-
-  moviesContainer
-    .querySelectorAll(".movie")
-    .forEach(movie => movie.remove());
-
-
-  const searchValue =
-    document
-      .getElementById("search")
-      .value
-      .trim()
-      .toLowerCase();
-
-
-  let filteredMovies =
-    allMovies.filter(movie => {
-
-
-      /*
-        Category
-      */
-
-      const category =
-        String(
-          movie.genre ||
-          movie.category ||
-          ""
-        );
-
-
-      const categoryMatch =
-        currentCategory === "All" ||
-        category.toLowerCase()
-          .includes(
-            currentCategory.toLowerCase()
-          );
-
-
-      /*
-        Search
-      */
-
-      const searchableText = [
-
-        movie.title,
-
-        movie.name,
-
-        movie.genre,
-
-        movie.category,
-
-        movie.year,
-
-        movie.language,
-
-        movie.quality,
-
-        movie.description
-
-      ]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
-
-
-      const searchMatch =
-        searchableText.includes(searchValue);
-
-
-      return categoryMatch && searchMatch;
-
-    });
-
-
-  if(filteredMovies.length === 0){
-
-    noResults.style.display = "block";
-
-    return;
-
-  }
-
-
-  noResults.style.display = "none";
-
-
-  filteredMovies.forEach(movie => {
-
-    const card =
-      createMovieCard(movie);
-
-    moviesContainer.appendChild(card);
-
-  });
+`;
 
 }
 
 
+if(data.homeTitle){
 
-/* ==================================================
-   CREATE MOVIE CARD
-   ================================================== */
-
-function createMovieCard(movie){
-
-  const card =
-    document.createElement("div");
-
-  card.className = "movie";
-
-
-  const title =
-    movie.title ||
-    movie.name ||
-    "Untitled Movie";
-
-
-  const poster =
-    movie.poster ||
-    movie.posterUrl ||
-    movie.image ||
-    "https://via.placeholder.com/300x450?text=CineBox";
-
-
-  const year =
-    movie.year ||
-    "";
-
-
-  const genre =
-    movie.genre ||
-    movie.category ||
-    "";
-
-
-  const language =
-    movie.language ||
-    "";
-
-
-  const quality =
-    movie.quality ||
-    "";
-
-
-  /*
-    Meta text
-  */
-
-  const metaParts = [
-
-    year,
-
-    genre,
-
-    language,
-
-    quality
-
-  ].filter(Boolean);
-
-
-  const meta =
-    metaParts.join(" • ");
-
-
-  card.innerHTML = `
-
-    <img
-      src="${escapeHTML(poster)}"
-      alt="${escapeHTML(title)}"
-      loading="lazy"
-      onerror="this.src='https://via.placeholder.com/300x450?text=CineBox'"
-    >
-
-    <div class="movie-info">
-
-      <h3>
-        ${escapeHTML(title)}
-      </h3>
-
-      <p>
-        ${escapeHTML(meta || "Movie")}
-      </p>
-
-      <button
-        class="btn"
-        type="button"
-      >
-        View Details
-      </button>
-
-    </div>
-
-  `;
-
-
-  /*
-    Details button
-  */
-
-  const button =
-    card.querySelector("button");
-
-
-  button.addEventListener(
-    "click",
-    () => {
-
-      openMovie(movie);
-
-    }
-  );
-
-
-  return card;
+document.getElementById(
+"homeTitle"
+).innerText =
+data.homeTitle;
 
 }
 
 
+if(data.homeSubtitle){
 
-/* ==================================================
-   OPEN MOVIE
-   ================================================== */
-
-function openMovie(movie){
-
-  const title =
-    movie.title ||
-    movie.name ||
-    "Untitled Movie";
-
-
-  const poster =
-    movie.poster ||
-    movie.posterUrl ||
-    movie.image ||
-    "https://via.placeholder.com/300x450?text=CineBox";
-
-
-  const meta = [
-
-    movie.year,
-
-    movie.genre || movie.category,
-
-    movie.language,
-
-    movie.quality
-
-  ]
-  .filter(Boolean)
-  .join(" • ");
-
-
-  const description =
-    movie.description ||
-    "No description available.";
-
-
-  const downloadUrl =
-    movie.downloadUrl ||
-    movie.downloadURL ||
-    movie.download ||
-    "#";
-
-
-  document.getElementById(
-    "modalTitle"
-  ).innerText = title;
-
-
-  document.getElementById(
-    "modalImage"
-  ).src = poster;
-
-
-  document.getElementById(
-    "modalMeta"
-  ).innerText = meta;
-
-
-  document.getElementById(
-    "modalDescription"
-  ).innerText = description;
-
-
-  const downloadButton =
-    document.getElementById(
-      "downloadButton"
-    );
-
-
-  if(downloadUrl && downloadUrl !== "#"){
-
-    downloadButton.href =
-      downloadUrl;
-
-    downloadButton.style.display =
-      "block";
-
-  }else{
-
-    downloadButton.removeAttribute("href");
-
-    downloadButton.style.display =
-      "none";
-
-  }
-
-
-  document.getElementById(
-    "movieModal"
-  ).style.display = "block";
+document.getElementById(
+"homeSubtitle"
+).innerText =
+data.homeSubtitle;
 
 }
 
 
+if(data.footerText){
 
-/* ==================================================
-   CLOSE MOVIE
-   ================================================== */
+document.getElementById(
+"footerText"
+).innerText =
+data.footerText;
 
-window.closeMovie = function(){
+}
 
-  document.getElementById(
-    "movieModal"
-  ).style.display = "none";
+
+if(data.backgroundColor){
+
+document.body.style.background =
+data.backgroundColor;
+
+}
+
+
+if(data.accentColor){
+
+const style =
+document.createElement("style");
+
+style.innerHTML = `
+
+.category:hover,
+.category.active,
+.btn{
+background:${data.accentColor};
+}
+
+.category:hover,
+.category.active{
+border-color:${data.accentColor};
+}
+
+`;
+
+document.head.appendChild(style);
+
+}
+
+
+if(data.maintenance === true){
+
+document.body.innerHTML = `
+
+<div style="
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:30px;
+">
+
+<div>
+
+<h1>
+🚧 Website Maintenance
+</h1>
+
+<p style="
+color:#aaa;
+margin-top:10px;
+">
+Website is currently under maintenance.
+Please come back later.
+</p>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}catch(error){
+
+console.error(
+"Website settings error:",
+error
+);
+
+}
+
+}
+
+
+/* =========================
+   CREATE AD IMAGE
+========================= */
+
+function createImageAd(
+imageUrl,
+clickUrl
+){
+
+if(!imageUrl){
+return null;
+}
+
+
+const wrapper =
+document.createElement("div");
+
+wrapper.className =
+"ad-item";
+
+
+const image =
+document.createElement("img");
+
+image.className =
+"ad-image";
+
+image.src =
+imageUrl;
+
+image.alt =
+"Advertisement";
+
+image.loading =
+"lazy";
+
+
+image.onerror =
+function(){
+
+wrapper.remove();
 
 };
 
 
+if(clickUrl){
 
-/* ==================================================
-   CATEGORY FILTER
-   ================================================== */
+const link =
+document.createElement("a");
+
+link.href =
+clickUrl;
+
+link.target =
+"_blank";
+
+link.rel =
+"noopener noreferrer sponsored";
+
+link.appendChild(image);
+
+wrapper.appendChild(link);
+
+}else{
+
+wrapper.appendChild(image);
+
+}
+
+
+return wrapper;
+
+}
+
+
+/* =========================
+   CREATE AD VIDEO
+========================= */
+
+function createVideoAd(
+videoUrl,
+clickUrl
+){
+
+if(!videoUrl){
+return null;
+}
+
+
+const wrapper =
+document.createElement("div");
+
+wrapper.className =
+"ad-item";
+
+
+const video =
+document.createElement("video");
+
+video.className =
+"ad-video";
+
+video.controls =
+true;
+
+video.playsInline =
+true;
+
+video.preload =
+"metadata";
+
+video.src =
+videoUrl;
+
+
+video.onerror =
+function(){
+
+wrapper.remove();
+
+};
+
+
+if(clickUrl){
+
+const link =
+document.createElement("a");
+
+link.href =
+clickUrl;
+
+link.target =
+"_blank";
+
+link.rel =
+"noopener noreferrer sponsored";
+
+link.appendChild(video);
+
+wrapper.appendChild(link);
+
+}else{
+
+wrapper.appendChild(video);
+
+}
+
+
+return wrapper;
+
+}
+
+
+/* =========================
+   RENDER ONE AD POSITION
+========================= */
+
+function renderAdPosition(
+sectionId,
+contentId,
+imageEnabled,
+imageUrl,
+imageClickUrl,
+videoEnabled,
+videoUrl,
+videoClickUrl
+){
+
+const section =
+document.getElementById(sectionId);
+
+const content =
+document.getElementById(contentId);
+
+
+content.innerHTML = "";
+
+section.classList.remove("active");
+
+
+let hasAd = false;
+
+
+if(imageEnabled && imageUrl){
+
+const imageAd =
+createImageAd(
+imageUrl,
+imageClickUrl
+);
+
+if(imageAd){
+
+content.appendChild(imageAd);
+
+hasAd = true;
+
+}
+
+}
+
+
+if(videoEnabled && videoUrl){
+
+const videoAd =
+createVideoAd(
+videoUrl,
+videoClickUrl
+);
+
+if(videoAd){
+
+content.appendChild(videoAd);
+
+hasAd = true;
+
+}
+
+}
+
+
+if(hasAd){
+
+section.classList.add("active");
+
+}
+
+}
+
+
+/* =========================
+   LOAD AD SETTINGS
+========================= */
+
+async function loadAdSettings(){
+
+try{
+
+const snap =
+await getDoc(
+doc(db,"settings","ads")
+);
+
+
+if(!snap.exists()){
+
+return;
+
+}
+
+
+const data =
+snap.data();
+
+
+/*
+MAIN ADS SWITCH
+*/
+
+if(data.enabled !== true){
+
+return;
+
+}
+
+
+/*
+TOP
+*/
+
+renderAdPosition(
+
+"topAd",
+
+"topAdContent",
+
+data.topImageAdEnabled === true,
+
+data.topImageAdUrl || "",
+
+data.topImageAdClickUrl || "",
+
+data.topVideoAdEnabled === true,
+
+data.topVideoAdUrl || "",
+
+data.topVideoAdClickUrl || ""
+
+);
+
+
+/*
+MIDDLE
+*/
+
+renderAdPosition(
+
+"middleAd",
+
+"middleAdContent",
+
+data.middleImageAdEnabled === true,
+
+data.middleImageAdUrl || "",
+
+data.middleImageAdClickUrl || "",
+
+data.middleVideoAdEnabled === true,
+
+data.middleVideoAdUrl || "",
+
+data.middleVideoAdClickUrl || ""
+
+);
+
+
+/*
+BOTTOM
+*/
+
+renderAdPosition(
+
+"bottomAd",
+
+"bottomAdContent",
+
+data.bottomImageAdEnabled === true,
+
+data.bottomImageAdUrl || "",
+
+data.bottomImageAdClickUrl || "",
+
+data.bottomVideoAdEnabled === true,
+
+data.bottomVideoAdUrl || "",
+
+data.bottomVideoAdClickUrl || ""
+
+);
+
+
+}catch(error){
+
+console.error(
+"Advertisement error:",
+error
+);
+
+}
+
+}
+
+
+/* =========================
+   LOAD MOVIES
+========================= */
+
+async function loadMovies(){
+
+const moviesContainer =
+document.getElementById("movies");
+
+const loading =
+document.getElementById("loading");
+
+const noResults =
+document.getElementById("noResults");
+
+
+try{
+
+loading.style.display =
+"block";
+
+noResults.style.display =
+"none";
+
+
+const moviesQuery =
+query(
+
+collection(db,"movies"),
+
+orderBy(
+"createdAt",
+"desc"
+),
+
+limit(10)
+
+);
+
+
+const snapshot =
+await getDocs(moviesQuery);
+
+
+allMovies = [];
+
+
+snapshot.forEach(
+(item) => {
+
+allMovies.push({
+
+id:item.id,
+
+...item.data()
+
+});
+
+});
+
+
+loading.style.display =
+"none";
+
+
+renderMovies();
+
+
+}catch(error){
+
+console.error(
+"Firebase Error:",
+error
+);
+
+loading.style.display =
+"none";
+
+
+moviesContainer.innerHTML = `
+
+<div class="loading">
+
+❌ Movies load nahi ho rahi.
+
+<br><br>
+
+Firebase configuration ya
+Firestore rules check karo.
+
+</div>
+
+`;
+
+}
+
+}
+
+
+/* =========================
+   RENDER MOVIES
+========================= */
+
+function renderMovies(){
+
+const moviesContainer =
+document.getElementById("movies");
+
+const noResults =
+document.getElementById("noResults");
+
+
+moviesContainer
+.querySelectorAll(".movie")
+.forEach(
+movie =>
+movie.remove()
+);
+
+
+const searchValue =
+document
+.getElementById("search")
+.value
+.trim()
+.toLowerCase();
+
+
+let filteredMovies =
+allMovies.filter(
+movie => {
+
+
+const category =
+String(
+
+movie.genre ||
+movie.category ||
+""
+
+);
+
+
+const categoryMatch =
+currentCategory === "All" ||
+
+category
+.toLowerCase()
+.includes(
+currentCategory.toLowerCase()
+);
+
+
+const searchableText = [
+
+movie.title,
+
+movie.name,
+
+movie.genre,
+
+movie.category,
+
+movie.year,
+
+movie.language,
+
+movie.quality,
+
+movie.description
+
+]
+.filter(Boolean)
+.join(" ")
+.toLowerCase();
+
+
+const searchMatch =
+searchableText
+.includes(searchValue);
+
+
+return (
+categoryMatch &&
+searchMatch
+);
+
+}
+);
+
+
+if(filteredMovies.length === 0){
+
+noResults.style.display =
+"block";
+
+return;
+
+}
+
+
+noResults.style.display =
+"none";
+
+
+filteredMovies.forEach(
+movie => {
+
+const card =
+createMovieCard(movie);
+
+moviesContainer
+.appendChild(card);
+
+}
+);
+
+}
+
+
+/* =========================
+   MOVIE CARD
+========================= */
+
+function createMovieCard(movie){
+
+const card =
+document.createElement("div");
+
+card.className =
+"movie";
+
+
+const title =
+movie.title ||
+movie.name ||
+"Untitled Movie";
+
+
+const poster =
+movie.poster ||
+movie.posterUrl ||
+movie.image ||
+"https://via.placeholder.com/300x450?text=CineBox";
+
+
+const year =
+movie.year || "";
+
+
+const genre =
+movie.genre ||
+movie.category ||
+"";
+
+
+const language =
+movie.language || "";
+
+
+const quality =
+movie.quality || "";
+
+
+const metaParts = [
+
+year,
+genre,
+language,
+quality
+
+].filter(Boolean);
+
+
+const meta =
+metaParts.join(" • ");
+
+
+const image =
+document.createElement("img");
+
+image.src =
+poster;
+
+image.alt =
+title;
+
+image.loading =
+"lazy";
+
+
+image.onerror =
+function(){
+
+this.src =
+"https://via.placeholder.com/300x450?text=CineBox";
+
+};
+
+
+const info =
+document.createElement("div");
+
+info.className =
+"movie-info";
+
+
+const heading =
+document.createElement("h3");
+
+heading.innerText =
+title;
+
+
+const paragraph =
+document.createElement("p");
+
+paragraph.innerText =
+meta || "Movie";
+
+
+const button =
+document.createElement("button");
+
+button.className =
+"btn";
+
+button.type =
+"button";
+
+button.innerText =
+"View Details";
+
+
+button.addEventListener(
+"click",
+function(){
+
+openMovie(movie);
+
+}
+);
+
+
+info.appendChild(heading);
+
+info.appendChild(paragraph);
+
+info.appendChild(button);
+
+
+card.appendChild(image);
+
+card.appendChild(info);
+
+
+return card;
+
+}
+
+
+/* =========================
+   OPEN MOVIE
+========================= */
+
+function openMovie(movie){
+
+const title =
+movie.title ||
+movie.name ||
+"Untitled Movie";
+
+
+const poster =
+movie.poster ||
+movie.posterUrl ||
+movie.image ||
+"https://via.placeholder.com/300x450?text=CineBox";
+
+
+const meta = [
+
+movie.year,
+
+movie.genre ||
+movie.category,
+
+movie.language,
+
+movie.quality
+
+]
+.filter(Boolean)
+.join(" • ");
+
+
+const description =
+movie.description ||
+"No description available.";
+
+
+const downloadUrl =
+movie.downloadUrl ||
+movie.downloadURL ||
+movie.download ||
+"#";
+
+
+document.getElementById(
+"modalTitle"
+).innerText =
+title;
+
+
+document.getElementById(
+"modalImage"
+).src =
+poster;
+
+
+document.getElementById(
+"modalMeta"
+).innerText =
+meta;
+
+
+document.getElementById(
+"modalDescription"
+).innerText =
+description;
+
+
+const downloadButton =
+document.getElementById(
+"downloadButton"
+);
+
+
+if(downloadUrl &&
+downloadUrl !== "#"){
+
+downloadButton.href =
+downloadUrl;
+
+downloadButton.style.display =
+"block";
+
+}else{
+
+downloadButton.removeAttribute(
+"href"
+);
+
+downloadButton.style.display =
+"none";
+
+}
+
+
+document.getElementById(
+"movieModal"
+).style.display =
+"block";
+
+}
+
+
+/* =========================
+   CLOSE MOVIE
+========================= */
+
+window.closeMovie =
+function(){
+
+document.getElementById(
+"movieModal"
+).style.display =
+"none";
+
+};
+
+
+/* =========================
+   CATEGORY
+========================= */
 
 window.filterCategory =
 function(category,button){
 
-  currentCategory =
-    category;
+currentCategory =
+category;
 
 
-  document
-    .querySelectorAll(".category")
-    .forEach(btn => {
-
-      btn.classList.remove("active");
-
-    });
-
-
-  button.classList.add("active");
+document
+.querySelectorAll(".category")
+.forEach(
+btn =>
+btn.classList.remove("active")
+);
 
 
-  renderMovies();
+button.classList.add("active");
+
+
+renderMovies();
 
 };
 
 
-
-/* ==================================================
+/* =========================
    SEARCH
-   ================================================== */
+========================= */
 
 const searchInput =
-  document.getElementById("search");
-
-
-searchInput.addEventListener(
-  "input",
-  function(){
-
-    updateClearButton();
-
-    renderMovies();
-
-  }
+document.getElementById(
+"search"
 );
 
 
-
-/* ENTER KEY */
-
 searchInput.addEventListener(
-  "keydown",
-  function(event){
+"input",
+function(){
 
-    if(event.key === "Enter"){
+updateClearButton();
 
-      renderMovies();
+renderMovies();
 
-    }
-
-  }
+}
 );
 
 
+searchInput.addEventListener(
+"keydown",
+function(event){
 
-/* CLEAR SEARCH */
+if(event.key === "Enter"){
+
+renderMovies();
+
+}
+
+}
+);
+
+
+/* =========================
+   CLEAR SEARCH
+========================= */
 
 window.clearSearch =
 function(){
 
-  searchInput.value = "";
+searchInput.value =
+"";
 
-  updateClearButton();
+updateClearButton();
 
-  renderMovies();
+renderMovies();
 
-  searchInput.focus();
+searchInput.focus();
 
 };
 
 
-
 function updateClearButton(){
 
-  const clearButton =
-    document.getElementById(
-      "clearSearch"
-    );
-
-
-  if(searchInput.value.trim()){
-
-    clearButton.style.display =
-      "block";
-
-  }else{
-
-    clearButton.style.display =
-      "none";
-
-  }
-
-}
-
-
-
-/* ==================================================
-   CLOSE MODAL WHEN OUTSIDE CLICK
-   ================================================== */
-
-window.addEventListener(
-  "click",
-  function(event){
-
-    const modal =
-      document.getElementById(
-        "movieModal"
-      );
-
-
-    if(event.target === modal){
-
-      closeMovie();
-
-    }
-
-  }
+const clearButton =
+document.getElementById(
+"clearSearch"
 );
 
 
+if(searchInput.value.trim()){
 
-/* ==================================================
-   ESCAPE HTML
-   ================================================== */
+clearButton.style.display =
+"block";
 
-function escapeHTML(value){
+}else{
 
-  return String(value)
+clearButton.style.display =
+"none";
 
-    .replace(/&/g,"&amp;")
-
-    .replace(/</g,"&lt;")
-
-    .replace(/>/g,"&gt;")
-
-    .replace(/"/g,"&quot;")
-
-    .replace(/'/g,"&#039;");
+}
 
 }
 
 
+/* =========================
+   CLOSE MODAL OUTSIDE
+========================= */
 
-/* ==================================================
-   START
-   ================================================== */
+window.addEventListener(
+"click",
+function(event){
 
-loadMovies();
+const modal =
+document.getElementById(
+"movieModal"
+);
+
+
+if(event.target === modal){
+
+closeMovie();
+
+}
+
+}
+);
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value){
+
+return String(value || "")
+
+.replace(
+/&/g,
+"&amp;"
+)
+
+.replace(
+/</g,
+"&lt;"
+)
+
+.replace(
+/>/g,
+"&gt;"
+)
+
+.replace(
+/"/g,
+"&quot;"
+)
+
+.replace(
+/'/g,
+"&#039;"
+);
+
+}
+
+
+/* =========================
+   START WEBSITE
+========================= */
+
+await loadWebsiteSettings();
+
+await loadAdSettings();
+
+await loadMovies();
+
 
 </script>
 
