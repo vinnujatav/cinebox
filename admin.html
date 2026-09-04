@@ -15,10 +15,7 @@ background:#0b0b0f;
 color:white
 }
 
-button{
-border:0;
-cursor:pointer
-}
+button{border:0;cursor:pointer}
 
 input,textarea,select{
 width:100%;
@@ -44,9 +41,7 @@ padding:30px;
 border-radius:15px
 }
 
-.login h1{
-text-align:center
-}
+.login h1{text-align:center}
 
 .primary{
 width:100%;
@@ -79,9 +74,7 @@ background:#444;
 color:white
 }
 
-#adminApp{
-display:none
-}
+#adminApp{display:none}
 
 .header{
 height:65px;
@@ -93,9 +86,7 @@ padding:0 20px;
 border-bottom:1px solid #292932
 }
 
-.header h2{
-margin:0
-}
+.header h2{margin:0}
 
 .logout{
 background:#444;
@@ -126,9 +117,7 @@ border-radius:8px;
 text-align:left
 }
 
-.nav.active{
-background:#e50914
-}
+.nav.active{background:#e50914}
 
 .content{
 flex:1;
@@ -136,13 +125,9 @@ padding:20px;
 max-width:1200px
 }
 
-.section{
-display:none
-}
+.section{display:none}
 
-.section.active{
-display:block
-}
+.section.active{display:block}
 
 .card{
 background:#15151d;
@@ -152,9 +137,7 @@ margin-bottom:20px;
 border:1px solid #292932
 }
 
-.card h2{
-margin-top:0
-}
+.card h2{margin-top:0}
 
 .stats{
 display:grid;
@@ -198,9 +181,7 @@ border-radius:6px;
 background:#222
 }
 
-.movie-info{
-flex:1
-}
+.movie-info{flex:1}
 
 .movie-info h3{
 margin:0 0 7px
@@ -212,9 +193,7 @@ gap:7px;
 margin-top:10px
 }
 
-.movie-actions button{
-flex:1
-}
+.movie-actions button{flex:1}
 
 .row{
 display:grid;
@@ -274,11 +253,26 @@ border-radius:8px;
 outline:none
 }
 
+.ad-box{
+border:1px solid #333;
+padding:18px;
+border-radius:10px;
+margin-bottom:18px;
+background:#111118
+}
+
+.ad-box h3{margin-top:0}
+
+.help{
+font-size:13px;
+color:#999;
+margin-top:-8px;
+margin-bottom:15px
+}
+
 @media(max-width:800px){
 
-.layout{
-flex-direction:column
-}
+.layout{flex-direction:column}
 
 .sidebar{
 width:100%;
@@ -287,13 +281,9 @@ overflow-x:auto;
 gap:8px
 }
 
-.nav{
-min-width:130px
-}
+.nav{min-width:130px}
 
-.content{
-padding:12px
-}
+.content{padding:12px}
 
 .stats,
 .grid,
@@ -307,8 +297,6 @@ grid-template-columns:1fr
 
 <body>
 
-<!-- LOGIN -->
-
 <div class="login" id="loginBox">
 
 <h1>🎬 CineBox</h1>
@@ -320,14 +308,12 @@ Admin Panel
 <input
 type="email"
 id="email"
-placeholder="Admin Email"
->
+placeholder="Admin Email">
 
 <input
 type="password"
 id="password"
-placeholder="Password"
->
+placeholder="Password">
 
 <button class="primary" onclick="login()">
 🔐 Login
@@ -337,8 +323,6 @@ placeholder="Password"
 
 </div>
 
-
-<!-- ADMIN APP -->
 
 <div id="adminApp">
 
@@ -355,31 +339,24 @@ Logout
 
 <div class="layout">
 
-
-<!-- SIDEBAR -->
-
 <aside class="sidebar">
 
-<button
-class="nav active"
+<button class="nav active"
 onclick="showSection('dashboard',this)">
 📊 Dashboard
 </button>
 
-<button
-class="nav"
+<button class="nav"
 onclick="showSection('movies',this)">
 🎬 Movies
 </button>
 
-<button
-class="nav"
+<button class="nav"
 onclick="showSection('website',this)">
 🌐 Website
 </button>
 
-<button
-class="nav"
+<button class="nav"
 onclick="showSection('ads',this)">
 📢 Ads
 </button>
@@ -387,16 +364,12 @@ onclick="showSection('ads',this)">
 </aside>
 
 
-<!-- CONTENT -->
-
 <main class="content">
 
 
 <!-- DASHBOARD -->
 
-<section
-id="dashboard"
-class="section active">
+<section id="dashboard" class="section active">
 
 <h1>Dashboard</h1>
 
@@ -432,26 +405,21 @@ class="section active">
 ➕ Add Movie
 </h2>
 
-<input
-type="hidden"
-id="movieId"
->
+<input type="hidden" id="movieId">
 
 <label>Movie Name</label>
 
 <input
 type="text"
 id="movieName"
-placeholder="Movie Name"
->
+placeholder="Movie Name">
 
 <label>Poster Image URL</label>
 
 <input
 type="url"
 id="poster"
-placeholder="https://example.com/poster.jpg"
->
+placeholder="https://example.com/poster.jpg">
 
 <div class="row">
 
@@ -462,8 +430,7 @@ placeholder="https://example.com/poster.jpg"
 <input
 type="number"
 id="year"
-placeholder="2026"
->
+placeholder="2026">
 
 </div>
 
@@ -533,27 +500,24 @@ placeholder="2026"
 
 <textarea
 id="description"
-placeholder="Movie description..."
-></textarea>
+placeholder="Movie description..."></textarea>
 
 
-<label>
-Authorized Download URL
-</label>
+<label>Authorized Download URL</label>
 
 <input
 type="url"
 id="downloadUrl"
-placeholder="https://your-authorized-download-link.com"
->
+placeholder="https://your-authorized-download-link.com">
+
+<p class="help">
+Only use a download URL you are authorized to distribute.
+</p>
 
 
 <label class="checkbox">
 
-<input
-type="checkbox"
-id="featured"
->
+<input type="checkbox" id="featured">
 
 Featured Movie
 
@@ -577,15 +541,10 @@ Cancel Edit
 </button>
 
 
-<div
-id="movieStatus"
-class="status">
-</div>
+<div id="movieStatus" class="status"></div>
 
 </div>
 
-
-<!-- MOVIE LIST -->
 
 <div class="card">
 
@@ -595,12 +554,9 @@ class="status">
 type="text"
 id="movieSearch"
 placeholder="Search movie..."
-oninput="renderMovies()"
->
+oninput="renderMovies()">
 
-<div
-id="movieList"
-class="grid">
+<div id="movieList" class="grid">
 Loading...
 </div>
 
@@ -611,9 +567,7 @@ Loading...
 
 <!-- WEBSITE -->
 
-<section
-id="website"
-class="section">
+<section id="website" class="section">
 
 <div class="card">
 
@@ -623,15 +577,13 @@ class="section">
 
 <input
 id="siteName"
-placeholder="CineBox"
->
+placeholder="CineBox">
 
 <label>Logo URL</label>
 
 <input
 id="logoUrl"
-placeholder="https://example.com/logo.png"
->
+placeholder="https://example.com/logo.png">
 
 <div class="row">
 
@@ -642,8 +594,7 @@ placeholder="https://example.com/logo.png"
 <input
 type="color"
 id="accentColor"
-value="#e50914"
->
+value="#e50914">
 
 </div>
 
@@ -654,8 +605,7 @@ value="#e50914"
 <input
 type="color"
 id="backgroundColor"
-value="#0b0b0f"
->
+value="#0b0b0f">
 
 </div>
 
@@ -666,31 +616,31 @@ value="#0b0b0f"
 
 <input
 id="homeTitle"
-placeholder="Watch & Download Movies"
->
+placeholder="Latest Movies">
 
 <label>Homepage Subtitle</label>
 
 <textarea
 id="homeSubtitle"
-placeholder="Your movie website subtitle..."
-></textarea>
+placeholder="Your movie website subtitle..."></textarea>
 
 
 <label>Categories</label>
 
 <input
 id="categories"
-placeholder="Action, Comedy, Drama, Horror"
->
+placeholder="Action, Comedy, Drama, Horror">
+
+<p class="help">
+Separate categories using commas.
+</p>
 
 
 <label>Footer Text</label>
 
 <input
 id="footerText"
-placeholder="© 2026 CineBox"
->
+placeholder="© 2026 CineBox">
 
 
 <label>About / Notice Text</label>
@@ -722,8 +672,7 @@ contenteditable="true">
 
 <input
 type="checkbox"
-id="maintenance"
->
+id="maintenance">
 
 Maintenance Mode
 
@@ -736,10 +685,7 @@ onclick="saveWebsiteSettings()">
 💾 Save Website Settings
 </button>
 
-<div
-id="websiteStatus"
-class="status">
-</div>
+<div id="websiteStatus" class="status"></div>
 
 </div>
 
@@ -748,16 +694,14 @@ class="status">
 
 <!-- ADS -->
 
-<section
-id="ads"
-class="section">
+<section id="ads" class="section">
 
 <div class="card">
 
 <h2>📢 Advertisement Settings</h2>
 
 <p style="color:#aaa">
-Sirf authorized ad network ka code paste karein.
+Ads ko website par enable/disable aur configure karein.
 </p>
 
 
@@ -765,48 +709,166 @@ Sirf authorized ad network ka code paste karein.
 
 <input
 type="checkbox"
-id="adsEnabled"
->
+id="adsEnabled">
 
-Enable Ads
+Enable Advertisements
 
 </label>
 
 
-<label>Top Advertisement Code</label>
+<div class="ad-box">
+
+<h3>🟦 Google AdSense</h3>
+
+<label class="checkbox">
+
+<input
+type="checkbox"
+id="adsenseEnabled">
+
+Enable Google AdSense
+
+</label>
+
+<label>AdSense Code</label>
 
 <textarea
-id="topAd"
-placeholder="Paste official ad code here..."
-></textarea>
+id="adsenseCode"
+placeholder="Paste your official Google AdSense code here...">
+</textarea>
+
+<p class="help">
+Google AdSense se mila official code yahan paste karein.
+</p>
+
+</div>
 
 
-<label>Middle Advertisement Code</label>
+<div class="ad-box">
 
-<textarea
-id="middleAd"
-placeholder="Paste official ad code here..."
-></textarea>
+<h3>🖼️ Image Advertisement</h3>
+
+<label class="checkbox">
+
+<input
+type="checkbox"
+id="imageAdEnabled">
+
+Enable Image Advertisement
+
+</label>
+
+<label>Image URL</label>
+
+<input
+type="url"
+id="imageAdUrl"
+placeholder="https://example.com/ad.jpg">
+
+<label>Click URL</label>
+
+<input
+type="url"
+id="imageAdClickUrl"
+placeholder="https://example.com/">
+
+</div>
 
 
-<label>Bottom Advertisement Code</label>
+<div class="ad-box">
 
-<textarea
-id="bottomAd"
-placeholder="Paste official ad code here..."
-></textarea>
+<h3>🎥 Video Advertisement</h3>
+
+<label class="checkbox">
+
+<input
+type="checkbox"
+id="videoAdEnabled">
+
+Enable Video Advertisement
+
+</label>
+
+<label>Video URL</label>
+
+<input
+type="url"
+id="videoAdUrl"
+placeholder="https://example.com/ad.mp4">
+
+<label>Click URL</label>
+
+<input
+type="url"
+id="videoAdClickUrl"
+placeholder="https://example.com/">
+
+<p class="help">
+Direct .mp4 ya .webm video URL use karein.
+</p>
+
+</div>
+
+
+<div class="ad-box">
+
+<h3>📍 Advertisement Placement</h3>
+
+<div class="row">
+
+<div>
+
+<label>Top Advertisement</label>
+
+<select id="topAdType">
+
+<option value="none">None</option>
+<option value="adsense">Google AdSense</option>
+<option value="image">Image Ad</option>
+<option value="video">Video Ad</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Middle Advertisement</label>
+
+<select id="middleAdType">
+
+<option value="none">None</option>
+<option value="adsense">Google AdSense</option>
+<option value="image">Image Ad</option>
+<option value="video">Video Ad</option>
+
+</select>
+
+</div>
+
+</div>
+
+<label>Bottom Advertisement</label>
+
+<select id="bottomAdType">
+
+<option value="none">None</option>
+<option value="adsense">Google AdSense</option>
+<option value="image">Image Ad</option>
+<option value="video">Video Ad</option>
+
+</select>
+
+</div>
 
 
 <button
 class="primary"
 onclick="saveAdSettings()">
-💾 Save Ads Settings
+💾 Save Advertisement Settings
 </button>
 
-<div
-id="adsStatus"
-class="status">
-</div>
+<div id="adsStatus" class="status"></div>
 
 </div>
 
@@ -814,11 +876,8 @@ class="status">
 
 
 </main>
-
 </div>
-
   </div>
-
   <script type="module">
 
 import { initializeApp } from
@@ -847,34 +906,18 @@ import {
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-// =====================================
-// FIREBASE CONFIG
-// =====================================
-// YAHAN APNE PURANE admin.html WALA
-// EXACT firebaseConfig OBJECT PASTE KARO.
-
 const firebaseConfig = {
-  apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
-  authDomain: "cinebox-9011f.firebaseapp.com",
-  projectId: "cinebox-9011f",
-  storageBucket: "cinebox-9011f.firebasestorage.app",
-  messagingSenderId: "134449166678",
-  appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
+  apiKey: "AIzaSyCdrs9-P25DinXfR0Zc0mqQeBiu5Gk4l2M",
+  authDomain: "cinebox-9011f.firebaseapp.com",
+  projectId: "cinebox-9011f",
+  storageBucket: "cinebox-9011f.firebasestorage.app",
+  messagingSenderId: "134449166678",
+  appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
 };
 
-    
+const ADMIN_UID =
+"tZRY6ChN91Z3AC4HPbkfi78OXOC3";
 
-
-// =====================================
-// ADMIN UID
-// =====================================
-// Firebase Authentication se mila
-// apna Admin UID yahan paste karo.
-
-const ADMIN_UID = "tZRY6ChN91Z3AC4HPbkfi78OXOC3";
-
-
-// FIREBASE START
 
 const app = initializeApp(firebaseConfig);
 
@@ -883,9 +926,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 
-// =====================================
-// AUTH CHECK
-// =====================================
+/* =========================
+   AUTH CHECK
+========================= */
 
 onAuthStateChanged(auth, async (user) => {
 
@@ -912,11 +955,11 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 
-// =====================================
-// LOGIN
-// =====================================
+/* =========================
+   LOGIN
+========================= */
 
-window.login = async function () {
+window.login = async function() {
 
   const email =
     document.getElementById("email").value.trim();
@@ -927,6 +970,7 @@ window.login = async function () {
   const status =
     document.getElementById("loginStatus");
 
+
   try {
 
     const result =
@@ -935,6 +979,7 @@ window.login = async function () {
         email,
         password
       );
+
 
     if (result.user.uid !== ADMIN_UID) {
 
@@ -947,12 +992,16 @@ window.login = async function () {
         "status error";
 
       return;
+
     }
 
-    status.innerText = "✅ Login successful!";
+
+    status.innerText =
+      "✅ Login successful!";
 
     status.className =
       "status success";
+
 
   } catch (error) {
 
@@ -967,11 +1016,11 @@ window.login = async function () {
 };
 
 
-// =====================================
-// LOGOUT
-// =====================================
+/* =========================
+   LOGOUT
+========================= */
 
-window.logout = async function () {
+window.logout = async function() {
 
   await signOut(auth);
 
@@ -980,43 +1029,47 @@ window.logout = async function () {
 };
 
 
-// =====================================
-// SECTION SWITCH
-// =====================================
+/* =========================
+   SECTION SWITCH
+========================= */
 
-window.showSection = function (sectionId, button) {
+window.showSection =
+function(sectionId, button) {
 
-  document
-    .querySelectorAll(".section")
+  document.querySelectorAll(".section")
     .forEach(section => {
 
       section.classList.remove("active");
 
     });
 
-  document
-    .getElementById(sectionId)
+
+  document.getElementById(sectionId)
     .classList.add("active");
 
 
-  document
-    .querySelectorAll(".nav")
+  document.querySelectorAll(".nav")
     .forEach(nav => {
 
       nav.classList.remove("active");
 
     });
 
+
   button.classList.add("active");
 
 };
 
 
-// =====================================
-// STATUS MESSAGE
-// =====================================
+/* =========================
+   STATUS MESSAGE
+========================= */
 
-function showStatus(id, message, success = true) {
+function showStatus(
+  id,
+  message,
+  success = true
+) {
 
   const box =
     document.getElementById(id);
@@ -1031,25 +1084,29 @@ function showStatus(id, message, success = true) {
 }
 
 
-// =====================================
-// ADD / UPDATE MOVIE
-// =====================================
+/* =========================
+   SAVE / ADD MOVIE
+========================= */
 
-window.saveMovie = async function () {
+window.saveMovie = async function() {
 
   const movieId =
     document.getElementById("movieId").value;
 
+
   const movieData = {
 
     name:
-      document.getElementById("movieName").value.trim(),
+      document.getElementById("movieName")
+      .value.trim(),
 
     poster:
-      document.getElementById("poster").value.trim(),
+      document.getElementById("poster")
+      .value.trim(),
 
     year:
-      document.getElementById("year").value.trim(),
+      document.getElementById("year")
+      .value.trim(),
 
     genre:
       document.getElementById("genre").value,
@@ -1061,13 +1118,16 @@ window.saveMovie = async function () {
       document.getElementById("quality").value,
 
     description:
-      document.getElementById("description").value.trim(),
+      document.getElementById("description")
+      .value.trim(),
 
     downloadUrl:
-      document.getElementById("downloadUrl").value.trim(),
+      document.getElementById("downloadUrl")
+      .value.trim(),
 
     featured:
-      document.getElementById("featured").checked
+      document.getElementById("featured")
+      .checked
 
   };
 
@@ -1117,8 +1177,12 @@ window.saveMovie = async function () {
 
       await updateDoc(
         doc(db, "movies", movieId),
-        movieData
+        {
+          ...movieData,
+          updatedAt: serverTimestamp()
+        }
       );
+
 
       showStatus(
         "movieStatus",
@@ -1135,6 +1199,7 @@ window.saveMovie = async function () {
         }
       );
 
+
       showStatus(
         "movieStatus",
         "✅ Movie added successfully!"
@@ -1146,6 +1211,7 @@ window.saveMovie = async function () {
     clearMovieForm();
 
     await loadMovies();
+
 
   } catch (error) {
 
@@ -1160,9 +1226,9 @@ window.saveMovie = async function () {
 };
 
 
-// =====================================
-// LOAD MOVIES
-// =====================================
+/* =========================
+   MOVIE LIST
+========================= */
 
 let movies = [];
 
@@ -1176,20 +1242,27 @@ async function loadMovies() {
         collection(db, "movies")
       );
 
+
     movies = [];
+
 
     snapshot.forEach(item => {
 
       movies.push({
+
         id: item.id,
+
         ...item.data()
+
       });
 
     });
 
+
     renderMovies();
 
     updateDashboard();
+
 
   } catch (error) {
 
@@ -1203,29 +1276,29 @@ async function loadMovies() {
 }
 
 
-// =====================================
-// RENDER MOVIE LIST
-// =====================================
+/* =========================
+   RENDER MOVIES
+========================= */
 
-window.renderMovies = function () {
+window.renderMovies = function() {
 
   const list =
     document.getElementById("movieList");
 
+
   const search =
-    document
-      .getElementById("movieSearch")
-      .value
-      .toLowerCase()
-      .trim();
+    document.getElementById("movieSearch")
+    .value
+    .toLowerCase()
+    .trim();
 
 
   const filtered =
     movies.filter(movie =>
 
       (movie.name || "")
-        .toLowerCase()
-        .includes(search)
+      .toLowerCase()
+      .includes(search)
 
     );
 
@@ -1248,6 +1321,7 @@ window.renderMovies = function () {
     const item =
       document.createElement("div");
 
+
     item.className = "movie";
 
 
@@ -1256,37 +1330,53 @@ window.renderMovies = function () {
       <img
         src="${escapeHtml(movie.poster || "")}"
         alt=""
-        onerror="this.src='';this.style.background='#222'"
+        onerror="this.style.display='none'"
       >
 
       <div class="movie-info">
 
         <h3>
-          ${escapeHtml(movie.name || "Untitled")}
+          ${escapeHtml(
+            movie.name || "Untitled"
+          )}
         </h3>
 
-        <div style="color:#aaa;font-size:13px">
+        <div style="
+          color:#aaa;
+          font-size:13px;
+        ">
+
           ${escapeHtml(movie.year || "")}
+
           •
           ${escapeHtml(movie.genre || "")}
+
           •
           ${escapeHtml(movie.language || "")}
+
           •
           ${escapeHtml(movie.quality || "")}
+
         </div>
+
 
         <div class="movie-actions">
 
           <button
             class="edit"
             onclick="editMovie('${movie.id}')">
+
             ✏️ Edit
+
           </button>
+
 
           <button
             class="danger"
             onclick="deleteMovie('${movie.id}')">
+
             🗑️ Delete
+
           </button>
 
         </div>
@@ -1303,9 +1393,9 @@ window.renderMovies = function () {
 };
 
 
-// =====================================
-// ESCAPE HTML
-// =====================================
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHtml(value) {
 
@@ -1324,57 +1414,72 @@ function escapeHtml(value) {
 }
 
 
-// =====================================
-// EDIT MOVIE
-// =====================================
+/* =========================
+   EDIT MOVIE
+========================= */
 
-window.editMovie = function (id) {
+window.editMovie = function(id) {
 
   const movie =
-    movies.find(item => item.id === id);
+    movies.find(
+      item => item.id === id
+    );
+
 
   if (!movie) return;
 
 
-  document.getElementById("movieId").value =
-    movie.id;
-
-  document.getElementById("movieName").value =
-    movie.name || "";
-
-  document.getElementById("poster").value =
-    movie.poster || "";
-
-  document.getElementById("year").value =
-    movie.year || "";
-
-  document.getElementById("genre").value =
-    movie.genre || "Action";
-
-  document.getElementById("language").value =
-    movie.language || "Hindi";
-
-  document.getElementById("quality").value =
-    movie.quality || "480p";
-
-  document.getElementById("description").value =
-    movie.description || "";
-
-  document.getElementById("downloadUrl").value =
-    movie.downloadUrl || "";
-
-  document.getElementById("featured").checked =
-    movie.featured === true;
+  document.getElementById("movieId")
+    .value = movie.id;
 
 
-  document.getElementById("movieFormTitle").innerText =
-    "✏️ Edit Movie";
+  document.getElementById("movieName")
+    .value = movie.name || "";
 
-  document.getElementById("saveMovieBtn").innerText =
-    "💾 Update Movie";
 
-  document.getElementById("cancelEditBtn").style.display =
-    "block";
+  document.getElementById("poster")
+    .value = movie.poster || "";
+
+
+  document.getElementById("year")
+    .value = movie.year || "";
+
+
+  document.getElementById("genre")
+    .value = movie.genre || "Action";
+
+
+  document.getElementById("language")
+    .value = movie.language || "Hindi";
+
+
+  document.getElementById("quality")
+    .value = movie.quality || "480p";
+
+
+  document.getElementById("description")
+    .value = movie.description || "";
+
+
+  document.getElementById("downloadUrl")
+    .value = movie.downloadUrl || "";
+
+
+  document.getElementById("featured")
+    .checked =
+      movie.featured === true;
+
+
+  document.getElementById("movieFormTitle")
+    .innerText = "✏️ Edit Movie";
+
+
+  document.getElementById("saveMovieBtn")
+    .innerText = "💾 Update Movie";
+
+
+  document.getElementById("cancelEditBtn")
+    .style.display = "block";
 
 
   window.scrollTo({
@@ -1385,58 +1490,72 @@ window.editMovie = function (id) {
 };
 
 
-// =====================================
-// CANCEL EDIT
-// =====================================
+/* =========================
+   CANCEL EDIT
+========================= */
 
-window.cancelEdit = function () {
+window.cancelEdit = function() {
 
   clearMovieForm();
 
 };
 
 
-// =====================================
-// CLEAR MOVIE FORM
-// =====================================
-
 function clearMovieForm() {
 
-  document.getElementById("movieId").value = "";
-
-  document.getElementById("movieName").value = "";
-
-  document.getElementById("poster").value = "";
-
-  document.getElementById("year").value = "";
-
-  document.getElementById("description").value = "";
-
-  document.getElementById("downloadUrl").value = "";
-
-  document.getElementById("featured").checked = false;
+  document.getElementById("movieId")
+    .value = "";
 
 
-  document.getElementById("movieFormTitle").innerText =
-    "➕ Add Movie";
+  document.getElementById("movieName")
+    .value = "";
 
-  document.getElementById("saveMovieBtn").innerText =
-    "➕ Add Movie";
 
-  document.getElementById("cancelEditBtn").style.display =
-    "none";
+  document.getElementById("poster")
+    .value = "";
+
+
+  document.getElementById("year")
+    .value = "";
+
+
+  document.getElementById("description")
+    .value = "";
+
+
+  document.getElementById("downloadUrl")
+    .value = "";
+
+
+  document.getElementById("featured")
+    .checked = false;
+
+
+  document.getElementById("movieFormTitle")
+    .innerText = "➕ Add Movie";
+
+
+  document.getElementById("saveMovieBtn")
+    .innerText = "➕ Add Movie";
+
+
+  document.getElementById("cancelEditBtn")
+    .style.display = "none";
 
 }
 
 
-// =====================================
-// DELETE MOVIE
-// =====================================
+/* =========================
+   DELETE MOVIE
+========================= */
 
-window.deleteMovie = async function (id) {
+window.deleteMovie = async function(id) {
 
   const movie =
-    movies.find(item => item.id === id);
+    movies.find(
+      item => item.id === id
+    );
+
 
   if (!movie) return;
 
@@ -1458,18 +1577,22 @@ window.deleteMovie = async function (id) {
       doc(db, "movies", id)
     );
 
+
     showStatus(
       "movieStatus",
       "✅ Movie deleted successfully!"
     );
 
+
     await loadMovies();
+
 
   } catch (error) {
 
     showStatus(
       "movieStatus",
-      "❌ Delete error: " + error.message,
+      "❌ Delete error: " +
+      error.message,
       false
     );
 
@@ -1478,39 +1601,48 @@ window.deleteMovie = async function (id) {
 };
 
 
-// =====================================
-// DASHBOARD
-// =====================================
+/* =========================
+   DASHBOARD
+========================= */
 
 function updateDashboard() {
 
-  document.getElementById("totalMovies").innerText =
-    movies.length;
+  document.getElementById(
+    "totalMovies"
+  ).innerText = movies.length;
 
 
-  document.getElementById("featuredMovies").innerText =
+  document.getElementById(
+    "featuredMovies"
+  ).innerText =
+
     movies.filter(
-      movie => movie.featured === true
+      movie =>
+        movie.featured === true
     ).length;
 
 
   const categories =
     new Set(
+
       movies
         .map(movie => movie.genre)
         .filter(Boolean)
+
     );
 
 
-  document.getElementById("totalCategories").innerText =
+  document.getElementById(
+    "totalCategories"
+  ).innerText =
     categories.size;
 
 }
 
 
-// =====================================
-// WEBSITE SETTINGS LOAD
-// =====================================
+/* =========================
+   WEBSITE SETTINGS
+========================= */
 
 async function loadWebsiteSettings() {
 
@@ -1521,45 +1653,68 @@ async function loadWebsiteSettings() {
         doc(db, "settings", "website")
       );
 
+
     if (!snap.exists()) return;
+
 
     const data = snap.data();
 
 
-    document.getElementById("siteName").value =
-      data.siteName || "CineBox";
+    document.getElementById("siteName")
+      .value =
+        data.siteName || "CineBox";
 
-    document.getElementById("logoUrl").value =
-      data.logoUrl || "";
 
-    document.getElementById("accentColor").value =
-      data.accentColor || "#e50914";
+    document.getElementById("logoUrl")
+      .value =
+        data.logoUrl || "";
 
-    document.getElementById("backgroundColor").value =
-      data.backgroundColor || "#0b0b0f";
 
-    document.getElementById("homeTitle").value =
-      data.homeTitle || "";
+    document.getElementById("accentColor")
+      .value =
+        data.accentColor || "#e50914";
 
-    document.getElementById("homeSubtitle").value =
-      data.homeSubtitle || "";
 
-    document.getElementById("categories").value =
-      data.categories || "";
+    document.getElementById("backgroundColor")
+      .value =
+        data.backgroundColor || "#0b0b0f";
 
-    document.getElementById("footerText").value =
-      data.footerText || "";
 
-    document.getElementById("aboutText").innerHTML =
-      data.aboutText || "";
+    document.getElementById("homeTitle")
+      .value =
+        data.homeTitle || "";
 
-    document.getElementById("maintenance").checked =
-      data.maintenance === true;
+
+    document.getElementById("homeSubtitle")
+      .value =
+        data.homeSubtitle || "";
+
+
+    document.getElementById("categories")
+      .value =
+        data.categories || "";
+
+
+    document.getElementById("footerText")
+      .value =
+        data.footerText || "";
+
+
+    document.getElementById("aboutText")
+      .innerHTML =
+        data.aboutText || "";
+
+
+    document.getElementById("maintenance")
+      .checked =
+        data.maintenance === true;
+
 
   } catch (error) {
 
     console.log(
-      "Website settings not loaded yet."
+      "Website settings not loaded:",
+      error
     );
 
   }
@@ -1567,53 +1722,82 @@ async function loadWebsiteSettings() {
 }
 
 
-// =====================================
-// SAVE WEBSITE SETTINGS
-// =====================================
+/* =========================
+   SAVE WEBSITE SETTINGS
+========================= */
 
-window.saveWebsiteSettings = async function () {
+window.saveWebsiteSettings =
+async function() {
 
   try {
 
     await setDoc(
-      doc(db, "settings", "website"),
+
+      doc(
+        db,
+        "settings",
+        "website"
+      ),
+
       {
 
         siteName:
-          document.getElementById("siteName").value.trim(),
+          document.getElementById(
+            "siteName"
+          ).value.trim(),
 
         logoUrl:
-          document.getElementById("logoUrl").value.trim(),
+          document.getElementById(
+            "logoUrl"
+          ).value.trim(),
 
         accentColor:
-          document.getElementById("accentColor").value,
+          document.getElementById(
+            "accentColor"
+          ).value,
 
         backgroundColor:
-          document.getElementById("backgroundColor").value,
+          document.getElementById(
+            "backgroundColor"
+          ).value,
 
         homeTitle:
-          document.getElementById("homeTitle").value.trim(),
+          document.getElementById(
+            "homeTitle"
+          ).value.trim(),
 
         homeSubtitle:
-          document.getElementById("homeSubtitle").value.trim(),
+          document.getElementById(
+            "homeSubtitle"
+          ).value.trim(),
 
         categories:
-          document.getElementById("categories").value.trim(),
+          document.getElementById(
+            "categories"
+          ).value.trim(),
 
         footerText:
-          document.getElementById("footerText").value.trim(),
+          document.getElementById(
+            "footerText"
+          ).value.trim(),
 
         aboutText:
-          document.getElementById("aboutText").innerHTML,
+          document.getElementById(
+            "aboutText"
+          ).innerHTML,
 
         maintenance:
-          document.getElementById("maintenance").checked,
+          document.getElementById(
+            "maintenance"
+          ).checked,
 
         updatedAt:
           serverTimestamp()
 
       },
+
       { merge: true }
+
     );
 
 
@@ -1622,11 +1806,13 @@ window.saveWebsiteSettings = async function () {
       "✅ Website settings saved!"
     );
 
+
   } catch (error) {
 
     showStatus(
       "websiteStatus",
-      "❌ Error: " + error.message,
+      "❌ Error: " +
+      error.message,
       false
     );
 
@@ -1635,9 +1821,9 @@ window.saveWebsiteSettings = async function () {
 };
 
 
-// =====================================
-// ADS SETTINGS LOAD
-// =====================================
+/* =========================
+   LOAD ADS SETTINGS
+========================= */
 
 async function loadAdSettings() {
 
@@ -1645,30 +1831,97 @@ async function loadAdSettings() {
 
     const snap =
       await getDoc(
-        doc(db, "settings", "ads")
+        doc(
+          db,
+          "settings",
+          "ads"
+        )
       );
 
+
     if (!snap.exists()) return;
+
 
     const data = snap.data();
 
 
-    document.getElementById("adsEnabled").checked =
+    document.getElementById(
+      "adsEnabled"
+    ).checked =
       data.enabled === true;
 
-    document.getElementById("topAd").value =
-      data.topAd || "";
 
-    document.getElementById("middleAd").value =
-      data.middleAd || "";
+    document.getElementById(
+      "adsenseEnabled"
+    ).checked =
+      data.adsenseEnabled === true;
 
-    document.getElementById("bottomAd").value =
-      data.bottomAd || "";
+
+    document.getElementById(
+      "adsenseCode"
+    ).value =
+      data.adsenseCode || "";
+
+
+    document.getElementById(
+      "imageAdEnabled"
+    ).checked =
+      data.imageAdEnabled === true;
+
+
+    document.getElementById(
+      "imageAdUrl"
+    ).value =
+      data.imageAdUrl || "";
+
+
+    document.getElementById(
+      "imageAdClickUrl"
+    ).value =
+      data.imageAdClickUrl || "";
+
+
+    document.getElementById(
+      "videoAdEnabled"
+    ).checked =
+      data.videoAdEnabled === true;
+
+
+    document.getElementById(
+      "videoAdUrl"
+    ).value =
+      data.videoAdUrl || "";
+
+
+    document.getElementById(
+      "videoAdClickUrl"
+    ).value =
+      data.videoAdClickUrl || "";
+
+
+    document.getElementById(
+      "topAdType"
+    ).value =
+      data.topAdType || "none";
+
+
+    document.getElementById(
+      "middleAdType"
+    ).value =
+      data.middleAdType || "none";
+
+
+    document.getElementById(
+      "bottomAdType"
+    ).value =
+      data.bottomAdType || "none";
+
 
   } catch (error) {
 
     console.log(
-      "Ads settings not loaded yet."
+      "Ads settings not loaded:",
+      error
     );
 
   }
@@ -1676,35 +1929,92 @@ async function loadAdSettings() {
 }
 
 
-// =====================================
-// SAVE ADS SETTINGS
-// =====================================
+/* =========================
+   SAVE ADS SETTINGS
+========================= */
 
-window.saveAdSettings = async function () {
+window.saveAdSettings =
+async function() {
 
   try {
 
     await setDoc(
-      doc(db, "settings", "ads"),
+
+      doc(
+        db,
+        "settings",
+        "ads"
+      ),
+
       {
 
         enabled:
-          document.getElementById("adsEnabled").checked,
+          document.getElementById(
+            "adsEnabled"
+          ).checked,
 
-        topAd:
-          document.getElementById("topAd").value,
+        adsenseEnabled:
+          document.getElementById(
+            "adsenseEnabled"
+          ).checked,
 
-        middleAd:
-          document.getElementById("middleAd").value,
+        adsenseCode:
+          document.getElementById(
+            "adsenseCode"
+          ).value.trim(),
 
-        bottomAd:
-          document.getElementById("bottomAd").value,
+        imageAdEnabled:
+          document.getElementById(
+            "imageAdEnabled"
+          ).checked,
+
+        imageAdUrl:
+          document.getElementById(
+            "imageAdUrl"
+          ).value.trim(),
+
+        imageAdClickUrl:
+          document.getElementById(
+            "imageAdClickUrl"
+          ).value.trim(),
+
+        videoAdEnabled:
+          document.getElementById(
+            "videoAdEnabled"
+          ).checked,
+
+        videoAdUrl:
+          document.getElementById(
+            "videoAdUrl"
+          ).value.trim(),
+
+        videoAdClickUrl:
+          document.getElementById(
+            "videoAdClickUrl"
+          ).value.trim(),
+
+        topAdType:
+          document.getElementById(
+            "topAdType"
+          ).value,
+
+        middleAdType:
+          document.getElementById(
+            "middleAdType"
+          ).value,
+
+        bottomAdType:
+          document.getElementById(
+            "bottomAdType"
+          ).value,
 
         updatedAt:
           serverTimestamp()
 
       },
+
       { merge: true }
+
     );
 
 
@@ -1713,11 +2023,13 @@ window.saveAdSettings = async function () {
       "✅ Advertisement settings saved!"
     );
 
+
   } catch (error) {
 
     showStatus(
       "adsStatus",
-      "❌ Error: " + error.message,
+      "❌ Error: " +
+      error.message,
       false
     );
 
@@ -1726,11 +2038,12 @@ window.saveAdSettings = async function () {
 };
 
 
-// =====================================
-// TEXT EDITOR
-// =====================================
+/* =========================
+   RICH TEXT
+========================= */
 
-window.formatText = function (command) {
+window.formatText =
+function(command) {
 
   document.execCommand(
     command,
@@ -1738,10 +2051,11 @@ window.formatText = function (command) {
     null
   );
 
-  document.getElementById("aboutText").focus();
+  document.getElementById(
+    "aboutText"
+  ).focus();
 
 };
-
 
 </script>
 
