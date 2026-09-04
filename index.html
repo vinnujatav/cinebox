@@ -19,6 +19,8 @@ body{
   color:white;
 }
 
+/* HEADER */
+
 header{
   padding:16px 20px;
   background:#14141c;
@@ -34,16 +36,37 @@ header{
 .logo{
   font-size:25px;
   font-weight:bold;
+  white-space:nowrap;
+}
+
+.search-box{
+  position:relative;
+  width:45%;
 }
 
 .search{
-  width:45%;
-  padding:12px 16px;
+  width:100%;
+  padding:12px 45px 12px 16px;
   border-radius:25px;
   border:none;
   outline:none;
   font-size:15px;
 }
+
+.clear-search{
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  border:none;
+  background:none;
+  color:#777;
+  font-size:20px;
+  cursor:pointer;
+  display:none;
+}
+
+/* HERO */
 
 .hero{
   padding:55px 20px;
@@ -60,11 +83,27 @@ header{
   color:#bbb;
 }
 
+/* CONTAINER */
+
 .container{
   padding:25px;
   max-width:1200px;
   margin:auto;
 }
+
+/* ADS */
+
+.ad{
+  margin:25px 0;
+  min-height:90px;
+  border:1px dashed #444;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#777;
+}
+
+/* CATEGORIES */
 
 .categories{
   display:flex;
@@ -88,10 +127,14 @@ header{
   border-color:#e50914;
 }
 
+/* TITLE */
+
 .section-title{
   margin-bottom:20px;
   font-size:24px;
 }
+
+/* MOVIES */
 
 .movies{
   display:grid;
@@ -123,6 +166,9 @@ header{
 
 .movie-info h3{
   margin-bottom:6px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .movie-info p{
@@ -145,22 +191,28 @@ header{
   width:100%;
 }
 
-.ad{
-  margin:25px 0;
-  min-height:90px;
-  border:1px dashed #444;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#777;
+/* LOADING */
+
+.loading{
+  text-align:center;
+  padding:40px;
+  color:#aaa;
+  grid-column:1/-1;
 }
 
-footer{
-  margin-top:40px;
-  padding:25px;
+/* NO RESULT */
+
+.no-results{
   text-align:center;
-  background:#14141c;
-  color:#888;
+  padding:40px 20px;
+  color:#aaa;
+  display:none;
+  grid-column:1/-1;
+}
+
+.no-results h3{
+  color:white;
+  margin-bottom:8px;
 }
 
 /* POPUP */
@@ -222,8 +274,19 @@ footer{
 
 .download{
   margin-top:10px;
-  background:#333;
 }
+
+/* FOOTER */
+
+footer{
+  margin-top:40px;
+  padding:25px;
+  text-align:center;
+  background:#14141c;
+  color:#888;
+}
+
+/* MOBILE */
 
 @media(max-width:600px){
 
@@ -231,7 +294,12 @@ footer{
     flex-direction:column;
   }
 
-  .search{
+  .logo{
+    width:100%;
+    text-align:center;
+  }
+
+  .search-box{
     width:100%;
   }
 
@@ -257,20 +325,44 @@ footer{
 <body>
 
 <header>
-  <div class="logo">🎬 CineBox</div>
 
-  <input
-    type="text"
-    class="search"
-    id="search"
-    placeholder="Search movies..."
-  >
+  <div class="logo">
+    🎬 CineBox
+  </div>
+
+  <div class="search-box">
+
+    <input
+      type="text"
+      class="search"
+      id="search"
+      placeholder="Search movies..."
+      autocomplete="off"
+    >
+
+    <button
+      class="clear-search"
+      id="clearSearch"
+      onclick="clearSearch()"
+    >
+      ×
+    </button>
+
+  </div>
+
 </header>
 
+
 <section class="hero">
+
   <h1>Welcome to CineBox</h1>
-  <p>Watch and discover your favorite movies</p>
+
+  <p>
+    Discover your favorite movies
+  </p>
+
 </section>
+
 
 <div class="container">
 
@@ -278,121 +370,73 @@ footer{
     Advertisement
   </div>
 
+
+  <!-- CATEGORIES -->
+
   <div class="categories">
-    <button class="category active" onclick="filterCategory('All',this)">
+
+    <button
+      class="category active"
+      onclick="filterCategory('All',this)"
+    >
       All
     </button>
 
-    <button class="category" onclick="filterCategory('Action',this)">
+    <button
+      class="category"
+      onclick="filterCategory('Action',this)"
+    >
       Action
     </button>
 
-    <button class="category" onclick="filterCategory('Comedy',this)">
+    <button
+      class="category"
+      onclick="filterCategory('Comedy',this)"
+    >
       Comedy
     </button>
 
-    <button class="category" onclick="filterCategory('Drama',this)">
+    <button
+      class="category"
+      onclick="filterCategory('Drama',this)"
+    >
       Drama
     </button>
+
   </div>
 
-  <h2 class="section-title">Latest Movies</h2>
 
-  <div class="movies" id="movies">
+  <h2 class="section-title">
+    Latest Movies
+  </h2>
 
-    <!-- MOVIE 1 -->
 
-    <div class="movie" data-category="Action">
+  <!-- FIREBASE MOVIES -->
 
-      <img
-        src="https://via.placeholder.com/300x450?text=Movie+1"
-        alt="My Movie 1"
-      >
+  <div
+    class="movies"
+    id="movies"
+  >
 
-      <div class="movie-info">
-
-        <h3>My Movie 1</h3>
-
-        <p>2026 • Action</p>
-
-        <button
-          class="btn"
-          onclick="openMovie(
-            'My Movie 1',
-            'https://via.placeholder.com/300x450?text=Movie+1',
-            '2026 • Action',
-            'यह मेरी पहली authorized movie है। यहाँ अपनी movie की जानकारी लिखें।'
-          )"
-        >
-          View Details
-        </button>
-
-      </div>
+    <div class="loading" id="loading">
+      Loading movies...
     </div>
 
+    <div
+      class="no-results"
+      id="noResults"
+    >
 
-    <!-- MOVIE 2 -->
+      <h3>No movies found</h3>
 
-    <div class="movie" data-category="Comedy">
+      <p>
+        Try another movie name or category.
+      </p>
 
-      <img
-        src="https://via.placeholder.com/300x450?text=Movie+2"
-        alt="My Movie 2"
-      >
-
-      <div class="movie-info">
-
-        <h3>My Movie 2</h3>
-
-        <p>2026 • Comedy</p>
-
-        <button
-          class="btn"
-          onclick="openMovie(
-            'My Movie 2',
-            'https://via.placeholder.com/300x450?text=Movie+2',
-            '2026 • Comedy',
-            'यह दूसरी movie की description है।'
-          )"
-        >
-          View Details
-        </button>
-
-      </div>
-    </div>
-
-
-    <!-- MOVIE 3 -->
-
-    <div class="movie" data-category="Drama">
-
-      <img
-        src="https://via.placeholder.com/300x450?text=Movie+3"
-        alt="My Movie 3"
-      >
-
-      <div class="movie-info">
-
-        <h3>My Movie 3</h3>
-
-        <p>2026 • Drama</p>
-
-        <button
-          class="btn"
-          onclick="openMovie(
-            'My Movie 3',
-            'https://via.placeholder.com/300x450?text=Movie+3',
-            '2026 • Drama',
-            'यह तीसरी movie की description है।'
-          )"
-        >
-          View Details
-        </button>
-
-      </div>
     </div>
 
   </div>
+
 
   <div class="ad">
     Advertisement
@@ -403,13 +447,25 @@ footer{
 
 <!-- MOVIE DETAILS POPUP -->
 
-<div class="modal" id="movieModal">
+<div
+  class="modal"
+  id="movieModal"
+>
 
   <div class="modal-content">
 
-    <span class="close" onclick="closeMovie()">×</span>
+    <span
+      class="close"
+      onclick="closeMovie()"
+    >
+      ×
+    </span>
 
-    <img id="modalImage" src="" alt="Movie">
+    <img
+      id="modalImage"
+      src=""
+      alt="Movie"
+    >
 
     <div class="modal-info">
 
@@ -419,22 +475,14 @@ footer{
 
       <p id="modalDescription"></p>
 
-      <!-- अपनी authorized movie की URL यहाँ डालें -->
-
-      <a
-        id="watchButton"
-        class="btn"
-        href="#"
-        target="_blank"
-      >
-        ▶ Watch Now
-      </a>
+      <!-- ONLY DOWNLOAD -->
 
       <a
         id="downloadButton"
         class="btn download"
         href="#"
         target="_blank"
+        rel="noopener noreferrer"
       >
         📥 Download
       </a>
@@ -447,98 +495,670 @@ footer{
 
 
 <footer>
+
   © 2026 CineBox • All Rights Reserved
+
 </footer>
 
 
-<script>
+<!-- FIREBASE -->
 
-const search = document.getElementById("search");
+<script type="module">
 
-search.addEventListener("input", function(){
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-  const value = this.value.toLowerCase();
-
-  document.querySelectorAll(".movie").forEach(movie => {
-
-    const title =
-      movie.querySelector("h3").innerText.toLowerCase();
-
-    movie.style.display =
-      title.includes(value) ? "" : "none";
-
-  });
-
-});
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-function filterCategory(category, button){
+/* ==================================================
+   IMPORTANT:
+   YAHAN APNE ADMIN PANEL WALA SAME FIREBASE CONFIG
+   PASTE KARO
+   ================================================== */
 
-  document.querySelectorAll(".category")
-    .forEach(btn => btn.classList.remove("active"));
+const firebaseConfig = {
 
-  button.classList.add("active");
+  apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
 
-  document.querySelectorAll(".movie").forEach(movie => {
+  authDomain: "cinebox-9011f.firebaseapp.com",
 
-    if(category === "All" ||
-       movie.dataset.category === category){
+  projectId: "cinebox-9011f",
 
-      movie.style.display = "";
+  storageBucket: "cinebox-9011f.firebasestorage.app",
 
-    }else{
+  messagingSenderId: "134449166678",
 
-      movie.style.display = "none";
+  appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
 
-    }
-
-  });
-
-}
+};
 
 
-function openMovie(title,image,meta,description){
+/* FIREBASE START */
 
-  document.getElementById("modalTitle").innerText = title;
+const app = initializeApp(firebaseConfig);
 
-  document.getElementById("modalImage").src = image;
-
-  document.getElementById("modalMeta").innerText = meta;
-
-  document.getElementById("modalDescription").innerText = description;
-
-  /*
-    IMPORTANT:
-    नीचे अपनी authorized movie/video की URL डालें।
-  */
-
-  document.getElementById("watchButton").href = "#";
-
-  document.getElementById("downloadButton").href = "#";
-
-  document.getElementById("movieModal").style.display = "block";
-
-}
+const db = getFirestore(app);
 
 
-function closeMovie(){
+/* GLOBAL DATA */
 
-  document.getElementById("movieModal").style.display = "none";
+let allMovies = [];
 
-}
+let currentCategory = "All";
 
 
-window.onclick = function(event){
 
-  const modal = document.getElementById("movieModal");
+/* ==================================================
+   LOAD LATEST 10 MOVIES
+   ================================================== */
 
-  if(event.target === modal){
+async function loadMovies(){
 
-    closeMovie();
+  const moviesContainer =
+    document.getElementById("movies");
+
+  const loading =
+    document.getElementById("loading");
+
+  const noResults =
+    document.getElementById("noResults");
+
+
+  try{
+
+    loading.style.display = "block";
+
+    noResults.style.display = "none";
+
+
+    /*
+      createdAt ke according se newest movies
+      pehle aayengi aur maximum 10 movies load hongi.
+    */
+
+    const moviesQuery = query(
+
+      collection(db,"movies"),
+
+      orderBy("createdAt","desc"),
+
+      limit(10)
+
+    );
+
+
+    const snapshot =
+      await getDocs(moviesQuery);
+
+
+    allMovies = [];
+
+
+    snapshot.forEach((doc) => {
+
+      allMovies.push({
+
+        id:doc.id,
+
+        ...doc.data()
+
+      });
+
+    });
+
+
+    loading.style.display = "none";
+
+
+    renderMovies();
+
+
+  }catch(error){
+
+    console.error("Firebase Error:",error);
+
+    loading.style.display = "none";
+
+    moviesContainer.innerHTML = `
+
+      <div class="loading">
+
+        ❌ Movies load nahi ho rahi.
+
+        <br><br>
+
+        Firebase configuration ya Firestore
+        rules check karo.
+
+      </div>
+
+    `;
 
   }
 
 }
+
+
+
+/* ==================================================
+   RENDER MOVIES
+   ================================================== */
+
+function renderMovies(){
+
+  const moviesContainer =
+    document.getElementById("movies");
+
+  const noResults =
+    document.getElementById("noResults");
+
+
+  /*
+    Purane cards remove
+  */
+
+  moviesContainer
+    .querySelectorAll(".movie")
+    .forEach(movie => movie.remove());
+
+
+  const searchValue =
+    document
+      .getElementById("search")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  let filteredMovies =
+    allMovies.filter(movie => {
+
+
+      /*
+        Category
+      */
+
+      const category =
+        String(
+          movie.genre ||
+          movie.category ||
+          ""
+        );
+
+
+      const categoryMatch =
+        currentCategory === "All" ||
+        category.toLowerCase()
+          .includes(
+            currentCategory.toLowerCase()
+          );
+
+
+      /*
+        Search
+      */
+
+      const searchableText = [
+
+        movie.title,
+
+        movie.name,
+
+        movie.genre,
+
+        movie.category,
+
+        movie.year,
+
+        movie.language,
+
+        movie.quality,
+
+        movie.description
+
+      ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+
+      const searchMatch =
+        searchableText.includes(searchValue);
+
+
+      return categoryMatch && searchMatch;
+
+    });
+
+
+  if(filteredMovies.length === 0){
+
+    noResults.style.display = "block";
+
+    return;
+
+  }
+
+
+  noResults.style.display = "none";
+
+
+  filteredMovies.forEach(movie => {
+
+    const card =
+      createMovieCard(movie);
+
+    moviesContainer.appendChild(card);
+
+  });
+
+}
+
+
+
+/* ==================================================
+   CREATE MOVIE CARD
+   ================================================== */
+
+function createMovieCard(movie){
+
+  const card =
+    document.createElement("div");
+
+  card.className = "movie";
+
+
+  const title =
+    movie.title ||
+    movie.name ||
+    "Untitled Movie";
+
+
+  const poster =
+    movie.poster ||
+    movie.posterUrl ||
+    movie.image ||
+    "https://via.placeholder.com/300x450?text=CineBox";
+
+
+  const year =
+    movie.year ||
+    "";
+
+
+  const genre =
+    movie.genre ||
+    movie.category ||
+    "";
+
+
+  const language =
+    movie.language ||
+    "";
+
+
+  const quality =
+    movie.quality ||
+    "";
+
+
+  /*
+    Meta text
+  */
+
+  const metaParts = [
+
+    year,
+
+    genre,
+
+    language,
+
+    quality
+
+  ].filter(Boolean);
+
+
+  const meta =
+    metaParts.join(" • ");
+
+
+  card.innerHTML = `
+
+    <img
+      src="${escapeHTML(poster)}"
+      alt="${escapeHTML(title)}"
+      loading="lazy"
+      onerror="this.src='https://via.placeholder.com/300x450?text=CineBox'"
+    >
+
+    <div class="movie-info">
+
+      <h3>
+        ${escapeHTML(title)}
+      </h3>
+
+      <p>
+        ${escapeHTML(meta || "Movie")}
+      </p>
+
+      <button
+        class="btn"
+        type="button"
+      >
+        View Details
+      </button>
+
+    </div>
+
+  `;
+
+
+  /*
+    Details button
+  */
+
+  const button =
+    card.querySelector("button");
+
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      openMovie(movie);
+
+    }
+  );
+
+
+  return card;
+
+}
+
+
+
+/* ==================================================
+   OPEN MOVIE
+   ================================================== */
+
+function openMovie(movie){
+
+  const title =
+    movie.title ||
+    movie.name ||
+    "Untitled Movie";
+
+
+  const poster =
+    movie.poster ||
+    movie.posterUrl ||
+    movie.image ||
+    "https://via.placeholder.com/300x450?text=CineBox";
+
+
+  const meta = [
+
+    movie.year,
+
+    movie.genre || movie.category,
+
+    movie.language,
+
+    movie.quality
+
+  ]
+  .filter(Boolean)
+  .join(" • ");
+
+
+  const description =
+    movie.description ||
+    "No description available.";
+
+
+  const downloadUrl =
+    movie.downloadUrl ||
+    movie.downloadURL ||
+    movie.download ||
+    "#";
+
+
+  document.getElementById(
+    "modalTitle"
+  ).innerText = title;
+
+
+  document.getElementById(
+    "modalImage"
+  ).src = poster;
+
+
+  document.getElementById(
+    "modalMeta"
+  ).innerText = meta;
+
+
+  document.getElementById(
+    "modalDescription"
+  ).innerText = description;
+
+
+  const downloadButton =
+    document.getElementById(
+      "downloadButton"
+    );
+
+
+  if(downloadUrl && downloadUrl !== "#"){
+
+    downloadButton.href =
+      downloadUrl;
+
+    downloadButton.style.display =
+      "block";
+
+  }else{
+
+    downloadButton.removeAttribute("href");
+
+    downloadButton.style.display =
+      "none";
+
+  }
+
+
+  document.getElementById(
+    "movieModal"
+  ).style.display = "block";
+
+}
+
+
+
+/* ==================================================
+   CLOSE MOVIE
+   ================================================== */
+
+window.closeMovie = function(){
+
+  document.getElementById(
+    "movieModal"
+  ).style.display = "none";
+
+};
+
+
+
+/* ==================================================
+   CATEGORY FILTER
+   ================================================== */
+
+window.filterCategory =
+function(category,button){
+
+  currentCategory =
+    category;
+
+
+  document
+    .querySelectorAll(".category")
+    .forEach(btn => {
+
+      btn.classList.remove("active");
+
+    });
+
+
+  button.classList.add("active");
+
+
+  renderMovies();
+
+};
+
+
+
+/* ==================================================
+   SEARCH
+   ================================================== */
+
+const searchInput =
+  document.getElementById("search");
+
+
+searchInput.addEventListener(
+  "input",
+  function(){
+
+    updateClearButton();
+
+    renderMovies();
+
+  }
+);
+
+
+
+/* ENTER KEY */
+
+searchInput.addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Enter"){
+
+      renderMovies();
+
+    }
+
+  }
+);
+
+
+
+/* CLEAR SEARCH */
+
+window.clearSearch =
+function(){
+
+  searchInput.value = "";
+
+  updateClearButton();
+
+  renderMovies();
+
+  searchInput.focus();
+
+};
+
+
+
+function updateClearButton(){
+
+  const clearButton =
+    document.getElementById(
+      "clearSearch"
+    );
+
+
+  if(searchInput.value.trim()){
+
+    clearButton.style.display =
+      "block";
+
+  }else{
+
+    clearButton.style.display =
+      "none";
+
+  }
+
+}
+
+
+
+/* ==================================================
+   CLOSE MODAL WHEN OUTSIDE CLICK
+   ================================================== */
+
+window.addEventListener(
+  "click",
+  function(event){
+
+    const modal =
+      document.getElementById(
+        "movieModal"
+      );
+
+
+    if(event.target === modal){
+
+      closeMovie();
+
+    }
+
+  }
+);
+
+
+
+/* ==================================================
+   ESCAPE HTML
+   ================================================== */
+
+function escapeHTML(value){
+
+  return String(value)
+
+    .replace(/&/g,"&amp;")
+
+    .replace(/</g,"&lt;")
+
+    .replace(/>/g,"&gt;")
+
+    .replace(/"/g,"&quot;")
+
+    .replace(/'/g,"&#039;");
+
+}
+
+
+
+/* ==================================================
+   START
+   ================================================== */
+
+loadMovies();
 
 </script>
 
