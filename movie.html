@@ -17,6 +17,7 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -30,6 +31,20 @@
             }
 
             try {
+                // Load general settings for header media background
+                const configDoc = await getDoc(doc(db, "settings", "general"));
+                if (configDoc.exists()) {
+                    const data = configDoc.data();
+                    if (data.headerMediaEnable && data.headerMedia) {
+                        const bgContainer = document.getElementById('headerBgMedia');
+                        if (data.headerMedia.includes('data:video') || data.headerMedia.endsWith('.mp4') || data.headerMedia.includes('video')) {
+                            bgContainer.innerHTML = `<video src="${data.headerMedia}" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:1; opacity:0.6;"></video>`;
+                        } else {
+                            bgContainer.innerHTML = `<img src="${data.headerMedia}" alt="Header BG" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:1; opacity:0.6;">`;
+                        }
+                    }
+                }
+
                 const adDoc = await getDoc(doc(db, "settings", "advancedAds"));
                 if (adDoc.exists()) {
                     const ads = adDoc.data();
@@ -141,8 +156,30 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
-        header { background-color: rgba(20, 20, 20, 0.95); padding: 12px 20px; text-align: center; border-bottom: 2px solid #222; position: sticky; top: 0; z-index: 1000; }
-        .logo-area { font-size: 24px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; text-decoration: none; }
+        
+        header { 
+            background-color: #141414; 
+            padding: 15px 20px; 
+            text-align: center; 
+            border-bottom: 2px solid #222; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            overflow: hidden;
+            position: relative;
+        }
+        .logo-area { 
+            font-size: 24px; 
+            font-weight: 800; 
+            color: var(--primary-color); 
+            text-transform: uppercase; 
+            text-decoration: none; 
+            position: relative; 
+            z-index: 2; 
+            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+            display: inline-block;
+        }
+
         .ad-banner { width: 100%; max-width: 750px; background-color: transparent; display: none; align-items: center; justify-content: center; margin: 10px auto; border-radius: 4px; overflow: hidden; text-align: center; border: none !important; }
         
         .container { max-width: 750px; margin: 10px auto; padding: 10px; flex: 1; width: 100%; }
@@ -181,7 +218,8 @@
 <body>
 
     <header>
-        <a href="index.html" class="logo-area">CineBox</a>
+        <div id="headerBgMedia" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
+        <a href="index.html" class="logo-area" id="brandTitle">CineBox</a>
     </header>
 
     <div class="ad-banner" id="movieTopAdContainer"></div>
@@ -192,7 +230,7 @@
                 <img id="moviePoster" src="" alt="Poster" class="detail-poster">
             </div>
 
-            <div class="file-info-bar">👉 Movie Info 👈</div>
+            <div class="file-info-bar">👉 File Info 👈</div>
 
             <table class="info-table">
                 <tr><td class="info-label">Name:</td><td class="info-val title-hl" id="movieTitleText">Loading...</td></tr>
@@ -211,7 +249,7 @@
 
             <div class="ad-banner" id="movieBotAdContainer" style="margin: 15px 0;"></div>
 
-            <div class="related-section-title">👇RELATED MOVIES👇</div>
+            <div class="related-section-title">RELATED MOVIES</div>
             <div class="related-list" id="relatedMoviesList">
                 <div style="color:#b3b3b3; text-align:center; padding:10px;">Loading related movies...</div>
             </div>
