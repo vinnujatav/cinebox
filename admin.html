@@ -41,6 +41,8 @@
         .multi-checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; background: #262626; padding: 8px; border-radius: 5px; border: 1px solid #444; max-height: 120px; overflow-y: auto; }
         .quality-row { background: #262626; padding: 8px; border-radius: 5px; margin-bottom: 8px; border: 1px solid #444; }
         .ad-box-sub { background: #262626; padding: 10px; border-radius: 5px; margin-bottom: 10px; border: 1px solid #444; }
+        .color-palette-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; display: inline-block; transition: transform 0.2s; }
+        .color-palette-btn:hover { transform: scale(1.15); }
     </style>
 </head>
 <body>
@@ -63,11 +65,28 @@
 
         <div class="admin-grid">
             <div>
-                <!-- 1. WEBSITE CUSTOMIZATION & SEPARATE HEADER BACKGROUNDS -->
+                <!-- 1. WEBSITE CUSTOMIZATION & THEME -->
                 <div class="admin-box">
-                    <h3>🎨 Website Customization & Social Footer</h3>
+                    <h3>🎨 Website Customization & Theme</h3>
                     <div class="form-group"><label>Website Title</label><input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox"></div>
-                    <div class="form-group"><label>Theme Color</label><input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 35px; padding: 2px; cursor: pointer;"></div>
+                    
+                    <div class="form-group">
+                        <label>Theme Color Palette / Quick Presets</label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 8px; align-items: center; flex-wrap: wrap;">
+                            <span class="color-palette-btn" style="background: #e50914;" onclick="setThemeColor('#e50914')" title="Netflix Red"></span>
+                            <span class="color-palette-btn" style="background: #3498db;" onclick="setThemeColor('#3498db')" title="Royal Blue"></span>
+                            <span class="color-palette-btn" style="background: #27ae60;" onclick="setThemeColor('#27ae60')" title="Emerald Green"></span>
+                            <span class="color-palette-btn" style="background: #f39c12;" onclick="setThemeColor('#f39c12')" title="Golden Orange"></span>
+                            <span class="color-palette-btn" style="background: #9b59b6;" onclick="setThemeColor('#9b59b6')" title="Purple"></span>
+                            <span class="color-palette-btn" style="background: #1abc9c;" onclick="setThemeColor('#1abc9c')" title="Turquoise"></span>
+                            <span class="color-palette-btn" style="background: #e67e22;" onclick="setThemeColor('#e67e22')" title="Pumpkin"></span>
+                            <span class="color-palette-btn" style="background: #e84393;" onclick="setThemeColor('#e84393')" title="Pink"></span>
+                            <span class="color-palette-btn" style="background: #2c3e50;" onclick="setThemeColor('#2c3e50')" title="Midnight Blue"></span>
+                            <span class="color-palette-btn" style="background: #d63031;" onclick="setThemeColor('#d63031')" title="Crimson"></span>
+                        </div>
+                        <input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 38px; padding: 2px; cursor: pointer;">
+                    </div>
+
                     <div class="form-group"><label>Font Style</label>
                         <select id="fontStyleSelect" class="form-control">
                             <option value="Segoe UI">Segoe UI</option><option value="Roboto">Roboto</option><option value="Poppins">Poppins</option>
@@ -77,20 +96,23 @@
                     <div class="form-group"><label>Footer Text</label><input type="text" id="footerTextInput" class="form-control" placeholder="© 2026 CineBox"></div>
                     
                     <div class="ad-box-sub" style="margin-top: 15px; border: 1px dashed #3498db;">
-                        <label style="font-weight:600; color:#3498db;">Footer 5 Social Links (Icon URL + Link)</label>
+                        <label style="font-weight:600; color:#3498db;">Footer 5 Social Icons (Upload Image / URL + Link)</label>
                         <script>
                             for(let i=1; i<=5; i++) {
                                 document.write(`
-                                    <div style="margin-top:8px; display:flex; gap:5px;">
-                                        <input type="text" id="socialIcon_${i}" class="form-control" placeholder="Icon URL ${i}" style="flex:1;">
-                                        <input type="text" id="socialLink_${i}" class="form-control" placeholder="Profile Link ${i}" style="flex:1;">
+                                    <div style="margin-top:10px; background:#1e1e1e; padding:8px; border-radius:4px; border:1px solid #333;">
+                                        <input type="hidden" id="existingSocialIcon_${i}">
+                                        <div style="display:flex; gap:5px; margin-bottom:4px;">
+                                            <input type="file" id="socialFile_${i}" class="form-control" accept="image/*" style="padding:2px; flex:1;">
+                                            <input type="text" id="socialIconUrl_${i}" class="form-control" placeholder="OR Icon URL" style="flex:1;">
+                                        </div>
+                                        <input type="text" id="socialLink_${i}" class="form-control" placeholder="Target Profile Link">
                                     </div>
                                 `);
                             }
                         </script>
                     </div>
 
-                    <!-- Separate Header Background for Home Page -->
                     <div class="ad-box-sub" style="margin-top: 15px; border: 1px dashed var(--primary-color);">
                         <label style="font-weight:600; color:var(--primary-color);">🏠 Home Page Header Background (Image / Video)</label>
                         <input type="hidden" id="existingHomeHeaderMedia">
@@ -99,7 +121,6 @@
                         <div class="checkbox-group" style="margin-top:6px;"><input type="checkbox" id="headerHomeEnable"> Enable Home Header Background</div>
                     </div>
 
-                    <!-- Separate Header Background for Movie Page -->
                     <div class="ad-box-sub" style="margin-top: 15px; border: 1px dashed #27ae60;">
                         <label style="font-weight:600; color:#27ae60;">🎬 Movie Page Header Background (Image / Video)</label>
                         <input type="hidden" id="existingMovieHeaderMedia">
@@ -126,7 +147,7 @@
                             ];
                             document.write(adSlots.map(s => `
                                 <div class="ad-box-sub">
-                                    <label style="font-weight:600; color:#fff;">${s.label} (Image/Video)</label>
+                                    <label style="font-weight:600; color:#fff;">${s.label} (Image/Video Upload)</label>
                                     <input type="hidden" id="existingAd_${s.id}">
                                     <input type="file" id="adFile_${s.id}" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
                                     <input type="text" id="adUrl_${s.id}" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
@@ -243,7 +264,7 @@
                     </div>
                     <div style="overflow-x: auto; max-height: 250px;">
                         <table class="movie-table">
-                            <thead><tr><th>Title</th><th>Date / Time</th><th>Actions</th></tr></thead>
+                            <thead><tr><th>⭐ Latest</th><th>Title</th><th>Actions</th></tr></thead>
                             <tbody id="adminMovieList"><tr><td colspan="3" style="text-align:center;">Loading...</td></tr></tbody>
                         </table>
                     </div>
@@ -272,7 +293,12 @@
         let selectedImageBase64 = "";
         let homeHeaderBase64 = "";
         let movieHeaderBase64 = "";
+        let socialBase64Map = {};
         let adBase64Map = {};
+
+        window.setThemeColor = function(color) {
+            document.getElementById('themeColorPicker').value = color;
+        }
 
         onAuthStateChanged(auth, (user) => {
             if (user) { showDashboard(); } else { handleLogoutUI(); }
@@ -327,12 +353,11 @@
             movies.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
             list.innerHTML = movies.map((movie) => {
-                const dateStr = movie.createdAt ? new Date(movie.createdAt).toLocaleString() : 'N/A';
-                const featuredBadge = movie.isFeatured ? ' ⭐' : '';
+                const checkedStr = movie.isFeatured ? 'checked' : '';
                 return `
                     <tr>
-                        <td><b>${movie.title}</b>${featuredBadge}<br><small style="color:#888;">${movie.category || ''}</small></td>
-                        <td><small>${dateStr}</small></td>
+                        <td style="text-align:center;"><input type="checkbox" ${checkedStr} onchange="toggleFeaturedStatus('${movie.id}', this.checked)" style="width:15px; height:15px; cursor:pointer;"></td>
+                        <td><b>${movie.title}</b><br><small style="color:#888;">${movie.category || ''}</small></td>
                         <td class="action-btns">
                             <button class="edit-btn" onclick="editMovie('${movie.id}')">Edit</button>
                             <button class="delete-btn" onclick="deleteMovie('${movie.id}')">Del</button>
@@ -340,6 +365,16 @@
                     </tr>
                 `;
             }).join('');
+        }
+
+        window.toggleFeaturedStatus = async function(id, isFeatured) {
+            try {
+                await updateDoc(doc(db, "movies", id), { isFeatured: isFeatured });
+                const m = cachedMovies.find(x => x.id === id);
+                if(m) m.isFeatured = isFeatured;
+            } catch(e) {
+                alert('Failed to update featured status');
+            }
         }
 
         window.filterAdminMovies = function() {
@@ -356,6 +391,11 @@
             setupFileReader('moviePosterFile', (res) => { selectedImageBase64 = res; });
             setupFileReader('homeHeaderFile', (res) => { homeHeaderBase64 = res; });
             setupFileReader('movieHeaderFile', (res) => { movieHeaderBase64 = res; });
+            
+            for(let i=1; i<=5; i++) {
+                setupFileReader(`socialFile_${i}`, (res) => { socialBase64Map[i] = res; });
+            }
+
             const adKeys = ['top', 'middle', 'bottom', 'movieTop', 'movieMid', 'movieBot'];
             adKeys.forEach(key => {
                 setupFileReader(`adFile_${key}`, (res) => { adBase64Map[key] = res; });
@@ -542,13 +582,11 @@
             const footerText = document.getElementById('footerTextInput').value;
             const fontStyle = document.getElementById('fontStyleSelect').value;
 
-            // Home Header Media
             let homeHeader = document.getElementById('existingHomeHeaderMedia').value;
             const homeUrl = document.getElementById('homeHeaderUrl').value;
             if (homeHeaderBase64) { homeHeader = homeHeaderBase64; }
             else if (homeUrl) { homeHeader = homeUrl; }
 
-            // Movie Header Media
             let movieHeader = document.getElementById('existingMovieHeaderMedia').value;
             const movieUrl = document.getElementById('movieHeaderUrl').value;
             if (movieHeaderBase64) { movieHeader = movieHeaderBase64; }
@@ -556,8 +594,13 @@
 
             const socials = [];
             for(let i=1; i<=5; i++) {
+                let iconImg = document.getElementById(`existingSocialIcon_${i}`).value;
+                const iconUrlInput = document.getElementById(`socialIconUrl_${i}`).value;
+                if(socialBase64Map[i]) { iconImg = socialBase64Map[i]; }
+                else if(iconUrlInput) { iconImg = iconUrlInput; }
+
                 socials.push({
-                    icon: document.getElementById(`socialIcon_${i}`).value,
+                    icon: iconImg,
                     link: document.getElementById(`socialLink_${i}`).value
                 });
             }
@@ -573,7 +616,7 @@
 
             try {
                 await setDoc(doc(db, "settings", "general"), generalData);
-                alert('Website Customization & Header saved successfully!');
+                alert('Website Customization & Footer saved successfully!');
             } catch (e) { alert('Failed to save settings.'); }
         }
 
@@ -599,8 +642,9 @@
                     if(data.socials && Array.isArray(data.socials)) {
                         data.socials.forEach((s, index) => {
                             const i = index + 1;
-                            if(document.getElementById(`socialIcon_${i}`)) {
-                                document.getElementById(`socialIcon_${i}`).value = s.icon || '';
+                            if(document.getElementById(`socialLink_${i}`)) {
+                                document.getElementById(`existingSocialIcon_${i}`).value = s.icon || '';
+                                document.getElementById(`socialIconUrl_${i}`).value = (s.icon && s.icon.startsWith('http')) ? s.icon : '';
                                 document.getElementById(`socialLink_${i}`).value = s.link || '';
                             }
                         });
