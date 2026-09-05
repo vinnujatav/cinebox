@@ -77,83 +77,55 @@
                     <button class="btn" onclick="saveSiteSettings()">Save Customization</button>
                 </div>
 
-                <!-- 2. ADVANCED ADVERTISEMENT MANAGER -->
+                <!-- 2. ADVANCED ADVERTISEMENT MANAGER (With Preset Sizes) -->
                 <div class="admin-box" style="border: 1px solid #f39c12;">
                     <h3 style="color: #f39c12;">📢 Advanced Advertisement Manager</h3>
                     
-                    <div class="ad-box-sub">
-                        <label style="font-weight:600; color:#fff;">Home: Top Ad (Image/Video)</label>
-                        <input type="file" id="adFile_top" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="adUrl_top" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
-                        <input type="text" id="adLink_top" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
-                        <div style="display:flex; gap:5px; margin-top:4px;">
-                            <input type="text" id="adHeight_top" class="form-control" placeholder="Height">
-                            <input type="text" id="adWidth_top" class="form-control" placeholder="Width">
-                        </div>
-                        <div class="checkbox-group"><input type="checkbox" id="adEnable_top"> Enable Top Ad</div>
+                    <!-- Ad Template Function Generator Code Snippet in HTML -->
+                    <div id="adsManagerContainer">
+                        <!-- Helper template for individual ad slots -->
+                        <!-- We will generate 6 slots: top, middle, bottom, movieTop, movieMid, movieBot -->
+                        <script>
+                            const adSlots = [
+                                { id: 'top', label: 'Home: Top Ad' },
+                                { id: 'middle', label: 'Home: Middle Ad' },
+                                { id: 'bottom', label: 'Home: Bottom Ad' },
+                                { id: 'movieTop', label: 'Movie Page: Top Ad' },
+                                { id: 'movieMid', label: 'Movie Page: Middle Ad' },
+                                { id: 'movieBot', label: 'Movie Page: Bottom Ad' }
+                            ];
+                            document.write(adSlots.map(s => `
+                                <div class="ad-box-sub">
+                                    <label style="font-weight:600; color:#fff;">${s.label} (Image/Video)</label>
+                                    <input type="hidden" id="existingAd_${s.id}">
+                                    <input type="file" id="adFile_${s.id}" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
+                                    <input type="text" id="adUrl_${s.id}" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
+                                    <input type="text" id="adLink_${s.id}" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                                    
+                                    <div style="margin-top:6px;">
+                                        <label style="font-size:11px; color:#aaa;">Select Banner Size Preset:</label>
+                                        <select id="adSizePreset_${s.id}" class="form-control" onchange="applyPresetSize('${s.id}')" style="margin-top:2px;">
+                                            <option value="banner">Standard Banner (728 x 90px)</option>
+                                            <option value="youtube">YouTube Video / Thumbnail (16:9 - 100% x 180px)</option>
+                                            <option value="square">Square Post (300 x 300px)</option>
+                                            <option value="reel">Reels / Shorts (9:16 vertical)</option>
+                                            <option value="compact">Compact Small Bar (100% x 50px)</option>
+                                            <option value="custom">Custom Size</option>
+                                        </select>
+                                    </div>
+
+                                    <div id="customSizeBox_${s.id}" style="display:flex; gap:5px; margin-top:6px;">
+                                        <input type="text" id="adHeight_${s.id}" class="form-control" placeholder="Height (e.g. 90px)">
+                                        <input type="text" id="adWidth_${s.id}" class="form-control" placeholder="Width (e.g. 100%)">
+                                    </div>
+
+                                    <div class="checkbox-group" style="margin-top:6px;"><input type="checkbox" id="adEnable_${s.id}"> Enable Ad</div>
+                                </div>
+                            `).join(''));
+                        </script>
                     </div>
 
-                    <div class="ad-box-sub">
-                        <label style="font-weight:600; color:#fff;">Home: Middle Ad (Image/Video)</label>
-                        <input type="file" id="adFile_middle" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="adUrl_middle" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
-                        <input type="text" id="adLink_middle" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
-                        <div style="display:flex; gap:5px; margin-top:4px;">
-                            <input type="text" id="adHeight_middle" class="form-control" placeholder="Height">
-                            <input type="text" id="adWidth_middle" class="form-control" placeholder="Width">
-                        </div>
-                        <div class="checkbox-group"><input type="checkbox" id="adEnable_middle"> Enable Middle Ad</div>
-                    </div>
-
-                    <div class="ad-box-sub">
-                        <label style="font-weight:600; color:#fff;">Home: Bottom Ad (Image/Video)</label>
-                        <input type="file" id="adFile_bottom" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="adUrl_bottom" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
-                        <input type="text" id="adLink_bottom" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
-                        <div style="display:flex; gap:5px; margin-top:4px;">
-                            <input type="text" id="adHeight_bottom" class="form-control" placeholder="Height">
-                            <input type="text" id="adWidth_bottom" class="form-control" placeholder="Width">
-                        </div>
-                        <div class="checkbox-group"><input type="checkbox" id="adEnable_bottom"> Enable Bottom Ad</div>
-                    </div>
-
-                    <div class="ad-box-sub" style="border: 1px dashed #3498db;">
-                        <label style="font-weight:600; color:#3498db;">Movie Page: Top Ad</label>
-                        <input type="file" id="adFile_movieTop" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="adUrl_movieTop" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
-                        <input type="text" id="adLink_movieTop" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
-                        <div style="display:flex; gap:5px; margin-top:4px;">
-                            <input type="text" id="adHeight_movieTop" class="form-control" placeholder="Height">
-                            <input type="text" id="adWidth_movieTop" class="form-control" placeholder="Width">
-                        </div>
-                        <div class="checkbox-group"><input type="checkbox" id="adEnable_movieTop"> Enable Movie Page Top Ad</div>
-                    </div>
-
-                    <div class="ad-box-sub" style="border: 1px dashed #3498db;">
-                        <label style="font-weight:600; color:#3498db;">Movie Page: Middle Ad</label>
-                        <input type="file" id="adFile_movieMid" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="adUrl_movieMid" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
-                        <input type="text" id="adLink_movieMid" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
-                        <div style="display:flex; gap:5px; margin-top:4px;">
-                            <input type="text" id="adHeight_movieMid" class="form-control" placeholder="Height">
-                            <input type="text" id="adWidth_movieMid" class="form-control" placeholder="Width">
-                        </div>
-                        <div class="checkbox-group"><input type="checkbox" id="adEnable_movieMid"> Enable Movie Page Middle Ad</div>
-                    </div>
-
-                    <div class="ad-box-sub" style="border: 1px dashed #3498db;">
-                        <label style="font-weight:600; color:#3498db;">Movie Page: Bottom Ad</label>
-                        <input type="file" id="adFile_movieBot" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="adUrl_movieBot" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
-                        <input type="text" id="adLink_movieBot" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
-                        <div style="display:flex; gap:5px; margin-top:4px;">
-                            <input type="text" id="adHeight_movieBot" class="form-control" placeholder="Height">
-                            <input type="text" id="adWidth_movieBot" class="form-control" placeholder="Width">
-                        </div>
-                        <div class="checkbox-group"><input type="checkbox" id="adEnable_movieBot"> Enable Movie Page Bottom Ad</div>
-                    </div>
-
-                    <button class="btn" style="background-color: #f39c12; color: #000; font-weight:700;" onclick="saveAllAdsSettings()">Save All Advertisements</button>
+                    <button class="btn" style="background-color: #f39c12; color: #000; font-weight:700; margin-top:10px;" onclick="saveAllAdsSettings()">Save All Advertisements</button>
                 </div>
             </div>
 
@@ -330,6 +302,27 @@
             }
         }
 
+        window.applyPresetSize = function(id) {
+            const preset = document.getElementById(`adSizePreset_${id}`).value;
+            const hField = document.getElementById(`adHeight_${id}`);
+            const wField = document.getElementById(`adWidth_${id}`);
+            const customBox = document.getElementById(`customSizeBox_${id}`);
+
+            if (preset === 'banner') {
+                hField.value = '90px'; wField.value = '100%'; customBox.style.display = 'flex';
+            } else if (preset === 'youtube') {
+                hField.value = '180px'; wField.value = '100%'; customBox.style.display = 'flex';
+            } else if (preset === 'square') {
+                hField.value = '250px'; wField.value = '250px'; customBox.style.display = 'flex';
+            } else if (preset === 'reel') {
+                hField.value = '320px'; wField.value = '180px'; customBox.style.display = 'flex';
+            } else if (preset === 'compact') {
+                hField.value = '50px'; wField.value = '100%'; customBox.style.display = 'flex';
+            } else {
+                customBox.style.display = 'flex';
+            }
+        }
+
         window.saveMovie = async function() {
             const id = document.getElementById('editMovieId').value;
             const title = document.getElementById('movieTitle').value;
@@ -448,6 +441,7 @@
 
                 adsData[`${key}Media`] = media;
                 adsData[`${key}Link`] = document.getElementById(`adLink_${key}`).value;
+                adsData[`${key}Preset`] = document.getElementById(`adSizePreset_${key}`).value;
                 adsData[`${key}Height`] = document.getElementById(`adHeight_${key}`).value;
                 adsData[`${key}Width`] = document.getElementById(`adWidth_${key}`).value;
                 adsData[`${key}Enable`] = document.getElementById(`adEnable_${key}`).checked;
@@ -489,25 +483,22 @@
                     const data = adDoc.data();
                     const adKeys = ['top', 'middle', 'bottom', 'movieTop', 'movieMid', 'movieBot'];
                     adKeys.forEach(key => {
-                        let hiddenField = document.getElementById(`existingAd_${key}`);
-                        if (!hiddenField) {
-                            hiddenField = document.createElement('input');
-                            hiddenField.type = 'hidden';
-                            hiddenField.id = `existingAd_${key}`;
-                            document.body.appendChild(hiddenField);
-                        }
-                        hiddenField.value = data[`${key}Media`] || '';
+                        const hiddenField = document.getElementById(`existingAd_${key}`);
+                        if (hiddenField) hiddenField.value = data[`${key}Media`] || '';
                         if (document.getElementById(`adUrl_${key}`)) {
                             document.getElementById(`adUrl_${key}`).value = (data[`${key}Media`] && data[`${key}Media`].startsWith('http')) ? data[`${key}Media`] : '';
                         }
                         if (document.getElementById(`adLink_${key}`)) {
                             document.getElementById(`adLink_${key}`).value = data[`${key}Link`] || '';
                         }
+                        if (document.getElementById(`adSizePreset_${key}`)) {
+                            document.getElementById(`adSizePreset_${key}`).value = data[`${key}Preset`] || 'banner';
+                        }
                         if (document.getElementById(`adHeight_${key}`)) {
-                            document.getElementById(`adHeight_${key}`).value = data[`${key}Height`] || '';
+                            document.getElementById(`adHeight_${key}`).value = data[`${key}Height`] || '90px';
                         }
                         if (document.getElementById(`adWidth_${key}`)) {
-                            document.getElementById(`adWidth_${key}`).value = data[`${key}Width`] || '';
+                            document.getElementById(`adWidth_${key}`).value = data[`${key}Width`] || '100%';
                         }
                         if (document.getElementById(`adEnable_${key}`)) {
                             document.getElementById(`adEnable_${key}`).checked = data[`${key}Enable`] || false;
