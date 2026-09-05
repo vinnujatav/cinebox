@@ -3,335 +3,240 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
-
-<title>CineBox Admin</title>
+<title>CineBox Admin Panel</title>
 
 <style>
 
 *{
-box-sizing:border-box
+box-sizing:border-box;
+margin:0;
+padding:0;
 }
 
 body{
-margin:0;
 font-family:Arial,sans-serif;
-background:#0b0b0f;
-color:white
+background:#0f1115;
+color:#fff;
+min-height:100vh;
 }
 
-button{
-border:0;
-cursor:pointer
+.hidden{
+display:none !important;
 }
 
-input,
-textarea,
-select{
+/* LOGIN */
+
+#loginPage{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+background:#0f1115;
+}
+
+.loginBox{
 width:100%;
-padding:12px;
-margin:7px 0 14px;
-border:1px solid #333;
+max-width:400px;
+background:#181b22;
+padding:30px;
+border-radius:16px;
+box-shadow:0 10px 40px rgba(0,0,0,.5);
+}
+
+.loginBox h1{
+text-align:center;
+margin-bottom:10px;
+color:#ff3b30;
+}
+
+.loginBox p{
+text-align:center;
+color:#aaa;
+margin-bottom:25px;
+}
+
+input,textarea,select{
+width:100%;
+padding:13px;
+margin-top:8px;
+margin-bottom:15px;
+border:none;
 border-radius:8px;
-background:#181820;
-color:white;
-outline:none
+background:#252a33;
+color:#fff;
+outline:none;
 }
 
 textarea{
-min-height:110px;
-resize:vertical
+min-height:100px;
+resize:vertical;
 }
 
-.login{
-max-width:420px;
-margin:80px auto;
-background:#15151d;
-padding:30px;
-border-radius:15px
-}
-
-.login h1{
-text-align:center
-}
-
-.primary{
-width:100%;
-padding:13px;
+button{
+border:none;
 border-radius:8px;
-background:#e50914;
-color:white;
+padding:12px 18px;
+cursor:pointer;
 font-weight:bold;
-margin-top:5px
 }
 
-.secondary{
-padding:10px 15px;
-border-radius:7px;
-background:#333;
-color:white
-}
-
-.danger{
-padding:9px 13px;
-border-radius:7px;
-background:#b00020;
-color:white
-}
-
-.edit{
-padding:9px 13px;
-border-radius:7px;
-background:#444;
-color:white
-}
-
-#adminApp{
-display:none
-}
-
-.header{
-height:65px;
-background:#15151d;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 20px;
-border-bottom:1px solid #292932
-}
-
-.header h2{
-margin:0
-}
-
-.logout{
-background:#444;
-color:white;
-padding:9px 14px;
-border-radius:7px
-}
-
-.layout{
-display:flex;
-min-height:calc(100vh - 65px)
-}
-
-.sidebar{
-width:220px;
-background:#111118;
-padding:15px;
-border-right:1px solid #292932
-}
-
-.nav{
+.loginBtn{
 width:100%;
-padding:12px;
-margin-bottom:8px;
-background:#1c1c25;
-color:white;
-border-radius:8px;
-text-align:left
+background:#e50914;
+color:#fff;
+font-size:16px;
 }
 
-.nav.active{
-background:#e50914
-}
-
-.content{
-flex:1;
-padding:20px;
-max-width:1200px
-}
-
-.section{
-display:none
-}
-
-.section.active{
-display:block
-}
-
-.card{
-background:#15151d;
-padding:20px;
-border-radius:12px;
-margin-bottom:20px;
-border:1px solid #292932
-}
-
-.card h2{
-margin-top:0
-}
-
-.card h3{
-margin-top:25px;
-padding-bottom:8px;
-border-bottom:1px solid #333
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:15px
-}
-
-.stat{
-background:#15151d;
-padding:20px;
-border-radius:12px;
-border:1px solid #292932
-}
-
-.stat strong{
-display:block;
-font-size:28px;
-margin-top:8px
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px
-}
-
-.movie{
-background:#15151d;
-border:1px solid #292932;
-border-radius:10px;
-padding:12px;
-display:flex;
-gap:12px
-}
-
-.movie img{
-width:75px;
-height:105px;
-object-fit:cover;
-border-radius:6px;
-background:#222
-}
-
-.movie-info{
-flex:1
-}
-
-.movie-info h3{
-margin:0 0 7px;
-border:0;
-padding:0
-}
-
-.movie-actions{
-display:flex;
-gap:7px;
-margin-top:10px
-}
-
-.movie-actions button{
-flex:1
-}
-
-.row{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px
-}
-
-.checkbox{
-display:flex;
-align-items:center;
-gap:10px;
-margin:10px 0 15px
-}
-
-.checkbox input{
-width:auto;
-margin:0
+.loginBtn:active{
+transform:scale(.98);
 }
 
 .status{
-padding:10px;
-border-radius:7px;
-margin-top:10px;
-display:none
-}
-
-.success{
-display:block;
-background:#123d22
-}
-
-.error{
-display:block;
-background:#45141a
-}
-
-.ad-box{
-border:1px solid #333;
-padding:15px;
-border-radius:10px;
 margin-top:15px;
-background:#101017
-}
-
-.ad-box h4{
-margin-top:0;
-font-size:18px
-}
-
-.editor-toolbar{
-display:flex;
-gap:6px;
-margin-bottom:7px;
-flex-wrap:wrap
-}
-
-.editor-toolbar button{
-background:#333;
-color:white;
-padding:8px 12px;
-border-radius:6px
-}
-
-.editor{
-min-height:150px;
-padding:12px;
-background:#181820;
-border:1px solid #333;
+padding:10px;
 border-radius:8px;
-outline:none
+display:none;
+font-size:14px;
 }
 
-@media(max-width:800px){
+/* ADMIN */
 
-.layout{
-flex-direction:column
+#adminApp{
+min-height:100vh;
 }
 
-.sidebar{
-width:100%;
+header{
+background:#181b22;
+padding:15px 20px;
 display:flex;
-overflow-x:auto;
-gap:8px
+align-items:center;
+justify-content:space-between;
+position:sticky;
+top:0;
+z-index:10;
+}
+
+header h1{
+font-size:22px;
+color:#ff3b30;
+}
+
+.logoutBtn{
+background:#333943;
+color:#fff;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:20px;
 }
 
 .nav{
-min-width:130px
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:25px;
 }
 
-.content{
-padding:12px
+.nav button{
+background:#252a33;
+color:#fff;
 }
 
-.stats,
-.grid,
-.row{
-grid-template-columns:1fr
+.nav button.active{
+background:#e50914;
+}
+
+.section{
+display:none;
+}
+
+.section.active{
+display:block;
+}
+
+.card{
+background:#181b22;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+.card h2{
+margin-bottom:20px;
+}
+
+.saveBtn{
+background:#e50914;
+color:#fff;
+}
+
+.cancelBtn{
+background:#444;
+color:#fff;
+margin-left:8px;
+}
+
+.movieItem{
+background:#252a33;
+padding:15px;
+border-radius:10px;
+margin-bottom:12px;
+display:flex;
+justify-content:space-between;
+gap:15px;
+align-items:center;
+}
+
+.movieInfo{
+flex:1;
+}
+
+.movieInfo h3{
+margin-bottom:6px;
+}
+
+.movieInfo p{
+color:#aaa;
+font-size:13px;
+}
+
+.movieActions{
+display:flex;
+gap:8px;
+}
+
+.editBtn{
+background:#1976d2;
+color:white;
+}
+
+.deleteBtn{
+background:#d32f2f;
+color:white;
+}
+
+@media(max-width:600px){
+
+.movieItem{
+flex-direction:column;
+align-items:stretch;
+}
+
+.movieActions{
+width:100%;
+}
+
+.movieActions button{
+flex:1;
 }
 
 }
+
 </style>
 
 </head>
@@ -339,37 +244,51 @@ grid-template-columns:1fr
 <body>
 
 
-<!-- LOGIN -->
+<!-- LOGIN PAGE -->
 
-<div class="login" id="loginBox">
+<div id="loginPage">
+
+<div class="loginBox">
 
 <h1>🎬 CineBox</h1>
 
-<p style="text-align:center;color:#aaa">
-Admin Panel
-</p>
+<p>Admin Panel Login</p>
+
+<form id="loginForm">
+
+<label>Email</label>
 
 <input
 type="email"
 id="email"
 placeholder="Admin Email"
+required
 >
+
+<label>Password</label>
 
 <input
 type="password"
 id="password"
 placeholder="Password"
+required
 >
 
 <button
-class="primary"
-onclick="login()">
-🔐 Login
+type="submit"
+class="loginBtn"
+id="loginButton"
+>
+Login
 </button>
+
+</form>
 
 <div
 id="loginStatus"
-class="status">
+class="status"
+></div>
+
 </div>
 
 </div>
@@ -377,97 +296,64 @@ class="status">
 
 <!-- ADMIN APP -->
 
-<div id="adminApp">
+<div
+id="adminApp"
+class="hidden"
+>
 
-<div class="header">
+<header>
 
-<h2>🎬 CineBox Admin</h2>
+<h1>🎬 CineBox Admin</h1>
 
 <button
-class="logout"
-onclick="logout()">
+class="logoutBtn"
+id="logoutButton"
+>
 Logout
 </button>
 
-</div>
+</header>
 
 
-<div class="layout">
+<div class="container">
 
 
-<aside class="sidebar">
+<!-- NAVIGATION -->
+
+<div class="nav">
 
 <button
-class="nav active"
-onclick="showSection('dashboard',this)">
-📊 Dashboard
+class="active"
+data-section="moviesSection"
+>
+Movies
 </button>
 
 <button
-class="nav"
-onclick="showSection('movies',this)">
-🎬 Movies
+data-section="websiteSection"
+>
+Website Settings
 </button>
 
 <button
-class="nav"
-onclick="showSection('website',this)">
-🌐 Website
+data-section="adsSection"
+>
+Ads Settings
 </button>
 
-<button
-class="nav"
-onclick="showSection('ads',this)">
-📢 Ads
-</button>
-
-</aside>
-
-
-<main class="content">
-
-
-<!-- DASHBOARD -->
-
-<section
-id="dashboard"
-class="section active">
-
-<h1>Dashboard</h1>
-
-<div class="stats">
-
-<div class="stat">
-🎬 Total Movies
-<strong id="totalMovies">0</strong>
 </div>
-
-<div class="stat">
-⭐ Featured Movies
-<strong id="featuredMovies">0</strong>
-</div>
-
-<div class="stat">
-📂 Categories
-<strong id="totalCategories">0</strong>
-</div>
-
-</div>
-
-</section>
 
 
 <!-- MOVIES -->
 
-<section
-id="movies"
-class="section">
+<div
+id="moviesSection"
+class="section active"
+>
 
 <div class="card">
 
-<h2 id="movieFormTitle">
-➕ Add Movie
-</h2>
+<h2>🎬 Add / Edit Movie</h2>
 
 <input
 type="hidden"
@@ -478,591 +364,208 @@ id="movieId"
 
 <input
 type="text"
-id="movieName"
-placeholder="Movie Name"
+id="movieTitle"
+placeholder="Movie name"
 >
 
 <label>Poster Image URL</label>
 
 <input
 type="url"
-id="poster"
-placeholder="https://example.com/poster.jpg"
+id="moviePoster"
+placeholder="https://..."
 >
 
-<div class="row">
-
-<div>
-
-<label>Release Year</label>
-
-<input
-type="number"
-id="year"
-placeholder="2026"
->
-
-</div>
-
-
-<div>
-
-<label>Genre</label>
-
-<select id="genre">
-
-<option>Action</option>
-<option>Comedy</option>
-<option>Drama</option>
-<option>Horror</option>
-<option>Romance</option>
-<option>Animation</option>
-<option>Thriller</option>
-<option>Sci-Fi</option>
-<option>Adventure</option>
-<option>Family</option>
-<option>Documentary</option>
-
-</select>
-
-</div>
-
-</div>
-
-
-<div class="row">
-
-<div>
-
-<label>Language</label>
-
-<select id="language">
-
-<option>Hindi</option>
-<option>English</option>
-<option>Hindi Dubbed</option>
-<option>English Dubbed</option>
-<option>Other</option>
-
-</select>
-
-</div>
-
-
-<div>
-
-<label>Quality</label>
-
-<select id="quality">
-
-<option>480p</option>
-<option>720p</option>
-<option>1080p</option>
-<option>1440p</option>
-<option>2160p 4K</option>
-
-</select>
-
-</div>
-
-</div>
-
-
-<label>Description</label>
+<label>Movie Description</label>
 
 <textarea
-id="description"
-placeholder="Movie description..."
+id="movieDescription"
+placeholder="Movie description"
 ></textarea>
 
-
-<label>Authorized Download URL</label>
+<label>Download Link</label>
 
 <input
 type="url"
-id="downloadUrl"
-placeholder="https://your-authorized-download-link.com"
+id="movieDownload"
+placeholder="https://..."
 >
 
+<label>Category</label>
 
-<label class="checkbox">
+<select id="movieCategory">
 
-<input
-type="checkbox"
-id="featured"
+<option value="Bollywood">
+Bollywood
+</option>
+
+<option value="Hollywood">
+Hollywood
+</option>
+
+<option value="South">
+South
+</option>
+
+<option value="Web Series">
+Web Series
+</option>
+
+</select>
+
+<button
+class="saveBtn"
+id="saveMovieButton"
 >
-
-Featured Movie
-
-</label>
-
-
-<button
-class="primary"
-id="saveMovieBtn"
-onclick="saveMovie()">
-➕ Add Movie
+Save Movie
 </button>
 
-
 <button
-class="secondary"
-id="cancelEditBtn"
-onclick="cancelEdit()"
-style="display:none;width:100%;margin-top:8px">
-Cancel Edit
+class="cancelBtn hidden"
+id="cancelMovieButton"
+>
+Cancel
 </button>
-
 
 <div
 id="movieStatus"
-class="status">
-</div>
+class="status"
+></div>
 
 </div>
 
 
 <div class="card">
 
-<h2>🎬 Movie List</h2>
+<h2>📽️ Movies List</h2>
 
-<input
-type="text"
-id="movieSearch"
-placeholder="Search movie..."
-oninput="renderMovies()"
->
+<div id="moviesList">
+
+Loading movies...
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- WEBSITE SETTINGS -->
 
 <div
-id="movieList"
-class="grid">
-Loading...
-</div>
-
-</div>
-
-</section>
-
-
-<!-- WEBSITE -->
-
-<section
-id="website"
-class="section">
+id="websiteSection"
+class="section"
+>
 
 <div class="card">
 
 <h2>🌐 Website Settings</h2>
 
-
 <label>Website Name</label>
 
 <input
+type="text"
 id="siteName"
 placeholder="CineBox"
 >
 
-
-<label>Logo URL</label>
-
-<input
-id="logoUrl"
-placeholder="https://example.com/logo.png"
->
-
-
-<div class="row">
-
-<div>
-
-<label>Theme Color</label>
-
-<input
-type="color"
-id="accentColor"
-value="#e50914"
->
-
-</div>
-
-
-<div>
-
-<label>Background Color</label>
-
-<input
-type="color"
-id="backgroundColor"
-value="#000000"
->
-
-</div>
-
-</div>
-
-
-<label>Homepage Heading</label>
-
-<input
-id="homeTitle"
-placeholder="Watch & Download Movies"
->
-
-
-<label>Homepage Subtitle</label>
+<label>Website Description</label>
 
 <textarea
-id="homeSubtitle"
-placeholder="Your movie website subtitle..."
+id="siteDescription"
+placeholder="Website description"
 ></textarea>
 
+<label>Notice / Announcement</label>
 
-<label>Categories</label>
+<textarea
+id="siteNotice"
+placeholder="Latest announcement..."
+></textarea>
 
-<input
-id="categories"
-placeholder="Action, Comedy, Drama, Horror"
+<button
+class="saveBtn"
+id="saveWebsiteButton"
 >
-
-
-<label>Footer Text</label>
-
-<input
-id="footerText"
-placeholder="© 2026 CineBox"
->
-
-
-<label>About / Notice Text</label>
-
-<div class="editor-toolbar">
-
-<button
-onclick="formatText('bold')">
-<b>B</b>
+Save Website Settings
 </button>
-
-<button
-onclick="formatText('italic')">
-<i>I</i>
-</button>
-
-<button
-onclick="formatText('underline')">
-<u>U</u>
-</button>
-
-</div>
-
-
-<div
-id="aboutText"
-class="editor"
-contenteditable="true">
-</div>
-
-
-<label class="checkbox">
-
-<input
-type="checkbox"
-id="maintenance"
->
-
-Maintenance Mode
-
-</label>
-
-
-<button
-class="primary"
-onclick="saveWebsiteSettings()">
-💾 Save Website Settings
-</button>
-
 
 <div
 id="websiteStatus"
-class="status">
-</div>
+class="status"
+></div>
 
 </div>
 
-</section>
-<!-- ADVERTISEMENT SETTINGS -->
+</div>
 
-<section id="ads" class="section">
+
+<!-- ADS SETTINGS -->
+
+<div
+id="adsSection"
+class="section"
+>
 
 <div class="card">
 
-<h2>📢 Advertisement Settings</h2>
+<h2>📢 Ads Settings</h2>
 
-<p style="color:#aaa">
-Top, Middle aur Bottom ke ads alag-alag manage karein.
-</p>
-
-
-<!-- TOP AD -->
-
-<div class="ad-box">
-
-<h3>🔝 Top Advertisement</h3>
-
-<h4>🖼️ Top Image Ad</h4>
-
-<label class="checkbox">
-
-<input
-type="checkbox"
-id="topImageAdEnabled"
->
-
-Enable Top Image Ad
-
+<label>
+Top Image Ad
 </label>
 
+<select id="topImageAdEnabled">
 
-<label>Top Image URL</label>
+<option value="true">
+Enabled
+</option>
+
+<option value="false">
+Disabled
+</option>
+
+</select>
+
+<label>
+Top Image Ad URL
+</label>
 
 <input
 type="url"
 id="topImageAdUrl"
-placeholder="https://example.com/top-ad.jpg"
+placeholder="https://..."
 >
-
-
-<label>Top Image Click URL</label>
-
-<input
-type="url"
-id="topImageAdClickUrl"
-placeholder="https://example.com"
->
-
-
-<h4>🎥 Top Video Ad</h4>
-
-<label class="checkbox">
-
-<input
-type="checkbox"
-id="topVideoAdEnabled"
->
-
-Enable Top Video Ad
-
-</label>
-
-
-<label>Top Video URL</label>
-
-<input
-type="url"
-id="topVideoAdUrl"
-placeholder="https://example.com/top-ad.mp4"
->
-
-
-<label>Top Video Click URL</label>
-
-<input
-type="url"
-id="topVideoAdClickUrl"
-placeholder="https://example.com"
->
-
-</div>
-
-
-<!-- MIDDLE AD -->
-
-<div class="ad-box">
-
-<h3>📍 Middle Advertisement</h3>
-
-<h4>🖼️ Middle Image Ad</h4>
-
-<label class="checkbox">
-
-<input
-type="checkbox"
-id="middleImageAdEnabled"
->
-
-Enable Middle Image Ad
-
-</label>
-
-
-<label>Middle Image URL</label>
-
-<input
-type="url"
-id="middleImageAdUrl"
-placeholder="https://example.com/middle-ad.jpg"
->
-
-
-<label>Middle Image Click URL</label>
-
-<input
-type="url"
-id="middleImageAdClickUrl"
-placeholder="https://example.com"
->
-
-
-<h4>🎥 Middle Video Ad</h4>
-
-<label class="checkbox">
-
-<input
-type="checkbox"
-id="middleVideoAdEnabled"
->
-
-Enable Middle Video Ad
-
-</label>
-
-
-<label>Middle Video URL</label>
-
-<input
-type="url"
-id="middleVideoAdUrl"
-placeholder="https://example.com/middle-ad.mp4"
->
-
-
-<label>Middle Video Click URL</label>
-
-<input
-type="url"
-id="middleVideoAdClickUrl"
-placeholder="https://example.com"
->
-
-</div>
-
-
-<!-- BOTTOM AD -->
-
-<div class="ad-box">
-
-<h3>🔻 Bottom Advertisement</h3>
-
-<h4>🖼️ Bottom Image Ad</h4>
-
-<label class="checkbox">
-
-<input
-type="checkbox"
-id="bottomImageAdEnabled"
->
-
-Enable Bottom Image Ad
-
-</label>
-
-
-<label>Bottom Image URL</label>
-
-<input
-type="url"
-id="bottomImageAdUrl"
-placeholder="https://example.com/bottom-ad.jpg"
->
-
-
-<label>Bottom Image Click URL</label>
-
-<input
-type="url"
-id="bottomImageAdClickUrl"
-placeholder="https://example.com"
->
-
-
-<h4>🎥 Bottom Video Ad</h4>
-
-<label class="checkbox">
-
-<input
-type="checkbox"
-id="bottomVideoAdEnabled"
->
-
-Enable Bottom Video Ad
-
-</label>
-
-
-<label>Bottom Video URL</label>
-
-<input
-type="url"
-id="bottomVideoAdUrl"
-placeholder="https://example.com/bottom-ad.mp4"
->
-
-
-<label>Bottom Video Click URL</label>
-
-<input
-type="url"
-id="bottomVideoAdClickUrl"
-placeholder="https://example.com"
->
-
-</div>
-
-
-<!-- MAIN ADS SWITCH -->
-
-<label class="checkbox">
-
-<input
-type="checkbox"
-id="adsEnabled"
->
-
-Enable All Advertisements
-
-</label>
-
 
 <button
-class="primary"
-onclick="saveAdSettings()">
-
-💾 Save Advertisement Settings
-
+class="saveBtn"
+id="saveAdsButton"
+>
+Save Ads Settings
 </button>
-
 
 <div
 id="adsStatus"
-class="status">
-</div>
-
-</div>
-
-</section>
-
-
-</main>
+class="status"
+></div>
 
 </div>
 
 </div>
 
-  <script type="module">
+
+</div>
+
+</div>
+
+
+<!-- FIREBASE -->
+
+<script type="module">
 
 import {
 initializeApp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 
 import {
 getAuth,
@@ -1070,7 +573,6 @@ signInWithEmailAndPassword,
 signOut,
 onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 import {
 getFirestore,
@@ -1086,18 +588,23 @@ serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+/* FIREBASE CONFIG */
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
-  authDomain: "cinebox-9011f.firebaseapp.com",
-  projectId: "cinebox-9011f",
-  storageBucket: "cinebox-9011f.firebasestorage.app",
-  messagingSenderId: "134449166678",
-  appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
+
+apiKey: "apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
+
+authDomain: "cinebox-9011f.firebaseapp.com",
+
+projectId: "cinebox-9011f",
+
+storageBucket: "cinebox-9011f.firebasestorage.app",
+
+messagingSenderId: "134449166678",
+
+appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
+
 };
-
-
-const ADMIN_UID =
-"tZRY6ChN91Z3AC4HPbkfi78OXOC3";
 
 
 const app =
@@ -1110,160 +617,31 @@ const db =
 getFirestore(app);
 
 
+/* ADMIN UID */
 
-/* AUTH */
-
-onAuthStateChanged(
-auth,
-async (user) => {
-
-if(
-user &&
-user.uid === ADMIN_UID
-){
-
-document.getElementById(
-"loginBox"
-).style.display="none";
-
-document.getElementById(
-"adminApp"
-).style.display="block";
+const ADMIN_UID =
+"tZRY6ChN91Z3AC4HPbkfi78OXOC3";
 
 
-await loadMovies();
+/* ELEMENTS */
 
-await loadWebsiteSettings();
+const loginPage =
+document.getElementById("loginPage");
 
-await loadAdSettings();
+const adminApp =
+document.getElementById("adminApp");
 
-}else{
+const loginForm =
+document.getElementById("loginForm");
 
-document.getElementById(
-"loginBox"
-).style.display="block";
+const logoutButton =
+document.getElementById("logoutButton");
 
-document.getElementById(
-"adminApp"
-).style.display="none";
-
-}
-
-});
+const loginStatus =
+document.getElementById("loginStatus");
 
 
-
-/* LOGIN */
-
-window.login = async function(){
-
-const email =
-document.getElementById(
-"email"
-).value.trim();
-
-const password =
-document.getElementById(
-"password"
-).value;
-
-const status =
-document.getElementById(
-"loginStatus"
-);
-
-try{
-
-const result =
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
-
-
-if(
-result.user.uid !== ADMIN_UID
-){
-
-await signOut(auth);
-
-status.innerText =
-"❌ Ye account admin nahi hai.";
-
-status.className =
-"status error";
-
-return;
-
-}
-
-
-status.innerText =
-"✅ Login successful!";
-
-status.className =
-"status success";
-
-
-}catch(error){
-
-status.innerText =
-"❌ Login failed: "
-+ error.message;
-
-status.className =
-"status error";
-
-}
-
-};
-
-
-
-/* LOGOUT */
-
-window.logout = async function(){
-
-await signOut(auth);
-
-location.reload();
-
-};
-
-
-
-/* SECTION */
-
-window.showSection =
-function(sectionId,button){
-
-document
-.querySelectorAll(".section")
-.forEach(section =>
-section.classList.remove("active")
-);
-
-
-document
-.getElementById(sectionId)
-.classList.add("active");
-
-
-document
-.querySelectorAll(".nav")
-.forEach(nav =>
-nav.classList.remove("active")
-);
-
-
-button.classList.add("active");
-
-};
-
-
-
-/* STATUS */
+/* STATUS FUNCTION */
 
 function showStatus(
 id,
@@ -1271,1094 +649,309 @@ message,
 success=true
 ){
 
-const box =
+const el =
 document.getElementById(id);
 
-box.innerText =
+if(!el) return;
+
+el.textContent =
 message;
 
-box.className =
+el.style.display =
+"block";
+
+el.style.background =
 success
-? "status success"
-: "status error";
+? "#164d2b"
+: "#5a1c1c";
 
 }
 
 
+/* AUTH STATE */
 
-/* ADD / UPDATE MOVIE */
+onAuthStateChanged(
+auth,
+(user)=>{
 
-window.saveMovie =
-async function(){
+if(user){
 
-try{
+if(user.uid === ADMIN_UID){
 
-const movieId =
-document.getElementById(
-"movieId"
-).value;
+loginPage.classList.add("hidden");
 
-const movieData = {
+adminApp.classList.remove("hidden");
 
-title:
-document.getElementById(
-"movieName"
-).value.trim(),
+loadMovies();
 
-poster:
-document.getElementById(
-"poster"
-).value.trim(),
+loadWebsiteSettings();
 
-year:
-document.getElementById(
-"year"
-).value,
-
-genre:
-document.getElementById(
-"genre"
-).value,
-
-language:
-document.getElementById(
-"language"
-).value,
-
-quality:
-document.getElementById(
-"quality"
-).value,
-
-description:
-document.getElementById(
-"description"
-).value.trim(),
-
-downloadUrl:
-document.getElementById(
-"downloadUrl"
-).value.trim(),
-
-featured:
-document.getElementById(
-"featured"
-).checked
-
-};
-
-
-if(!movieData.title){
-
-showStatus(
-"movieStatus",
-"❌ Movie name required.",
-false
-);
-
-return;
-
-}
-
-
-if(movieId){
-
-await updateDoc(
-doc(db,"movies",movieId),
-movieData
-);
-
-showStatus(
-"movieStatus",
-"✅ Movie updated!"
-);
+loadAdsSettings();
 
 }else{
 
-movieData.createdAt =
-serverTimestamp();
-
-await addDoc(
-collection(db,"movies"),
-movieData
-);
+signOut(auth);
 
 showStatus(
-"movieStatus",
-"✅ Movie added!"
-);
-
-}
-
-
-clearMovieForm();
-
-await loadMovies();
-
-
-}catch(error){
-
-showStatus(
-"movieStatus",
-"❌ Error: "
-+ error.message,
+"loginStatus",
+"❌ You are not authorized as admin.",
 false
 );
 
 }
 
-};
+}else{
 
+loginPage.classList.remove("hidden");
+
+adminApp.classList.add("hidden");
+
+}
+
+});
+
+
+/* LOGIN */
+
+loginForm.addEventListener(
+"submit",
+async (e)=>{
+
+e.preventDefault();
+
+const email =
+document.getElementById("email").value.trim();
+
+const password =
+document.getElementById("password").value;
+
+const button =
+document.getElementById("loginButton");
+
+button.disabled =
+true;
+
+button.textContent =
+"Logging in...";
+
+showStatus(
+"loginStatus",
+"Logging in...",
+true
+);
+
+try{
+
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+}catch(error){
+
+console.error(
+"LOGIN ERROR:",
+error
+);
+
+showStatus(
+"loginStatus",
+"❌ " + error.message,
+false
+);
+
+button.disabled =
+false;
+
+button.textContent =
+"Login";
+
+}
+
+});
+
+
+/* LOGOUT */
+
+logoutButton.addEventListener(
+"click",
+async ()=>{
+
+try{
+
+await signOut(auth);
+
+}catch(error){
+
+console.error(error);
+
+}
+
+});
+
+
+/* NAVIGATION */
+
+document.querySelectorAll(
+".nav button"
+).forEach(
+button=>{
+
+button.addEventListener(
+"click",
+()=>{
+
+document.querySelectorAll(
+".nav button"
+).forEach(
+b=>b.classList.remove("active")
+);
+
+document.querySelectorAll(
+".section"
+).forEach(
+s=>s.classList.remove("active")
+);
+
+button.classList.add("active");
+
+document.getElementById(
+button.dataset.section
+).classList.add("active");
+
+}
+
+);
+
+}
+);
 
 
 /* MOVIES */
 
-let movies=[];
+const moviesRef =
+collection(db,"movies");
 
 
 async function loadMovies(){
 
+const list =
+document.getElementById("moviesList");
+
+list.innerHTML =
+"Loading movies...";
+
 try{
 
 const snapshot =
-await getDocs(
-collection(db,"movies")
-);
+await getDocs(moviesRef);
 
-
-movies =
-snapshot.docs.map(
-item => ({
-
-id:item.id,
-...item.data()
-
-})
-);
-
-
-movies.sort(
-(a,b)=>{
-
-const aTime =
-a.createdAt?.seconds || 0;
-
-const bTime =
-b.createdAt?.seconds || 0;
-
-return bTime-aTime;
-
-}
-);
-
-
-renderMovies();
-
-updateDashboard();
-
-
-}catch(error){
-
-console.log(
-"Movies load error:",
-error
-);
-
-}
-
-}
-
-
-
-/* RENDER MOVIES */
-
-window.renderMovies =
-function(){
-
-const list =
-document.getElementById(
-"movieList"
-);
-
-const search =
-document.getElementById(
-"movieSearch"
-).value
-.toLowerCase();
-
-
-const filtered =
-movies.filter(movie =>
-(movie.title || movie.name || "")
-.toLowerCase()
-.includes(search)
-);
-
-
-if(!filtered.length){
+if(snapshot.empty){
 
 list.innerHTML =
-"<p>No movies found.</p>";
+"No movies added yet.";
 
 return;
 
 }
 
+list.innerHTML = "";
 
-list.innerHTML =
-filtered.map(movie => {
+snapshot.forEach(
+movie=>{
 
-const title =
-movie.title ||
-movie.name ||
-"Untitled";
+const data =
+movie.data();
 
+const div =
+document.createElement("div");
 
-const poster =
-movie.poster ||
-movie.posterUrl ||
-movie.image ||
-"";
+div.className =
+"movieItem";
 
+div.innerHTML = `
 
-return `
-
-<div class="movie">
-
-<img
-src="${escapeHtml(poster)}"
-onerror="this.style.display='none'"
->
-
-<div class="movie-info">
+<div class="movieInfo">
 
 <h3>
-${escapeHtml(title)}
+${escapeHtml(data.title || "Untitled")}
 </h3>
 
-<div>
-${escapeHtml(movie.year || "")}
-•
-${escapeHtml(movie.genre || "")}
+<p>
+${escapeHtml(data.category || "")}
+</p>
+
 </div>
 
-<div>
-${escapeHtml(movie.language || "")}
-•
-${escapeHtml(movie.quality || "")}
-</div>
-
-<div class="movie-actions">
+<div class="movieActions">
 
 <button
-class="edit"
-onclick="editMovie('${movie.id}')">
-✏️ Edit
+class="editBtn"
+data-id="${movie.id}"
+>
+Edit
 </button>
 
 <button
-class="danger"
-onclick="deleteMovie('${movie.id}')">
-🗑️ Delete
+class="deleteBtn"
+data-id="${movie.id}"
+>
+Delete
 </button>
-
-</div>
-
-</div>
 
 </div>
 
 `;
 
-}).join("");
+list.appendChild(div);
 
-}
-
-
-
-/* ESCAPE HTML */
-
-function escapeHtml(value){
-
-return String(value || "")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
-}
-
-
-
-/* EDIT MOVIE */
-
-window.editMovie =
-function(id){
-
-const movie =
-movies.find(
-item => item.id === id
-);
-
-if(!movie) return;
-
-
-document.getElementById(
-"movieId"
-).value =
-id;
-
-
-document.getElementById(
-"movieName"
-).value =
-movie.title ||
-movie.name ||
-"";
-
-
-document.getElementById(
-"poster"
-).value =
-movie.poster ||
-movie.posterUrl ||
-movie.image ||
-"";
-
-
-document.getElementById(
-"year"
-).value =
-movie.year || "";
-
-
-document.getElementById(
-"genre"
-).value =
-movie.genre || "Action";
-
-
-document.getElementById(
-"language"
-).value =
-movie.language || "Hindi";
-
-
-document.getElementById(
-"quality"
-).value =
-movie.quality || "720p";
-
-
-document.getElementById(
-"description"
-).value =
-movie.description || "";
-
-
-document.getElementById(
-"downloadUrl"
-).value =
-movie.downloadUrl ||
-movie.downloadURL ||
-movie.download ||
-"";
-
-
-document.getElementById(
-"featured"
-).checked =
-movie.featured === true;
-
-
-document.getElementById(
-"movieFormTitle"
-).innerText =
-"✏️ Edit Movie";
-
-
-document.getElementById(
-"saveMovieBtn"
-).innerText =
-"💾 Update Movie";
-
-
-document.getElementById(
-"cancelEditBtn"
-).style.display =
-"block";
-
-
-window.scrollTo({
-top:0,
-behavior:"smooth"
 });
 
-};
+document.querySelectorAll(
+".editBtn"
+).forEach(
+button=>{
 
-
-
-/* CANCEL EDIT */
-
-window.cancelEdit =
-function(){
-
-clearMovieForm();
-
-};
-
-
-
-/* CLEAR FORM */
-
-function clearMovieForm(){
-
-document.getElementById(
-"movieId"
-).value="";
-
-
-document.getElementById(
-"movieName"
-).value="";
-
-
-document.getElementById(
-"poster"
-).value="";
-
-
-document.getElementById(
-"year"
-).value="";
-
-
-document.getElementById(
-"description"
-).value="";
-
-
-document.getElementById(
-"downloadUrl"
-).value="";
-
-
-document.getElementById(
-"featured"
-).checked=false;
-
-
-document.getElementById(
-"movieFormTitle"
-).innerText =
-"➕ Add Movie";
-
-
-document.getElementById(
-"saveMovieBtn"
-).innerText =
-"➕ Add Movie";
-
-
-document.getElementById(
-"cancelEditBtn"
-).style.display =
-"none";
-
-}
-
-
-
-/* DELETE MOVIE */
-
-window.deleteMovie =
-async function(id){
-
-if(
-!confirm(
-"Is movie ko delete karna hai?"
-)
-){
-
-return;
-
-}
-
-
-try{
-
-await deleteDoc(
-doc(db,"movies",id)
+button.addEventListener(
+"click",
+()=>editMovie(button.dataset.id)
 );
 
+});
 
-showStatus(
-"movieStatus",
-"✅ Movie deleted!"
+document.querySelectorAll(
+".deleteBtn"
+).forEach(
+button=>{
+
+button.addEventListener(
+"click",
+()=>deleteMovie(button.dataset.id)
 );
 
-
-await loadMovies();
-
+});
 
 }catch(error){
 
-showStatus(
-"movieStatus",
-"❌ Delete error: "
-+ error.message,
-false
-);
+console.error(error);
 
-}
-
-};
-
-
-
-/* DASHBOARD */
-
-function updateDashboard(){
-
-document.getElementById(
-"totalMovies"
-).innerText =
-movies.length;
-
-
-document.getElementById(
-"featuredMovies"
-).innerText =
-movies.filter(
-movie => movie.featured === true
-).length;
-
-
-const categories =
-new Set(
-movies.map(
-movie => movie.genre
-).filter(Boolean)
-);
-
-
-document.getElementById(
-"totalCategories"
-).innerText =
-categories.size;
-
-}
-
-
-
-/* WEBSITE SETTINGS */
-
-async function loadWebsiteSettings(){
-
-try{
-
-const snap =
-await getDoc(
-doc(db,"settings","website")
-);
-
-
-if(!snap.exists()) return;
-
-const data =
-snap.data();
-
-
-document.getElementById(
-"siteName"
-).value =
-data.siteName || "";
-
-
-document.getElementById(
-"logoUrl"
-).value =
-data.logoUrl || "";
-
-
-document.getElementById(
-"accentColor"
-).value =
-data.accentColor || "#e50914";
-
-
-document.getElementById(
-"backgroundColor"
-).value =
-data.backgroundColor || "#0b0b0f";
-
-
-document.getElementById(
-"homeTitle"
-).value =
-data.homeTitle || "";
-
-
-document.getElementById(
-"homeSubtitle"
-).value =
-data.homeSubtitle || "";
-
-
-document.getElementById(
-"categories"
-).value =
-data.categories || "";
-
-
-document.getElementById(
-"footerText"
-).value =
-data.footerText || "";
-
-
-document.getElementById(
-"aboutText"
-).innerHTML =
-data.aboutText || "";
-
-
-document.getElementById(
-"maintenance"
-).checked =
-data.maintenance === true;
-
-
-}catch(error){
-
-console.log(
-"Website settings error:",
-error
-);
+list.innerHTML =
+"❌ Error loading movies: "
++ error.message;
 
 }
 
 }
 
 
+function escapeHtml(text){
 
-/* SAVE WEBSITE */
-
-window.saveWebsiteSettings =
-async function(){
-
-try{
-
-await setDoc(
-
-doc(db,"settings","website"),
-
-{
-
-siteName:
-document.getElementById(
-"siteName"
-).value.trim(),
-
-logoUrl:
-document.getElementById(
-"logoUrl"
-).value.trim(),
-
-accentColor:
-document.getElementById(
-"accentColor"
-).value,
-
-backgroundColor:
-document.getElementById(
-"backgroundColor"
-).value,
-
-homeTitle:
-document.getElementById(
-"homeTitle"
-).value.trim(),
-
-homeSubtitle:
-document.getElementById(
-"homeSubtitle"
-).value.trim(),
-
-categories:
-document.getElementById(
-"categories"
-).value.trim(),
-
-footerText:
-document.getElementById(
-"footerText"
-).value.trim(),
-
-aboutText:
-document.getElementById(
-"aboutText"
-).innerHTML,
-
-maintenance:
-document.getElementById(
-"maintenance"
-).checked,
-
-updatedAt:
-serverTimestamp()
-
-},
-
-{merge:true}
-
-);
-
-
-showStatus(
-"websiteStatus",
-"✅ Website settings saved!"
-);
-
-
-}catch(error){
-
-showStatus(
-"websiteStatus",
-"❌ Error: "
-+ error.message,
-false
-);
+return String(text)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
 
 }
-
-}
-
-
-async function loadAdSettings(){
-
-try{
-
-const snap =
-await getDoc(
-doc(db,"settings","ads")
-);
-
-if(!snap.exists()) return;
-
-const data = snap.data();
-
-
-/* MAIN ADS SWITCH */
-
-document.getElementById(
-"adsEnabled"
-).checked =
-data.enabled === true;
-
-
-/* TOP IMAGE */
-
-document.getElementById(
-"topImageAdEnabled"
-).checked =
-data.topImageAdEnabled === true;
-
-document.getElementById(
-"topImageAdUrl"
-).value =
-data.topImageAdUrl || "";
-
-document.getElementById(
-"topImageAdClickUrl"
-).value =
-data.topImageAdClickUrl || "";
-
-
-/* TOP VIDEO */
-
-document.getElementById(
-"topVideoAdEnabled"
-).checked =
-data.topVideoAdEnabled === true;
-
-document.getElementById(
-"topVideoAdUrl"
-).value =
-data.topVideoAdUrl || "";
-
-document.getElementById(
-"topVideoAdClickUrl"
-).value =
-data.topVideoAdClickUrl || "";
-
-
-/* MIDDLE IMAGE */
-
-document.getElementById(
-"middleImageAdEnabled"
-).checked =
-data.middleImageAdEnabled === true;
-
-document.getElementById(
-"middleImageAdUrl"
-).value =
-data.middleImageAdUrl || "";
-
-document.getElementById(
-"middleImageAdClickUrl"
-).value =
-data.middleImageAdClickUrl || "";
-
-
-/* MIDDLE VIDEO */
-
-document.getElementById(
-"middleVideoAdEnabled"
-).checked =
-data.middleVideoAdEnabled === true;
-
-document.getElementById(
-"middleVideoAdUrl"
-).value =
-data.middleVideoAdUrl || "";
-
-document.getElementById(
-"middleVideoAdClickUrl"
-).value =
-data.middleVideoAdClickUrl || "";
-
-
-/* BOTTOM IMAGE */
-
-document.getElementById(
-"bottomImageAdEnabled"
-).checked =
-data.bottomImageAdEnabled === true;
-
-document.getElementById(
-"bottomImageAdUrl"
-).value =
-data.bottomImageAdUrl || "";
-
-document.getElementById(
-"bottomImageAdClickUrl"
-).value =
-data.bottomImageAdClickUrl || "";
-
-
-/* BOTTOM VIDEO */
-
-document.getElementById(
-"bottomVideoAdEnabled"
-).checked =
-data.bottomVideoAdEnabled === true;
-
-document.getElementById(
-"bottomVideoAdUrl"
-).value =
-data.bottomVideoAdUrl || "";
-
-document.getElementById(
-"bottomVideoAdClickUrl"
-).value =
-data.bottomVideoAdClickUrl || "";
-
-
-}catch(error){
-
-console.log(
-"Ads settings error:",
-error
-);
-
-}
-
-}
-
-
-
-/* SAVE AD SETTINGS */
-
-window.saveAdSettings =
-async function(){
-
-try{
-
-await setDoc(
-
-doc(db,"settings","ads"),
-
-{
-
-/* MAIN SWITCH */
-
-enabled:
-document.getElementById(
-"adsEnabled"
-).checked,
-
-
-/* TOP IMAGE */
-
-topImageAdEnabled:
-document.getElementById(
-"topImageAdEnabled"
-).checked,
-
-topImageAdUrl:
-document.getElementById(
-"topImageAdUrl"
-).value.trim(),
-
-topImageAdClickUrl:
-document.getElementById(
-"topImageAdClickUrl"
-).value.trim(),
-
-
-/* TOP VIDEO */
-
-topVideoAdEnabled:
-document.getElementById(
-"topVideoAdEnabled"
-).checked,
-
-topVideoAdUrl:
-document.getElementById(
-"topVideoAdUrl"
-).value.trim(),
-
-topVideoAdClickUrl:
-document.getElementById(
-"topVideoAdClickUrl"
-).value.trim(),
-
-
-/* MIDDLE IMAGE */
-
-middleImageAdEnabled:
-document.getElementById(
-"middleImageAdEnabled"
-).checked,
-
-middleImageAdUrl:
-document.getElementById(
-"middleImageAdUrl"
-).value.trim(),
-
-middleImageAdClickUrl:
-document.getElementById(
-"middleImageAdClickUrl"
-).value.trim(),
-
-
-/* MIDDLE VIDEO */
-
-middleVideoAdEnabled:
-document.getElementById(
-"middleVideoAdEnabled"
-).checked,
-
-middleVideoAdUrl:
-document.getElementById(
-"middleVideoAdUrl"
-).value.trim(),
-
-middleVideoAdClickUrl:
-document.getElementById(
-"middleVideoAdClickUrl"
-).value.trim(),
-
-
-/* BOTTOM IMAGE */
-
-bottomImageAdEnabled:
-document.getElementById(
-"bottomImageAdEnabled"
-).checked,
-
-bottomImageAdUrl:
-document.getElementById(
-"bottomImageAdUrl"
-).value.trim(),
-
-bottomImageAdClickUrl:
-document.getElementById(
-"bottomImageAdClickUrl"
-).value.trim(),
-
-
-/* BOTTOM VIDEO */
-
-bottomVideoAdEnabled:
-document.getElementById(
-"bottomVideoAdEnabled"
-).checked,
-
-bottomVideoAdUrl:
-document.getElementById(
-"bottomVideoAdUrl"
-).value.trim(),
-
-bottomVideoAdClickUrl:
-document.getElementById(
-"bottomVideoAdClickUrl"
-).value.trim(),
-
-
-updatedAt:
-serverTimestamp()
-
-},
-
-{merge:true}
-
-);
-
-
-showStatus(
-"adsStatus",
-"✅ Advertisement settings saved!"
-);
-
-
-}catch(error){
-
-showStatus(
-"adsStatus",
-"❌ Error: "
-+ error.message,
-false
-);
-
-}
-
-};
-
-/* TEXT EDITOR */
-
-window.formatText =
-function(command){
-
-document.execCommand(
-command,
-false,
-null
-);
-
-document.getElementById(
-"aboutText"
-).focus();
-
-};
-
-
-</script>
-
-</body>
-
-</html>
-    
-  
