@@ -36,7 +36,7 @@
                     if (data.footerText) { document.getElementById('footerText').innerText = data.footerText; }
                     if (data.fontStyle) { document.documentElement.style.setProperty('--font-family', data.fontStyle); }
 
-                    // Render Home Page Header Background (Image or Video)
+                    // Render Home Header Background Media (Image or Video)
                     if (data.headerHomeEnable && data.homeHeaderMedia) {
                         const bgContainer = document.getElementById('headerBgMedia');
                         if (data.homeHeaderMedia.includes('data:video') || data.homeHeaderMedia.endsWith('.mp4') || data.homeHeaderMedia.includes('video')) {
@@ -46,7 +46,7 @@
                         }
                     }
 
-                    // Render Footer 5 Social Icons & Links
+                    // Render Footer Social Icons & Links
                     if(data.socials && Array.isArray(data.socials)) {
                         const socialContainer = document.getElementById('footerSocialIcons');
                         let iconsHTML = data.socials.map(s => {
@@ -249,7 +249,7 @@
 
         <div class="ad-banner" id="middleAdContainer"></div>
 
-        <div class="section-title">Lates Movies</div>
+        <div class="section-title">Latest Movies</div>
         <div class="movies-grid" id="moviesGrid">
             <div class="no-movies">Loading movies...</div>
         </div>
