@@ -19,7 +19,6 @@
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
 
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
@@ -177,13 +176,14 @@
             }
         }
 
+        // Save Advertisement Link
         window.saveAdCode = async function() {
             const adCode = document.getElementById('adCodeInput').value;
             try {
                 await setDoc(doc(db, "settings", "ads"), { adCode });
-                alert('Advertisement code updated live successfully!');
+                alert('Advertisement link saved successfully!');
             } catch (e) {
-                alert('Failed to save ad code.');
+                alert('Failed to save ad link.');
             }
         }
 
@@ -223,7 +223,6 @@
         .form-group label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--text-muted); }
         .form-control { width: 100%; padding: 10px; background-color: #2a2a2a; border: 1px solid #444; border-radius: 5px; color: white; font-size: 14px; outline: none; }
         .form-control:focus { border-color: var(--primary-color); }
-        textarea.form-control { resize: vertical; height: 70px; }
         .btn { width: 100%; padding: 10px; background-color: var(--primary-color); color: white; border: none; border-radius: 5px; font-size: 15px; font-weight: 600; cursor: pointer; }
         .error-msg { color: var(--primary-color); text-align: center; margin-top: 10px; font-size: 13px; }
         #adminDashboard { display: none; padding: 20px; max-width: 1100px; margin: 0 auto; }
@@ -269,10 +268,9 @@
         </div>
 
         <div class="admin-grid">
-            <!-- Left Column: Settings, Ads & Add Movie -->
             <div>
                 <div class="admin-box">
-                    <h3>Website Customization (Theme, Icon & Name)</h3>
+                    <h3>Website Customization</h3>
                     <div class="form-group">
                         <label>Website Name / Title</label>
                         <input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox">
@@ -288,13 +286,14 @@
                     <button class="btn" onclick="saveSiteSettings()">Save Customization</button>
                 </div>
 
+                <!-- Advertisement Manager (Only Link Input) -->
                 <div class="admin-box">
                     <h3>Advertisement Manager</h3>
                     <div class="form-group">
-                        <label>Ad HTML / Script Code</label>
-                        <textarea id="adCodeInput" class="form-control" placeholder="Paste ad script here..."></textarea>
+                        <label>Advertisement Link (URL)</label>
+                        <input type="text" id="adCodeInput" class="form-control" placeholder="https://example.com/ad-link">
                     </div>
-                    <button class="btn" onclick="saveAdCode()">Save Advertisement</button>
+                    <button class="btn" onclick="saveAdCode()">Save Advertisement Link</button>
                 </div>
 
                 <div class="admin-box">
@@ -316,7 +315,7 @@
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea id="movieDesc" class="form-control" placeholder="Short summary..."></textarea>
+                        <textarea id="movieDesc" class="form-control" placeholder="Short summary..." style="resize:vertical; height:70px;"></textarea>
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <div class="form-group" style="flex:1;">
@@ -340,7 +339,6 @@
                 </div>
             </div>
 
-            <!-- Right Column: Movie List Database -->
             <div>
                 <div class="admin-box">
                     <h3>Manage Movies Database</h3>
