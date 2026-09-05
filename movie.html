@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Movie Details - CineBox</title>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
+            authDomain: "cinebox-9011f.firebaseapp.com",
+            projectId: "cinebox-9011f",
+            storageBucket: "cinebox-9011f.firebasestorage.app",
+            messagingSenderId: "134449166678",
+            appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadMovieDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieId = urlParams.get('id');
+
+            if (!movieId) {
+                document.getElementById('movieDetailContainer').innerHTML = `<div class="error-msg">Movie not found!</div>`;
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "movies", movieId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const movie = docSnap.data();
+                    document.getElementById('pageTitle').innerText = `${movie.title} - CineBox`;
+                    document.getElementById('moviePoster').src = movie.poster;
+                    document.getElementById('movieTitle').innerText = movie.title;
+                    document.getElementById('movieMeta').innerText = `${movie.year || '2026'} • ${movie.language || 'Hindi'} • ${movie.category || 'General'}`;
+                    document.getElementById('movieDesc').innerText = movie.description || 'No description available for this movie.';
+
+                    const linksContainer = document.getElementById('qualityLinksContainer');
+                    let linksHTML = '';
+
+                    if (movie.qualities && Array.isArray(movie.qualities) && movie.qualities.length > 0) {
+                        linksHTML = movie.qualities.map(q => `
+                            <a href="${q.link}" target="_blank" class="quality-btn">
+                                <span>Download ${q.quality}</span>
+                                <span class="size-text">${q.size || ''}</span>
+                            </a>
+                        `).join('');
+                    } else {
+                        linksHTML = `<div class="error-msg" style="padding: 10px;">No download links available.</div>`;
+                    }
+                    linksContainer.innerHTML = linksHTML;
+
+                } else {
+                    document.getElementById('movieDetailContainer').innerHTML = `<div class="error-msg">Movie does not exist.</div>`;
+                }
+            } catch (error) {
+                console.error("Error loading movie:", error);
+                document.getElementById('movieDetailContainer').innerHTML = `<div class="error-msg">Failed to load movie details.</div>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadMovieDetails);
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #e50914;
+            --bg-color: #141414;
+            --card-bg: #1f1f1f;
+            --text-color: #ffffff;
+            --text-muted: #b3b3b3;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
+        header { background-color: rgba(20, 20, 20, 0.95); padding: 15px 20px; text-align: center; border-bottom: 2px solid #222; }
+        .logo-area { font-size: 26px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; text-decoration: none; }
+        .container { max-width: 700px; margin: 20px auto; padding: 15px; flex: 1; width: 100%; }
+        .movie-detail-card { background-color: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; gap: 20px; padding: 20px; }
+        .detail-poster { width: 100%; max-height: 380px; object-fit: cover; border-radius: 6px; background-color: #2b2b2b; }
+        .detail-info { display: flex; flex-direction: column; gap: 10px; }
+        .movie-title { font-size: 22px; font-weight: 700; }
+        .movie-meta { font-size: 13px; color: var(--text-muted); }
+        .movie-desc { font-size: 14px; color: #d1d1d1; line-height: 1.5; margin-top: 5px; }
+        .section-heading { font-size: 16px; font-weight: 600; margin-top: 15px; border-left: 4px solid var(--primary-color); padding-left: 8px; color: white; }
+        .quality-links { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .quality-btn { display: flex; justify-content: space-between; align-items: center; background-color: var(--primary-color); color: white; text-decoration: none; padding: 12px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; transition: opacity 0.2s; }
+        .quality-btn:hover { opacity: 0.9; }
+        .size-text { background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+        .error-msg { text-align: center; color: var(--text-muted); padding: 40px; font-size: 15px; }
+        footer { background-color: #0d0d0d; text-align: center; padding: 15px; color: var(--text-muted); font-size: 13px; border-top: 1px solid #222; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo-area">CineBox</a>
+    </header>
+
+    <div class="container" id="movieDetailContainer">
+        <div class="movie-detail-card">
+            <img id="moviePoster" src="" alt="Poster" class="detail-poster">
+            <div class="detail-info">
+                <h1 id="movieTitle" class="movie-title">Loading...</h1>
+                <div id="movieMeta" class="movie-meta"></div>
+                <p id="movieDesc" class="movie-desc"></p>
+                
+                <div class="section-heading">Select Download Quality</div>
+                <div class="quality-links" id="qualityLinksContainer">
+                    <!-- Quality buttons will load here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <span>&copy; 2026 CineBox. All Rights Reserved.</span>
+    </footer>
+
+</body>
+</html>
