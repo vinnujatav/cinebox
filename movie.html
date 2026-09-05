@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">Movie Details - CineBox</title>
+    <link id="siteFavicon" rel="icon" type="image/x-icon" href="">
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -17,6 +18,7 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -33,8 +35,14 @@
                 const configDoc = await getDoc(doc(db, "settings", "general"));
                 if (configDoc.exists()) {
                     const data = configDoc.data();
-                    
-                    // Render Separate Movie Page Header Background Media
+                    if (data.siteTitle) {
+                        document.getElementById('pageTitle').innerText = `${data.siteTitle} - Movie Details`;
+                    }
+                    if (data.themeColor) { document.documentElement.style.setProperty('--primary-color', data.themeColor); }
+                    if (data.iconUrl) { document.getElementById('siteFavicon').href = data.iconUrl; }
+                    if (data.fontStyle) { document.documentElement.style.setProperty('--font-family', data.fontStyle); }
+
+                    // Render Separate Movie Page Header Background (Image or Video)
                     if (data.headerMovieEnable && data.movieHeaderMedia) {
                         const bgContainer = document.getElementById('headerBgMedia');
                         if (data.movieHeaderMedia.includes('data:video') || data.movieHeaderMedia.endsWith('.mp4') || data.movieHeaderMedia.includes('video')) {
@@ -44,7 +52,7 @@
                         }
                     }
 
-                    // Render Footer Social Icons
+                    // Render Footer 5 Social Icons & Links
                     if(data.socials && Array.isArray(data.socials)) {
                         const socialContainer = document.getElementById('footerSocialIcons');
                         let iconsHTML = data.socials.map(s => {
@@ -163,8 +171,9 @@
             --card-bg: #1f1f1f;
             --text-color: #ffffff;
             --text-muted: #b3b3b3;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-family); }
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
         
         header { 
@@ -233,7 +242,7 @@
         .related-cat { font-size: 11px; background: #2c3e50; color: #ecf0f1; padding: 2px 6px; border-radius: 3px; width: fit-content; }
 
         .error-msg { text-align: center; color: var(--text-muted); padding: 30px; font-size: 14px; }
-        footer { background-color: #0d0d0d; text-align: center; padding: 15px; color: var(--text-muted); font-size: 12px; border-top: 1px solid #222; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        footer { background-color: #0d0d0d; text-align: center; padding: 15px; color: var(--text-muted); font-size: 12px; border-top: 1px solid #222; display: flex; flex-direction: column; gap: 10px; align-items: center; margin-top: auto; }
         .footer-socials { display: flex; gap: 15px; justify-content: center; align-items: center; margin-bottom: 5px; }
     </style>
 </head>
@@ -252,7 +261,7 @@
                 <img id="moviePoster" src="" alt="Poster" class="detail-poster">
             </div>
 
-            <div class="file-info-bar">👉 File Info 👈</div>
+            <div class="file-info-bar">👉 Movie Info 👈</div>
 
             <table class="info-table">
                 <tr><td class="info-label">Name:</td><td class="info-val title-hl" id="movieTitleText">Loading...</td></tr>
@@ -280,7 +289,7 @@
 
     <footer>
         <div class="footer-socials" id="footerSocialIcons"></div>
-        <span>&copy; 2026 CineBox. All Rights Reserved.</span>
+        <span id="footerText">&copy; 2026 CineBox. All Rights Reserved.</span>
     </footer>
 
 </body>
