@@ -7,7 +7,7 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
@@ -17,7 +17,6 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -31,6 +30,18 @@
             }
 
             try {
+                // Fetch Dedicated Movie Page Top Ad from Firestore
+                const movieAdDoc = await getDoc(doc(db, "settings", "moviePageAd"));
+                if (movieAdDoc.exists()) {
+                    const adData = movieAdDoc.data();
+                    if (adData.adEnable && adData.adImg) {
+                        const topAd = document.getElementById('topAdContainer');
+                        topAd.innerHTML = `<a href="${adData.adLink || '#'}" target="_blank"><img src="${adData.adImg}" alt="Ad" style="width:100%; height:auto; display:block; max-height:90px; object-fit:cover;"></a>`;
+                        topAd.style.display = 'block';
+                    }
+                }
+
+                // Load Current Movie Data
                 const docRef = doc(db, "movies", movieId);
                 const docSnap = await getDoc(docRef);
 
@@ -38,24 +49,35 @@
                     const movie = docSnap.data();
                     document.getElementById('pageTitle').innerText = `${movie.title} - CineBox`;
                     document.getElementById('moviePoster').src = movie.poster;
-                    document.getElementById('movieTitle').innerText = movie.title;
-                    document.getElementById('movieMeta').innerText = `${movie.year || '2026'} • ${movie.language || 'Hindi'} • ${movie.category || 'General'}`;
-                    document.getElementById('movieDesc').innerText = movie.description || 'No description available for this movie.';
+                    document.getElementById('movieTitleText').innerText = movie.title || 'Untitled Movie';
+                    document.getElementById('movieGenre').innerText = movie.category || 'Action, Drama';
+                    document.getElementById('movieDuration').innerText = movie.duration || '2h 30m';
+                    document.getElementById('movieYear').innerText = movie.year || '2026';
+                    document.getElementById('movieLang').innerText = movie.language || 'Hindi';
+                    document.getElementById('movieCast').innerText = movie.cast || 'Not Available';
+                    document.getElementById('movieDesc').innerText = movie.description || 'No description available.';
 
+                    // Quality Buttons Rendering
                     const linksContainer = document.getElementById('qualityLinksContainer');
                     let linksHTML = '';
 
                     if (movie.qualities && Array.isArray(movie.qualities) && movie.qualities.length > 0) {
-                        linksHTML = movie.qualities.map(q => `
-                            <a href="${q.link}" target="_blank" class="quality-btn">
-                                <span>Download ${q.quality}</span>
-                                <span class="size-text">${q.size || ''}</span>
-                            </a>
-                        `).join('');
+                        const bgColors = ['#27ae60', '#d35400', '#c0392b', '#2980b9', '#16a085'];
+                        linksHTML = movie.qualities.map((q, index) => {
+                            const btnColor = bgColors[index % bgColors.length];
+                            return `
+                                <a href="${q.link}" target="_blank" class="quality-btn" style="background-color: ${btnColor};">
+                                    <span>Download ${q.size ? q.size : '{' + q.quality + '}'}</span>
+                                </a>
+                            `;
+                        }).join('');
                     } else {
-                        linksHTML = `<div class="error-msg" style="padding: 10px;">No download links available.</div>`;
+                        linksHTML = `<div class="error-msg">No download links available.</div>`;
                     }
                     linksContainer.innerHTML = linksHTML;
+
+                    // Load Related Movies
+                    loadRelatedMovies(movie.category, movieId);
 
                 } else {
                     document.getElementById('movieDetailContainer').innerHTML = `<div class="error-msg">Movie does not exist.</div>`;
@@ -63,6 +85,33 @@
             } catch (error) {
                 console.error("Error loading movie:", error);
                 document.getElementById('movieDetailContainer').innerHTML = `<div class="error-msg">Failed to load movie details.</div>`;
+            }
+        }
+
+        async function loadRelatedMovies(currentCategory, currentId) {
+            try {
+                const querySnapshot = await getDocs(collection(db, "movies"));
+                const relatedContainer = document.getElementById('relatedMoviesList');
+                let html = '';
+
+                querySnapshot.forEach((docSnap) => {
+                    if (docSnap.id !== currentId) {
+                        const m = docSnap.data();
+                        html += `
+                            <div class="related-item" onclick="window.location.href='movie.html?id=${docSnap.id}'">
+                                <img src="${m.poster}" class="related-poster" onerror="this.src='https://via.placeholder.com/60x80/222/fff?text=No+Img'">
+                                <div class="related-info">
+                                    <div class="related-title">${m.title}</div>
+                                    <span class="related-cat">${m.category || 'Movie'}</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                relatedContainer.innerHTML = html || `<div style="padding:10px; color:#b3b3b3; text-align:center;">No related movies found.</div>`;
+            } catch (e) {
+                console.error("Error loading related movies", e);
             }
         }
 
@@ -79,22 +128,41 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
-        header { background-color: rgba(20, 20, 20, 0.95); padding: 15px 20px; text-align: center; border-bottom: 2px solid #222; }
-        .logo-area { font-size: 26px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; text-decoration: none; }
-        .container { max-width: 700px; margin: 20px auto; padding: 15px; flex: 1; width: 100%; }
-        .movie-detail-card { background-color: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; gap: 20px; padding: 20px; }
-        .detail-poster { width: 100%; max-height: 380px; object-fit: cover; border-radius: 6px; background-color: #2b2b2b; }
-        .detail-info { display: flex; flex-direction: column; gap: 10px; }
-        .movie-title { font-size: 22px; font-weight: 700; }
-        .movie-meta { font-size: 13px; color: var(--text-muted); }
-        .movie-desc { font-size: 14px; color: #d1d1d1; line-height: 1.5; margin-top: 5px; }
-        .section-heading { font-size: 16px; font-weight: 600; margin-top: 15px; border-left: 4px solid var(--primary-color); padding-left: 8px; color: white; }
-        .quality-links { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .quality-btn { display: flex; justify-content: space-between; align-items: center; background-color: var(--primary-color); color: white; text-decoration: none; padding: 12px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; transition: opacity 0.2s; }
-        .quality-btn:hover { opacity: 0.9; }
-        .size-text { background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 4px; font-size: 12px; }
-        .error-msg { text-align: center; color: var(--text-muted); padding: 40px; font-size: 15px; }
-        footer { background-color: #0d0d0d; text-align: center; padding: 15px; color: var(--text-muted); font-size: 13px; border-top: 1px solid #222; }
+        header { background-color: rgba(20, 20, 20, 0.95); padding: 12px 20px; text-align: center; border-bottom: 2px solid #222; position: sticky; top: 0; z-index: 1000; }
+        .logo-area { font-size: 24px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; text-decoration: none; }
+        .ad-banner { width: 100%; max-width: 750px; min-height: 60px; background-color: #222; border: 1px dashed #444; display: none; align-items: center; justify-content: center; color: var(--text-muted); font-size: 12px; margin: 10px auto; border-radius: 4px; overflow: hidden; text-align: center; }
+        
+        .container { max-width: 750px; margin: 10px auto; padding: 10px; flex: 1; width: 100%; }
+        .movie-box { background-color: var(--card-bg); border-radius: 6px; overflow: hidden; border: 1px solid #333; padding: 15px; margin-bottom: 20px; }
+        .poster-wrapper { text-align: center; background: #000; border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
+        .detail-poster { width: 100%; max-height: 420px; object-fit: contain; }
+        
+        .file-info-bar { background: #262626; color: #f39c12; text-align: center; font-weight: 700; padding: 8px; font-size: 14px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #444; }
+        
+        .info-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 15px; }
+        .info-table td { padding: 8px 6px; border-bottom: 1px solid #2c2c2c; }
+        .info-label { font-weight: 700; color: white; width: 110px; }
+        .info-val { color: var(--text-muted); }
+        .info-val.title-hl { color: #e74c3c; font-weight: 700; font-size: 15px; }
+        .info-val.genre-hl { color: #d35400; font-weight: 600; }
+        .info-val.desc-hl { color: #9b59b6; line-height: 1.4; }
+
+        .download-heading { background: #1f618d; color: white; text-align: center; padding: 10px; font-weight: 700; border-radius: 4px; margin: 15px 0 10px 0; font-size: 15px; }
+        .quality-links { display: flex; flex-direction: column; gap: 8px; }
+        .quality-btn { display: block; text-align: center; color: white; text-decoration: none; padding: 12px; border-radius: 4px; font-size: 14px; font-weight: 700; transition: opacity 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .quality-btn:hover { opacity: 0.85; }
+
+        .related-section-title { background: #1f618d; color: white; text-align: center; padding: 10px; font-weight: 700; border-radius: 4px; margin: 20px 0 10px 0; font-size: 15px; }
+        .related-list { display: flex; flex-direction: column; gap: 8px; }
+        .related-item { display: flex; align-items: center; gap: 10px; background: #222; padding: 8px; border-radius: 4px; cursor: pointer; border: 1px solid #333; transition: background 0.2s; }
+        .related-item:hover { background: #2a2a2a; }
+        .related-poster { width: 50px; height: 65px; object-fit: cover; border-radius: 3px; background: #111; }
+        .related-info { display: flex; flex-direction: column; gap: 4px; }
+        .related-title { font-size: 13px; font-weight: 600; color: #3498db; }
+        .related_cat { font-size: 11px; background: #2c3e50; color: #ecf0f1; padding: 2px 6px; border-radius: 3px; width: fit-content; }
+
+        .error-msg { text-align: center; color: var(--text-muted); padding: 30px; font-size: 14px; }
+        footer { background-color: #0d0d0d; text-align: center; padding: 12px; color: var(--text-muted); font-size: 12px; border-top: 1px solid #222; }
     </style>
 </head>
 <body>
@@ -103,18 +171,54 @@
         <a href="index.html" class="logo-area">CineBox</a>
     </header>
 
+    <!-- Alag se banaya gaya Movie Page Top Advertisement Banner -->
+    <div class="ad-banner" id="topAdContainer"></div>
+
     <div class="container" id="movieDetailContainer">
-        <div class="movie-detail-card">
-            <img id="moviePoster" src="" alt="Poster" class="detail-poster">
-            <div class="detail-info">
-                <h1 id="movieTitle" class="movie-title">Loading...</h1>
-                <div id="movieMeta" class="movie-meta"></div>
-                <p id="movieDesc" class="movie-desc"></p>
-                
-                <div class="section-heading">Select Download Quality</div>
-                <div class="quality-links" id="qualityLinksContainer">
-                    <!-- Quality buttons will load here -->
-                </div>
+        <div class="movie-box">
+            <div class="poster-wrapper">
+                <img id="moviePoster" src="" alt="Poster" class="detail-poster">
+            </div>
+
+            <div class="file-info-bar">👉 File Info 👈</div>
+
+            <table class="info-table">
+                <tr>
+                    <td class="info-label">Name:</td>
+                    <td class="info-val title-hl" id="movieTitleText">Loading...</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Genre:</td>
+                    <td class="info-val genre-hl" id="movieGenre">--</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Duration:</td>
+                    <td class="info-val" id="movieDuration">--</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Release Date:</td>
+                    <td class="info-val" id="movieYear">--</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Language:</td>
+                    <td class="info-val" id="movieLang">--</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Starcast:</td>
+                    <td class="info-val" id="movieCast">--</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Description:</td>
+                    <td class="info-val desc-hl" id="movieDesc">--</td>
+                </tr>
+            </table>
+
+            <div class="download-heading">DOWNLOAD THIS MOVIE</div>
+            <div class="quality-links" id="qualityLinksContainer"></div>
+
+            <div class="related-section-title">RELATED MOVIES</div>
+            <div class="related-list" id="relatedMoviesList">
+                <div style="color:#b3b3b3; text-align:center; padding:10px;">Loading related movies...</div>
             </div>
         </div>
     </div>
