@@ -64,7 +64,7 @@
             <div>
                 <!-- 1. WEBSITE CUSTOMIZATION -->
                 <div class="admin-box">
-                    <h3>🎨 Website Customization</h3>
+                    <h3>🎨 Website Customization & Header Background</h3>
                     <div class="form-group"><label>Website Title</label><input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox"></div>
                     <div class="form-group"><label>Theme Color</label><input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 35px; padding: 2px; cursor: pointer;"></div>
                     <div class="form-group"><label>Font Style</label>
@@ -74,17 +74,22 @@
                     </div>
                     <div class="form-group"><label>Favicon URL</label><input type="text" id="siteIconInput" class="form-control" placeholder="https://..."></div>
                     <div class="form-group"><label>Footer Text</label><input type="text" id="footerTextInput" class="form-control" placeholder="© 2026 CineBox"></div>
-                    <button class="btn" onclick="saveSiteSettings()">Save Customization</button>
+                    
+                    <div class="ad-box-sub" style="margin-top: 15px; border: 1px dashed var(--primary-color);">
+                        <label style="font-weight:600; color:var(--primary-color);">Header Title Background (Image/Video)</label>
+                        <input type="hidden" id="existingHeaderMedia">
+                        <input type="file" id="headerMediaFile" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="headerMediaUrl" class="form-control" placeholder="OR Media URL (.jpg, .mp4)" style="margin-top:4px;">
+                        <div class="checkbox-group" style="margin-top:6px;"><input type="checkbox" id="headerMediaEnable"> Enable Header Background Media</div>
+                    </div>
+
+                    <button class="btn" style="margin-top:10px;" onclick="saveSiteSettings()">Save Customization</button>
                 </div>
 
-                <!-- 2. ADVANCED ADVERTISEMENT MANAGER (With Preset Sizes) -->
+                <!-- 2. ADVANCED ADVERTISEMENT MANAGER -->
                 <div class="admin-box" style="border: 1px solid #f39c12;">
                     <h3 style="color: #f39c12;">📢 Advanced Advertisement Manager</h3>
-                    
-                    <!-- Ad Template Function Generator Code Snippet in HTML -->
                     <div id="adsManagerContainer">
-                        <!-- Helper template for individual ad slots -->
-                        <!-- We will generate 6 slots: top, middle, bottom, movieTop, movieMid, movieBot -->
                         <script>
                             const adSlots = [
                                 { id: 'top', label: 'Home: Top Ad' },
@@ -103,10 +108,10 @@
                                     <input type="text" id="adLink_${s.id}" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
                                     
                                     <div style="margin-top:6px;">
-                                        <label style="font-size:11px; color:#aaa;">Select Banner Size Preset:</label>
+                                        <label style="font-size:11px; color:#aaa;">Banner Size Preset:</label>
                                         <select id="adSizePreset_${s.id}" class="form-control" onchange="applyPresetSize('${s.id}')" style="margin-top:2px;">
                                             <option value="banner">Standard Banner (728 x 90px)</option>
-                                            <option value="youtube">YouTube Video / Thumbnail (16:9 - 100% x 180px)</option>
+                                            <option value="youtube">YouTube Video / Thumbnail (16:9)</option>
                                             <option value="square">Square Post (300 x 300px)</option>
                                             <option value="reel">Reels / Shorts (9:16 vertical)</option>
                                             <option value="compact">Compact Small Bar (100% x 50px)</option>
@@ -115,8 +120,8 @@
                                     </div>
 
                                     <div id="customSizeBox_${s.id}" style="display:flex; gap:5px; margin-top:6px;">
-                                        <input type="text" id="adHeight_${s.id}" class="form-control" placeholder="Height (e.g. 90px)">
-                                        <input type="text" id="adWidth_${s.id}" class="form-control" placeholder="Width (e.g. 100%)">
+                                        <input type="text" id="adHeight_${s.id}" class="form-control" placeholder="Height">
+                                        <input type="text" id="adWidth_${s.id}" class="form-control" placeholder="Width">
                                     </div>
 
                                     <div class="checkbox-group" style="margin-top:6px;"><input type="checkbox" id="adEnable_${s.id}"> Enable Ad</div>
@@ -124,7 +129,6 @@
                             `).join(''));
                         </script>
                     </div>
-
                     <button class="btn" style="background-color: #f39c12; color: #000; font-weight:700; margin-top:10px;" onclick="saveAllAdsSettings()">Save All Advertisements</button>
                 </div>
             </div>
@@ -196,11 +200,13 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
         let selectedImageBase64 = "";
+        let headerMediaBase64 = "";
         let adBase64Map = {};
 
         onAuthStateChanged(auth, (user) => {
@@ -282,6 +288,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             setupFileReader('moviePosterFile', (res) => { selectedImageBase64 = res; });
+            setupFileReader('headerMediaFile', (res) => { headerMediaBase64 = res; });
             const adKeys = ['top', 'middle', 'bottom', 'movieTop', 'movieMid', 'movieBot'];
             adKeys.forEach(key => {
                 setupFileReader(`adFile_${key}`, (res) => { adBase64Map[key] = res; });
@@ -306,21 +313,12 @@
             const preset = document.getElementById(`adSizePreset_${id}`).value;
             const hField = document.getElementById(`adHeight_${id}`);
             const wField = document.getElementById(`adWidth_${id}`);
-            const customBox = document.getElementById(`customSizeBox_${id}`);
 
-            if (preset === 'banner') {
-                hField.value = '90px'; wField.value = '100%'; customBox.style.display = 'flex';
-            } else if (preset === 'youtube') {
-                hField.value = '180px'; wField.value = '100%'; customBox.style.display = 'flex';
-            } else if (preset === 'square') {
-                hField.value = '250px'; wField.value = '250px'; customBox.style.display = 'flex';
-            } else if (preset === 'reel') {
-                hField.value = '320px'; wField.value = '180px'; customBox.style.display = 'flex';
-            } else if (preset === 'compact') {
-                hField.value = '50px'; wField.value = '100%'; customBox.style.display = 'flex';
-            } else {
-                customBox.style.display = 'flex';
-            }
+            if (preset === 'banner') { hField.value = '90px'; wField.value = '100%'; }
+            else if (preset === 'youtube') { hField.value = '180px'; wField.value = '100%'; }
+            else if (preset === 'square') { hField.value = '250px'; wField.value = '250px'; }
+            else if (preset === 'reel') { hField.value = '320px'; wField.value = '180px'; }
+            else if (preset === 'compact') { hField.value = '50px'; wField.value = '100%'; }
         }
 
         window.saveMovie = async function() {
@@ -460,9 +458,20 @@
             const footerText = document.getElementById('footerTextInput').value;
             const fontStyle = document.getElementById('fontStyleSelect').value;
 
+            let headerMedia = document.getElementById('existingHeaderMedia').value;
+            const headerMediaUrl = document.getElementById('headerMediaUrl').value;
+            if (headerMediaBase64) { headerMedia = headerMediaBase64; }
+            else if (headerMediaUrl) { headerMedia = headerMediaUrl; }
+
+            const generalData = {
+                siteTitle, themeColor, iconUrl, footerText, fontStyle,
+                headerMedia,
+                headerMediaEnable: document.getElementById('headerMediaEnable').checked
+            };
+
             try {
-                await setDoc(doc(db, "settings", "general"), { siteTitle, themeColor, iconUrl, footerText, fontStyle });
-                alert('Website Customization saved successfully!');
+                await setDoc(doc(db, "settings", "general"), generalData);
+                alert('Website Customization & Header saved successfully!');
             } catch (e) { alert('Failed to save settings.'); }
         }
 
@@ -476,6 +485,10 @@
                     document.getElementById('siteIconInput').value = data.iconUrl || '';
                     document.getElementById('footerTextInput').value = data.footerText || '© 2026 CineBox. All Rights Reserved.';
                     document.getElementById('fontStyleSelect').value = data.fontStyle || 'Segoe UI';
+
+                    document.getElementById('existingHeaderMedia').value = data.headerMedia || '';
+                    document.getElementById('headerMediaUrl').value = (data.headerMedia && data.headerMedia.startsWith('http')) ? data.headerMedia : '';
+                    document.getElementById('headerMediaEnable').checked = data.headerMediaEnable || false;
                 }
 
                 const adDoc = await getDoc(doc(db, "settings", "advancedAds"));
