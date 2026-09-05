@@ -42,6 +42,7 @@
                     if (data.iconUrl) { document.getElementById('siteFavicon').href = data.iconUrl; }
                     if (data.fontStyle) { document.documentElement.style.setProperty('--font-family', data.fontStyle); }
 
+                    // Render Separate Movie Page Header Background (Image or Video)
                     if (data.headerMovieEnable && data.movieHeaderMedia) {
                         const bgContainer = document.getElementById('headerBgMedia');
                         if (data.movieHeaderMedia.includes('data:video') || data.movieHeaderMedia.endsWith('.mp4') || data.movieHeaderMedia.includes('video')) {
@@ -51,6 +52,7 @@
                         }
                     }
 
+                    // Render Footer Social Icons & Links
                     if(data.socials && Array.isArray(data.socials)) {
                         const socialContainer = document.getElementById('footerSocialIcons');
                         let iconsHTML = data.socials.map(s => {
@@ -259,7 +261,7 @@
                 <img id="moviePoster" src="" alt="Poster" class="detail-poster">
             </div>
 
-            <div class="file-info-bar">👉 Movie Info 👈</div>
+            <div class="file-info-bar">👉 File Info 👈</div>
 
             <table class="info-table">
                 <tr><td class="info-label">Name:</td><td class="info-val title-hl" id="movieTitleText">Loading...</td></tr>
@@ -287,7 +289,7 @@
 
     <footer>
         <div class="footer-socials" id="footerSocialIcons"></div>
-        <span>&copy; 2026 CineBox. All Rights Reserved.</span>
+        <span id="footerText">&copy; 2026 CineBox. All Rights Reserved.</span>
     </footer>
 
 </body>
