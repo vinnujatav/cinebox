@@ -65,7 +65,6 @@
 
         <div class="admin-grid">
             <div>
-                <!-- 1. WEBSITE CUSTOMIZATION & THEME -->
                 <div class="admin-box">
                     <h3>🎨 Website Customization & Theme</h3>
                     <div class="form-group"><label>Website Title</label><input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox"></div>
@@ -144,7 +143,6 @@
                     <button class="btn" style="margin-top:10px;" onclick="saveSiteSettings()">Save Customization</button>
                 </div>
 
-                <!-- 2. ADVANCED ADVERTISEMENT MANAGER -->
                 <div class="admin-box" style="border: 1px solid #f39c12;">
                     <h3 style="color: #f39c12;">📢 Advanced Advertisement Manager</h3>
                     <div id="adsManagerContainer">
@@ -190,9 +188,7 @@
                     <button class="btn" style="background-color: #f39c12; color: #000; font-weight:700; margin-top:10px;" onclick="saveAllAdsSettings()">Save All Advertisements</button>
                 </div>
             </div>
-
-            <div>
-                <!-- 3. MOVIE MANAGEMENT -->
+                        <div>
                 <div class="admin-box" style="border: 1px solid var(--primary-color);">
                     <h3 id="formTitle" style="color: var(--primary-color);">Add New Movie</h3>
                     <input type="hidden" id="editMovieId">
@@ -297,7 +293,6 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
@@ -673,25 +668,4 @@
                         if (document.getElementById(`adUrl_${key}`)) {
                             document.getElementById(`adUrl_${key}`).value = (data[`${key}Media`] && data[`${key}Media`].startsWith('http')) ? data[`${key}Media`] : '';
                         }
-                        if (document.getElementById(`adLink_${key}`)) {
-                            document.getElementById(`adLink_${key}`).value = data[`${key}Link`] || '';
-                        }
-                        if (document.getElementById(`adSizePreset_${key}`)) {
-                            document.getElementById(`adSizePreset_${key}`).value = data[`${key}Preset`] || 'banner';
-                        }
-                        if (document.getElementById(`adHeight_${key}`)) {
-                            document.getElementById(`adHeight_${key}`).value = data[`${key}Height`] || '90px';
-                        }
-                        if (document.getElementById(`adWidth_${key}`)) {
-                            document.getElementById(`adWidth_${key}`).value = data[`${key}Width`] || '100%';
-                        }
-                        if (document.getElementById(`adEnable_${key}`)) {
-                            document.getElementById(`adEnable_${key}`).checked = data[`${key}Enable`] || false;
-                        }
-                    });
-                }
-            } catch (e) {}
-        }
-    </script>
-</body>
-</html>
+ 
