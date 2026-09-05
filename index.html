@@ -18,7 +18,7 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
-        
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -107,7 +107,7 @@
             }
 
             grid.innerHTML = latestMovies.map(movie => `
-                <div class="movie-card">
+                <div class="movie-card" onclick="window.location.href='movie.html?id=${movie.id}'">
                     <img src="${movie.poster}" alt="${movie.title}" class="movie-poster" onerror="this.src='https://via.placeholder.com/150x220/222/fff?text=No+Image'">
                     <div class="movie-info">
                         <div>
@@ -117,7 +117,7 @@
                             </div>
                             <span class="movie-category">${movie.category}</span>
                         </div>
-                        <a href="${movie.link}" target="_blank" class="download-btn">Download Now</a>
+                        <span class="download-btn">View Details</span>
                     </div>
                 </div>
             `).join('');
@@ -165,7 +165,8 @@
         .category-btn:hover, .category-btn.active { background-color: var(--primary-color); font-weight: 600; }
         .section-title { font-size: 18px; margin-bottom: 15px; font-weight: 600; border-left: 4px solid var(--primary-color); padding-left: 8px; }
         .movies-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .movie-card { background-color: var(--card-bg); border-radius: 6px; overflow: hidden; box-shadow: 0 3px 8px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
+        .movie-card { background-color: var(--card-bg); border-radius: 6px; overflow: hidden; box-shadow: 0 3px 8px rgba(0,0,0,0.3); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s; }
+        .movie-card:hover { transform: translateY(-3px); }
         .movie-poster { width: 100%; height: 190px; object-fit: cover; background-color: #2b2b2b; }
         .movie-info { padding: 10px; display: flex; flex-direction: column; gap: 6px; flex: 1; justify-content: space-between; }
         .movie-title { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
