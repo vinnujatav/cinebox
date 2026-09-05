@@ -192,7 +192,6 @@
             selectedImageBase64 = "";
         }
 
-        // Save General Website Settings
         window.saveSiteSettings = async function() {
             const siteTitle = document.getElementById('siteTitleInput').value;
             const themeColor = document.getElementById('themeColorPicker').value;
@@ -208,7 +207,6 @@
             }
         }
 
-        // Save Multi-Ads Settings
         window.saveAdsSettings = async function() {
             const topAd = document.getElementById('topAdInput').value;
             const topAdEnable = document.getElementById('topAdEnable').checked;
@@ -322,7 +320,6 @@
 
         <div class="admin-grid">
             <div>
-                <!-- Website Customization Box -->
                 <div class="admin-box">
                     <h3>Website Customization (Theme, Font & Footer)</h3>
                     <div class="form-group">
@@ -353,31 +350,27 @@
                     <button class="btn" onclick="saveSiteSettings()">Save Customization</button>
                 </div>
 
-                <!-- Multi-Advertisement Manager -->
                 <div class="admin-box">
                     <h3>Multi-Advertisement Slots (Top, Middle, Bottom)</h3>
                     
-                    <!-- Top Ad -->
                     <div class="form-group">
-                        <label>Top Ad Link / Script</label>
+                        <label>Top Ad Link / Script Code</label>
                         <input type="text" id="topAdInput" class="form-control" placeholder="https://... or HTML code">
                         <div class="checkbox-group">
                             <input type="checkbox" id="topAdEnable"> Enable Top Ad
                         </div>
                     </div>
 
-                    <!-- Middle Ad -->
                     <div class="form-group" style="margin-top:15px;">
-                        <label>Middle Ad Link / Script</label>
+                        <label>Middle Ad Link / Script Code</label>
                         <input type="text" id="middleAdInput" class="form-control" placeholder="https://... or HTML code">
                         <div class="checkbox-group">
                             <input type="checkbox" id="middleAdEnable"> Enable Middle Ad
                         </div>
                     </div>
 
-                    <!-- Bottom Ad -->
                     <div class="form-group" style="margin-top:15px;">
-                        <label>Bottom Ad Link / Script</label>
+                        <label>Bottom Ad Link / Script Code</label>
                         <input type="text" id="bottomAdInput" class="form-control" placeholder="https://... or HTML code">
                         <div class="checkbox-group">
                             <input type="checkbox" id="bottomAdEnable"> Enable Bottom Ad
@@ -387,7 +380,6 @@
                     <button class="btn" style="margin-top:10px;" onclick="saveAdsSettings()">Save Advertisements</button>
                 </div>
 
-                <!-- Movie Manager Box -->
                 <div class="admin-box">
                     <h3 id="formTitle">Add New Movie</h3>
                     <input type="hidden" id="editMovieId">
