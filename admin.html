@@ -38,6 +38,7 @@
         .edit-btn { background-color: #3498db; color: white; }
         .delete-btn { background-color: #e74c3c; color: white; }
         .checkbox-group { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 12px; color: var(--text-muted); }
+        .multi-checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; background: #262626; padding: 8px; border-radius: 5px; border: 1px solid #444; max-height: 120px; overflow-y: auto; }
         .quality-row { background: #262626; padding: 8px; border-radius: 5px; margin-bottom: 8px; border: 1px solid #444; }
         .ad-box-sub { background: #262626; padding: 10px; border-radius: 5px; margin-bottom: 10px; border: 1px solid #444; }
     </style>
@@ -62,9 +63,9 @@
 
         <div class="admin-grid">
             <div>
-                <!-- 1. WEBSITE CUSTOMIZATION -->
+                <!-- 1. WEBSITE CUSTOMIZATION & SEPARATE HEADER BACKGROUNDS -->
                 <div class="admin-box">
-                    <h3>🎨 Website Customization & Header Background</h3>
+                    <h3>🎨 Website Customization & Social Footer</h3>
                     <div class="form-group"><label>Website Title</label><input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox"></div>
                     <div class="form-group"><label>Theme Color</label><input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 35px; padding: 2px; cursor: pointer;"></div>
                     <div class="form-group"><label>Font Style</label>
@@ -75,17 +76,36 @@
                     <div class="form-group"><label>Favicon URL</label><input type="text" id="siteIconInput" class="form-control" placeholder="https://..."></div>
                     <div class="form-group"><label>Footer Text</label><input type="text" id="footerTextInput" class="form-control" placeholder="© 2026 CineBox"></div>
                     
+                    <div class="ad-box-sub" style="margin-top: 15px; border: 1px dashed #3498db;">
+                        <label style="font-weight:600; color:#3498db;">Footer 5 Social Links (Icon URL + Link)</label>
+                        <script>
+                            for(let i=1; i<=5; i++) {
+                                document.write(`
+                                    <div style="margin-top:8px; display:flex; gap:5px;">
+                                        <input type="text" id="socialIcon_${i}" class="form-control" placeholder="Icon URL ${i}" style="flex:1;">
+                                        <input type="text" id="socialLink_${i}" class="form-control" placeholder="Profile Link ${i}" style="flex:1;">
+                                    </div>
+                                `);
+                            }
+                        </script>
+                    </div>
+
+                    <!-- Separate Header Background for Home Page -->
                     <div class="ad-box-sub" style="margin-top: 15px; border: 1px dashed var(--primary-color);">
-                        <label style="font-weight:600; color:var(--primary-color);">Header Title Background (Image/Video)</label>
-                        <input type="hidden" id="existingHeaderMedia">
-                        <input type="file" id="headerMediaFile" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="headerMediaUrl" class="form-control" placeholder="OR Media URL (.jpg, .mp4)" style="margin-top:4px;">
-                        
-                        <div style="margin-top: 8px; border-top: 1px solid #444; padding-top: 6px;">
-                            <label style="font-size:11px; color:#aaa; margin-bottom:4px;">Where to show Header Background?</label>
-                            <div class="checkbox-group"><input type="checkbox" id="headerHomeEnable"> Show on Home Page</div>
-                            <div class="checkbox-group" style="margin-top:4px;"><input type="checkbox" id="headerMovieEnable"> Show on Movie Details Page</div>
-                        </div>
+                        <label style="font-weight:600; color:var(--primary-color);">🏠 Home Page Header Background (Image / Video)</label>
+                        <input type="hidden" id="existingHomeHeaderMedia">
+                        <input type="file" id="homeHeaderFile" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="homeHeaderUrl" class="form-control" placeholder="OR Media URL (.jpg, .mp4)" style="margin-top:4px;">
+                        <div class="checkbox-group" style="margin-top:6px;"><input type="checkbox" id="headerHomeEnable"> Enable Home Header Background</div>
+                    </div>
+
+                    <!-- Separate Header Background for Movie Page -->
+                    <div class="ad-box-sub" style="margin-top: 15px; border: 1px dashed #27ae60;">
+                        <label style="font-weight:600; color:#27ae60;">🎬 Movie Page Header Background (Image / Video)</label>
+                        <input type="hidden" id="existingMovieHeaderMedia">
+                        <input type="file" id="movieHeaderFile" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="movieHeaderUrl" class="form-control" placeholder="OR Media URL (.jpg, .mp4)" style="margin-top:4px;">
+                        <div class="checkbox-group" style="margin-top:6px;"><input type="checkbox" id="headerMovieEnable"> Enable Movie Header Background</div>
                     </div>
 
                     <button class="btn" style="margin-top:10px;" onclick="saveSiteSettings()">Save Customization</button>
@@ -146,23 +166,54 @@
                     <input type="hidden" id="existingPoster">
                     
                     <div class="form-group"><label>Movie Title</label><input type="text" id="movieTitle" class="form-control" placeholder="Toxic V2"></div>
-                    <div class="form-group"><label>Genre / Category</label><input type="text" id="movieCategory" class="form-control" placeholder="Action, Crime, Drama"></div>
+                    
+                    <div class="form-group">
+                        <label>Select Categories / Genres (Choose multiple)</label>
+                        <div class="multi-checkbox-grid" id="genreCheckboxGroup">
+                            <label><input type="checkbox" value="Action"> Action</label>
+                            <label><input type="checkbox" value="Comedy"> Comedy</label>
+                            <label><input type="checkbox" value="Romance"> Romance</label>
+                            <label><input type="checkbox" value="Horror"> Horror</label>
+                            <label><input type="checkbox" value="Sci-Fi"> Sci-Fi</label>
+                            <label><input type="checkbox" value="Thriller"> Thriller</label>
+                            <label><input type="checkbox" value="Drama"> Drama</label>
+                            <label><input type="checkbox" value="Crime"> Crime</label>
+                            <label><input type="checkbox" value="Mystery"> Mystery</label>
+                            <label><input type="checkbox" value="Animation"> Animation</label>
+                        </div>
+                    </div>
+
                     <div class="form-group"><label>Description</label><textarea id="movieDesc" class="form-control" placeholder="Summary..." style="height:60px;"></textarea></div>
+                    
                     <div style="display: flex; gap: 10px;">
-                        <div class="form-group" style="flex:1;"><label>Release Year</label><input type="text" id="movieYear" class="form-control" placeholder="2026"></div>
-                        <div class="form-group" style="flex:1;"><label>Language</label><input type="text" id="movieLang" class="form-control" placeholder="Hindi"></div>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
+                        <div class="form-group" style="flex:1;"><label>Release Date / Year</label><input type="text" id="movieYear" class="form-control" placeholder="2026"></div>
                         <div class="form-group" style="flex:1;"><label>Duration</label><input type="text" id="movieDuration" class="form-control" placeholder="3h 02min"></div>
-                        <div class="form-group" style="flex:1;"><label>Starcast</label><input type="text" id="movieCast" class="form-control" placeholder="Yash, Nayanthara"></div>
                     </div>
+
+                    <div class="form-group">
+                        <label>Select Languages (Choose multiple)</label>
+                        <div class="multi-checkbox-grid" id="langCheckboxGroup">
+                            <label><input type="checkbox" value="Hindi"> Hindi</label>
+                            <label><input type="checkbox" value="English"> English</label>
+                            <label><input type="checkbox" value="Telugu"> Telugu</label>
+                            <label><input type="checkbox" value="Tamil"> Tamil</label>
+                            <label><input type="checkbox" value="Kannada"> Kannada</label>
+                            <label><input type="checkbox" value="Malayalam"> Malayalam</label>
+                            <label><input type="checkbox" value="Punjabi"> Punjabi</label>
+                            <label><input type="checkbox" value="Bengali"> Bengali</label>
+                            <label><input type="checkbox" value="Marathi"> Marathi</label>
+                            <label><input type="checkbox" value="Gujarati"> Gujarati</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group"><label>Starcast</label><input type="text" id="movieCast" class="form-control" placeholder="Yash, Nayanthara"></div>
+                    
                     <div class="form-group"><label>Poster File</label><input type="file" id="moviePosterFile" class="form-control" accept="image/*" style="padding:4px;"></div>
                     <div class="form-group"><label>OR Poster URL</label><input type="text" id="moviePosterUrl" class="form-control" placeholder="https://..."></div>
 
-                    <!-- New Featured / Latest Movie Checkbox (Unlimited) -->
                     <div class="form-group" style="background: #262626; padding: 10px; border-radius: 5px; border: 1px solid #444;">
                         <div class="checkbox-group" style="font-size: 13px; color: #fff;">
-                            <input type="checkbox" id="isFeaturedMovie" style="width: 16px; height: 16px; accent-var: var(--primary-color);"> 
+                            <input type="checkbox" id="isFeaturedMovie" style="width: 16px; height: 16px;"> 
                             ⭐ Pin to Latest / Featured Movies (Show on Home Page)
                         </div>
                     </div>
@@ -199,7 +250,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
         <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -219,7 +270,8 @@
         const auth = getAuth(app);
 
         let selectedImageBase64 = "";
-        let headerMediaBase64 = "";
+        let homeHeaderBase64 = "";
+        let movieHeaderBase64 = "";
         let adBase64Map = {};
 
         onAuthStateChanged(auth, (user) => {
@@ -302,7 +354,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             setupFileReader('moviePosterFile', (res) => { selectedImageBase64 = res; });
-            setupFileReader('headerMediaFile', (res) => { headerMediaBase64 = res; });
+            setupFileReader('homeHeaderFile', (res) => { homeHeaderBase64 = res; });
+            setupFileReader('movieHeaderFile', (res) => { movieHeaderBase64 = res; });
             const adKeys = ['top', 'middle', 'bottom', 'movieTop', 'movieMid', 'movieBot'];
             adKeys.forEach(key => {
                 setupFileReader(`adFile_${key}`, (res) => { adBase64Map[key] = res; });
@@ -338,15 +391,21 @@
         window.saveMovie = async function() {
             const id = document.getElementById('editMovieId').value;
             const title = document.getElementById('movieTitle').value;
-            const category = document.getElementById('movieCategory').value;
             const description = document.getElementById('movieDesc').value;
             const year = document.getElementById('movieYear').value;
-            const language = document.getElementById('movieLang').value;
             const duration = document.getElementById('movieDuration').value;
             const cast = document.getElementById('movieCast').value;
             const isFeatured = document.getElementById('isFeaturedMovie').checked;
             const posterUrlInput = document.getElementById('moviePosterUrl').value;
             let poster = document.getElementById('existingPoster').value;
+
+            const selectedGenres = [];
+            document.querySelectorAll('#genreCheckboxGroup input:checked').forEach(cb => selectedGenres.push(cb.value));
+            const category = selectedGenres.join(', ');
+
+            const selectedLangs = [];
+            document.querySelectorAll('#langCheckboxGroup input:checked').forEach(cb => selectedLangs.push(cb.value));
+            const language = selectedLangs.join(', ');
 
             if (selectedImageBase64) { poster = selectedImageBase64; } 
             else if (posterUrlInput) { poster = posterUrlInput; }
@@ -388,14 +447,20 @@
 
             document.getElementById('editMovieId').value = movie.id;
             document.getElementById('movieTitle').value = movie.title;
-            document.getElementById('movieCategory').value = movie.category;
             document.getElementById('movieDesc').value = movie.description || '';
             document.getElementById('movieYear').value = movie.year || '';
-            document.getElementById('movieLang').value = movie.language || '';
             document.getElementById('movieDuration').value = movie.duration || '';
             document.getElementById('movieCast').value = movie.cast || '';
             document.getElementById('existingPoster').value = movie.poster || '';
             document.getElementById('isFeaturedMovie').checked = movie.isFeatured || false;
+
+            document.querySelectorAll('#genreCheckboxGroup input').forEach(cb => {
+                cb.checked = movie.category && movie.category.includes(cb.value);
+            });
+
+            document.querySelectorAll('#langCheckboxGroup input').forEach(cb => {
+                cb.checked = movie.language && movie.language.includes(cb.value);
+            });
             
             ['480p', '720p', '1080p'].forEach(q => {
                 document.getElementById(`link${q}`).value = '';
@@ -431,13 +496,14 @@
             document.getElementById('movieTitle').value = '';
             document.getElementById('movieDesc').value = '';
             document.getElementById('movieYear').value = '';
-            document.getElementById('movieLang').value = '';
             document.getElementById('movieDuration').value = '';
             document.getElementById('movieCast').value = '';
             document.getElementById('moviePosterFile').value = '';
             document.getElementById('moviePosterUrl').value = '';
             document.getElementById('existingPoster').value = '';
             document.getElementById('isFeaturedMovie').checked = false;
+            document.querySelectorAll('#genreCheckboxGroup input').forEach(cb => cb.checked = false);
+            document.querySelectorAll('#langCheckboxGroup input').forEach(cb => cb.checked = false);
             ['480p', '720p', '1080p'].forEach(q => {
                 document.getElementById(`link${q}`).value = '';
                 document.getElementById(`size${q}`).value = '';
@@ -476,16 +542,33 @@
             const footerText = document.getElementById('footerTextInput').value;
             const fontStyle = document.getElementById('fontStyleSelect').value;
 
-            let headerMedia = document.getElementById('existingHeaderMedia').value;
-            const headerMediaUrl = document.getElementById('headerMediaUrl').value;
-            if (headerMediaBase64) { headerMedia = headerMediaBase64; }
-            else if (headerMediaUrl) { headerMedia = headerMediaUrl; }
+            // Home Header Media
+            let homeHeader = document.getElementById('existingHomeHeaderMedia').value;
+            const homeUrl = document.getElementById('homeHeaderUrl').value;
+            if (homeHeaderBase64) { homeHeader = homeHeaderBase64; }
+            else if (homeUrl) { homeHeader = homeUrl; }
+
+            // Movie Header Media
+            let movieHeader = document.getElementById('existingMovieHeaderMedia').value;
+            const movieUrl = document.getElementById('movieHeaderUrl').value;
+            if (movieHeaderBase64) { movieHeader = movieHeaderBase64; }
+            else if (movieUrl) { movieHeader = movieUrl; }
+
+            const socials = [];
+            for(let i=1; i<=5; i++) {
+                socials.push({
+                    icon: document.getElementById(`socialIcon_${i}`).value,
+                    link: document.getElementById(`socialLink_${i}`).value
+                });
+            }
 
             const generalData = {
                 siteTitle, themeColor, iconUrl, footerText, fontStyle,
-                headerMedia,
+                homeHeaderMedia: homeHeader,
                 headerHomeEnable: document.getElementById('headerHomeEnable').checked,
-                headerMovieEnable: document.getElementById('headerMovieEnable').checked
+                movieHeaderMedia: movieHeader,
+                headerMovieEnable: document.getElementById('headerMovieEnable').checked,
+                socials: socials
             };
 
             try {
@@ -505,10 +588,23 @@
                     document.getElementById('footerTextInput').value = data.footerText || '© 2026 CineBox. All Rights Reserved.';
                     document.getElementById('fontStyleSelect').value = data.fontStyle || 'Segoe UI';
 
-                    document.getElementById('existingHeaderMedia').value = data.headerMedia || '';
-                    document.getElementById('headerMediaUrl').value = (data.headerMedia && data.headerMedia.startsWith('http')) ? data.headerMedia : '';
+                    document.getElementById('existingHomeHeaderMedia').value = data.homeHeaderMedia || '';
+                    document.getElementById('homeHeaderUrl').value = (data.homeHeaderMedia && data.homeHeaderMedia.startsWith('http')) ? data.homeHeaderMedia : '';
                     document.getElementById('headerHomeEnable').checked = data.headerHomeEnable || false;
+
+                    document.getElementById('existingMovieHeaderMedia').value = data.movieHeaderMedia || '';
+                    document.getElementById('movieHeaderUrl').value = (data.movieHeaderMedia && data.movieHeaderMedia.startsWith('http')) ? data.movieHeaderMedia : '';
                     document.getElementById('headerMovieEnable').checked = data.headerMovieEnable || false;
+
+                    if(data.socials && Array.isArray(data.socials)) {
+                        data.socials.forEach((s, index) => {
+                            const i = index + 1;
+                            if(document.getElementById(`socialIcon_${i}`)) {
+                                document.getElementById(`socialIcon_${i}`).value = s.icon || '';
+                                document.getElementById(`socialLink_${i}`).value = s.link || '';
+                            }
+                        });
+                    }
                 }
 
                 const adDoc = await getDoc(doc(db, "settings", "advancedAds"));
