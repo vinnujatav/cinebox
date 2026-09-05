@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineBox - Admin Panel</title>
+    <title>CineBox - Advanced Admin Panel</title>
 
-    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // TODO: Replace with your actual Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
             authDomain: "cinebox-9011f.firebaseapp.com",
@@ -21,11 +19,11 @@
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
 
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Check active session automatically
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 showDashboard();
@@ -35,38 +33,26 @@
         });
 
         window.handleLogin = async function() {
-            const emailInput = document.getElementById('usernameInput').value; // Yahan apna Firebase wala Email dalein
-            const passInput = document.getElementById('passwordInput').value; // Yahan Password dalein
-            
+            const emailInput = document.getElementById('usernameInput').value;
+            const passInput = document.getElementById('passwordInput').value;
             try {
-                // Firebase Auth se sign in karein
                 await signInWithEmailAndPassword(auth, emailInput, passInput);
                 showDashboard();
             } catch (error) {
-                console.error(error);
                 document.getElementById('errorMsg').innerText = 'Invalid Email or Password!';
             }
         }
 
         window.handleLogout = async function() {
-            try {
-                await signOut(auth);
-                handleLogoutUI();
-            } catch (error) {
-                console.error(error);
-            }
+            await signOut(auth);
+            handleLogoutUI();
         }
 
         function showDashboard() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('adminDashboard').style.display = 'block';
             loadAdminMovies();
-            
-            const savedColor = localStorage.getItem('cinebox_theme_color');
-            if(savedColor) {
-                document.getElementById('themeColorPicker').value = savedColor;
-                document.documentElement.style.setProperty('--primary-color', savedColor);
-            }
+            loadSettings();
         }
 
         function handleLogoutUI() {
@@ -82,8 +68,8 @@
             try {
                 const querySnapshot = await getDocs(collection(db, "movies"));
                 cachedMovies = [];
-                querySnapshot.forEach((documentSnapshot) => {
-                    cachedMovies.push({ id: documentSnapshot.id, ...documentSnapshot.data() });
+                querySnapshot.forEach((docSnap) => {
+                    cachedMovies.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
                 if (cachedMovies.length === 0) {
@@ -102,7 +88,6 @@
                     </tr>
                 `).join('');
             } catch (err) {
-                console.error(err);
                 list.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error loading movies.</td></tr>`;
             }
         }
@@ -111,33 +96,32 @@
             const id = document.getElementById('editMovieId').value;
             const title = document.getElementById('movieTitle').value;
             const category = document.getElementById('movieCategory').value;
+            const description = document.getElementById('movieDesc').value;
+            const year = document.getElementById('movieYear').value;
+            const language = document.getElementById('movieLang').value;
             const poster = document.getElementById('moviePoster').value;
             const link = document.getElementById('movieLink').value;
 
             if (!title || !poster || !link) {
-                alert('Please fill all fields!');
+                alert('Please fill required fields (Title, Poster, Link)!');
                 return;
             }
 
             try {
+                const movieData = { title, category, description, year, language, poster, link, createdAt: Date.now() };
                 if (id === "") {
-                    // Add new movie to Firestore
-                    await addDoc(collection(db, "movies"), { title, category, poster, link, createdAt: Date.now() });
+                    await addDoc(collection(db, "movies"), movieData);
                     alert('Movie added successfully!');
                 } else {
-                    // Update existing movie in Firestore
-                    const movieRef = doc(db, "movies", id);
-                    await updateDoc(movieRef, { title, category, poster, link });
+                    await updateDoc(doc(db, "movies", id), movieData);
                     document.getElementById('editMovieId').value = "";
                     document.getElementById('formTitle').innerText = "Add New Movie";
                     document.getElementById('saveMovieBtn').innerText = "Add Movie";
                     alert('Movie updated successfully!');
                 }
-
                 clearForm();
                 loadAdminMovies();
             } catch (error) {
-                console.error("Error saving movie: ", error);
                 alert("Failed to save movie.");
             }
         }
@@ -149,6 +133,9 @@
             document.getElementById('editMovieId').value = movie.id;
             document.getElementById('movieTitle').value = movie.title;
             document.getElementById('movieCategory').value = movie.category;
+            document.getElementById('movieDesc').value = movie.description || '';
+            document.getElementById('movieYear').value = movie.year || '';
+            document.getElementById('movieLang').value = movie.language || '';
             document.getElementById('moviePoster').value = movie.poster;
             document.getElementById('movieLink').value = movie.link;
 
@@ -163,7 +150,6 @@
                     loadAdminMovies();
                     alert('Movie deleted successfully!');
                 } catch (error) {
-                    console.error("Error deleting movie: ", error);
                     alert("Failed to delete movie.");
                 }
             }
@@ -171,15 +157,51 @@
 
         function clearForm() {
             document.getElementById('movieTitle').value = '';
+            document.getElementById('movieDesc').value = '';
+            document.getElementById('movieYear').value = '';
+            document.getElementById('movieLang').value = '';
             document.getElementById('moviePoster').value = '';
             document.getElementById('movieLink').value = '';
         }
 
-        window.saveTheme = function() {
-            const color = document.getElementById('themeColorPicker').value;
-            localStorage.setItem('cinebox_theme_color', color);
-            document.documentElement.style.setProperty('--primary-color', color);
-            alert('Theme color updated successfully!');
+        window.saveSiteSettings = async function() {
+            const siteTitle = document.getElementById('siteTitleInput').value;
+            const themeColor = document.getElementById('themeColorPicker').value;
+            const iconUrl = document.getElementById('siteIconInput').value;
+
+            try {
+                await setDoc(doc(db, "settings", "general"), { siteTitle, themeColor, iconUrl });
+                alert('Website customization saved successfully!');
+            } catch (e) {
+                alert('Failed to save settings.');
+            }
+        }
+
+        window.saveAdCode = async function() {
+            const adCode = document.getElementById('adCodeInput').value;
+            try {
+                await setDoc(doc(db, "settings", "ads"), { adCode });
+                alert('Advertisement code updated live successfully!');
+            } catch (e) {
+                alert('Failed to save ad code.');
+            }
+        }
+
+        async function loadSettings() {
+            try {
+                const genDoc = await getDoc(doc(db, "settings", "general"));
+                if (genDoc.exists()) {
+                    const data = genDoc.data();
+                    document.getElementById('siteTitleInput').value = data.siteTitle || 'CineBox';
+                    document.getElementById('themeColorPicker').value = data.themeColor || '#e50914';
+                    document.getElementById('siteIconInput').value = data.iconUrl || '';
+                }
+
+                const adDoc = await getDoc(doc(db, "settings", "ads"));
+                if (adDoc.exists()) {
+                    document.getElementById('adCodeInput').value = adDoc.data().adCode || '';
+                }
+            } catch (e) {}
         }
     </script>
 
@@ -192,177 +214,30 @@
             --text-muted: #b3b3b3;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-        }
-
-        #loginSection {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #111, #222);
-        }
-
-        .login-card {
-            background-color: var(--card-bg);
-            padding: 40px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            border: 1px solid #333;
-        }
-
-        .login-card h2 {
-            margin-bottom: 20px;
-            color: var(--primary-color);
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            background-color: #2a2a2a;
-            border: 1px solid #444;
-            border-radius: 6px;
-            color: white;
-            font-size: 16px;
-            outline: none;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-        }
-
-        .error-msg {
-            color: var(--primary-color);
-            text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        #adminDashboard {
-            display: none;
-            padding: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #222;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-
-        .admin-header h1 {
-            color: var(--primary-color);
-            font-size: 26px;
-        }
-
-        .logout-btn {
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .admin-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .admin-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .admin-box {
-            background-color: var(--card-bg);
-            padding: 25px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            margin-box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            margin-bottom: 25px;
-        }
-
-        .admin-box h3 {
-            margin-bottom: 20px;
-            font-size: 18px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-        }
-
-        .movie-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        .movie-table th, .movie-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #333;
-            font-size: 14px;
-        }
-
-        .movie-table th {
-            color: var(--text-muted);
-        }
-
-        .action-btns button {
-            padding: 5px 10px;
-            margin-right: 5px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; }
+        #loginSection { display: flex; align-items: center; justify-content: center; height: 100vh; background: linear-gradient(135deg, #111, #222); padding: 20px; }
+        .login-card { background-color: var(--card-bg); padding: 30px; border-radius: 8px; width: 100%; max-width: 380px; border: 1px solid #333; }
+        .login-card h2 { margin-bottom: 20px; color: var(--primary-color); text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--text-muted); }
+        .form-control { width: 100%; padding: 10px; background-color: #2a2a2a; border: 1px solid #444; border-radius: 5px; color: white; font-size: 14px; outline: none; }
+        .form-control:focus { border-color: var(--primary-color); }
+        textarea.form-control { resize: vertical; height: 70px; }
+        .btn { width: 100%; padding: 10px; background-color: var(--primary-color); color: white; border: none; border-radius: 5px; font-size: 15px; font-weight: 600; cursor: pointer; }
+        .error-msg { color: var(--primary-color); text-align: center; margin-top: 10px; font-size: 13px; }
+        #adminDashboard { display: none; padding: 20px; max-width: 1100px; margin: 0 auto; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; padding-bottom: 15px; margin-bottom: 25px; }
+        .admin-header h1 { color: var(--primary-color); font-size: 22px; }
+        .logout-btn { background-color: #333; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 800px) { .admin-grid { grid-template-columns: 1fr; } }
+        .admin-box { background-color: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px; }
+        .admin-box h3 { margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+        .movie-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .movie-table th, .movie-table td { padding: 10px; text-align: left; border-bottom: 1px solid #333; font-size: 13px; }
+        .movie-table th { color: var(--text-muted); }
+        .action-btns button { padding: 4px 8px; margin-right: 4px; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; }
         .edit-btn { background-color: #3498db; color: white; }
         .delete-btn { background-color: #e74c3c; color: white; }
     </style>
@@ -375,11 +250,11 @@
             <h2>CineBox Admin</h2>
             <div class="form-group">
                 <label>Email Address</label>
-                <input type="email" id="usernameInput" class="form-control" placeholder="Enter your Firebase auth email">
+                <input type="email" id="usernameInput" class="form-control" placeholder="Admin email">
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="passwordInput" class="form-control" placeholder="Enter password">
+                <input type="password" id="passwordInput" class="form-control" placeholder="Password">
             </div>
             <button class="btn" onclick="handleLogin()">Login</button>
             <div id="errorMsg" class="error-msg"></div>
@@ -394,8 +269,34 @@
         </div>
 
         <div class="admin-grid">
-            <!-- Left Column: Add/Edit Movie & Theme Customizer -->
+            <!-- Left Column: Settings, Ads & Add Movie -->
             <div>
+                <div class="admin-box">
+                    <h3>Website Customization (Theme, Icon & Name)</h3>
+                    <div class="form-group">
+                        <label>Website Name / Title</label>
+                        <input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox">
+                    </div>
+                    <div class="form-group">
+                        <label>Theme Accent Color</label>
+                        <input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 38px; padding: 2px; cursor: pointer;">
+                    </div>
+                    <div class="form-group">
+                        <label>Favicon / Icon Image Link</label>
+                        <input type="text" id="siteIconInput" class="form-control" placeholder="https://.../icon.png">
+                    </div>
+                    <button class="btn" onclick="saveSiteSettings()">Save Customization</button>
+                </div>
+
+                <div class="admin-box">
+                    <h3>Advertisement Manager</h3>
+                    <div class="form-group">
+                        <label>Ad HTML / Script Code</label>
+                        <textarea id="adCodeInput" class="form-control" placeholder="Paste ad script here..."></textarea>
+                    </div>
+                    <button class="btn" onclick="saveAdCode()">Save Advertisement</button>
+                </div>
+
                 <div class="admin-box">
                     <h3 id="formTitle">Add New Movie</h3>
                     <input type="hidden" id="editMovieId">
@@ -414,27 +315,32 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="movieDesc" class="form-control" placeholder="Short summary..."></textarea>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <div class="form-group" style="flex:1;">
+                            <label>Release Year</label>
+                            <input type="text" id="movieYear" class="form-control" placeholder="2026">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Language</label>
+                            <input type="text" id="movieLang" class="form-control" placeholder="Hindi">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label>Poster Image Link</label>
-                        <input type="text" id="moviePoster" class="form-control" placeholder="https://example.com/poster.jpg">
+                        <input type="text" id="moviePoster" class="form-control" placeholder="https://...">
                     </div>
                     <div class="form-group">
                         <label>Download Link</label>
-                        <input type="text" id="movieLink" class="form-control" placeholder="https://example.com/download">
+                        <input type="text" id="movieLink" class="form-control" placeholder="https://...">
                     </div>
                     <button class="btn" id="saveMovieBtn" onclick="saveMovie()">Add Movie</button>
                 </div>
-
-                <div class="admin-box">
-                    <h3>Theme Customizer</h3>
-                    <div class="form-group">
-                        <label>Poster / Accent Theme Color</label>
-                        <input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 40px; padding: 2px; cursor: pointer;">
-                    </div>
-                    <button class="btn" onclick="saveTheme()">Apply Theme</button>
-                </div>
             </div>
 
-            <!-- Right Column: Movie Management List -->
+            <!-- Right Column: Movie List Database -->
             <div>
                 <div class="admin-box">
                     <h3>Manage Movies Database</h3>
@@ -448,7 +354,7 @@
                                 </tr>
                             </thead>
                             <tbody id="adminMovieList">
-                                <!-- Loaded dynamically from Firebase -->
+                                <tr><td colspan="3" style="text-align:center;">Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
