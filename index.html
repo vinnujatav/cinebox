@@ -18,7 +18,6 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -31,42 +30,41 @@
                         document.getElementById('brandTitle').innerText = data.siteTitle;
                         document.getElementById('pageTitle').innerText = data.siteTitle;
                     }
-                    if (data.themeColor) {
-                        document.documentElement.style.setProperty('--primary-color', data.themeColor);
-                    }
-                    if (data.iconUrl) {
-                        document.getElementById('siteFavicon').href = data.iconUrl;
-                    }
-                    if (data.footerText) {
-                        document.getElementById('footerText').innerText = data.footerText;
-                    }
-                    if (data.fontStyle) {
-                        document.documentElement.style.setProperty('--font-family', data.fontStyle);
-                    }
+                    if (data.themeColor) { document.documentElement.style.setProperty('--primary-color', data.themeColor); }
+                    if (data.iconUrl) { document.getElementById('siteFavicon').href = data.iconUrl; }
+                    if (data.footerText) { document.getElementById('footerText').innerText = data.footerText; }
+                    if (data.fontStyle) { document.documentElement.style.setProperty('--font-family', data.fontStyle); }
                 }
 
-                const adDoc = await getDoc(doc(db, "settings", "ads"));
+                const adDoc = await getDoc(doc(db, "settings", "advancedAds"));
                 if (adDoc.exists()) {
                     const ads = adDoc.data();
-                    
-                    if (ads.topAdEnable && ads.topAdImg) {
-                        const container = document.getElementById('topAdContainer');
-                        container.innerHTML = `<a href="${ads.topAdLink || '#'}" target="_blank"><img src="${ads.topAdImg}" alt="Ad" style="width:100%; height:auto; display:block; max-height:90px; object-fit:cover;"></a>`;
-                        container.style.display = 'block';
-                    }
-                    if (ads.middleAdEnable && ads.middleAdImg) {
-                        const container = document.getElementById('middleAdContainer');
-                        container.innerHTML = `<a href="${ads.middleAdLink || '#'}" target="_blank"><img src="${ads.middleAdImg}" alt="Ad" style="width:100%; height:auto; display:block; max-height:90px; object-fit:cover;"></a>`;
-                        container.style.display = 'block';
-                    }
-                    if (ads.bottomAdEnable && ads.bottomAdImg) {
-                        const container = document.getElementById('bottomAdContainer');
-                        container.innerHTML = `<a href="${ads.bottomAdLink || '#'}" target="_blank"><img src="${ads.bottomAdImg}" alt="Ad" style="width:100%; height:auto; display:block; max-height:90px; object-fit:cover;"></a>`;
-                        container.style.display = 'block';
-                    }
+                    renderAd('topAdContainer', ads.topMedia, ads.topLink, ads.topHeight, ads.topWidth, ads.topEnable);
+                    renderAd('middleAdContainer', ads.middleMedia, ads.middleLink, ads.middleHeight, ads.middleWidth, ads.middleEnable);
+                    renderAd('bottomAdContainer', ads.bottomMedia, ads.bottomLink, ads.bottomHeight, ads.bottomWidth, ads.bottomEnable);
                 }
-            } catch (e) {
-                console.error("Settings load error:", e);
+            } catch (e) { console.error("Settings load error:", e); }
+        }
+
+        function renderAd(containerId, media, link, height, width, enable) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            if (enable && media) {
+                let content = '';
+                const hStyle = height ? `height:${height};` : 'height:auto;';
+                const wStyle = width ? `width:${width};` : 'width:100%;';
+                
+                // Check if video or image
+                if (media.includes('data:video') || media.endsWith('.mp4') || media.includes('video')) {
+                    content = `<video src="${media}" autoplay muted loop playsinline style="${hStyle} ${wStyle} object-fit:cover; display:block;"></video>`;
+                } else {
+                    content = `<img src="${media}" alt="Ad" style="${hStyle} ${wStyle} object-fit:cover; display:block;">`;
+                }
+
+                container.innerHTML = `<a href="${link || '#'}" target="_blank" style="display:block;">${content}</a>`;
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
             }
         }
 
@@ -99,7 +97,9 @@
                 movies = movies.filter(m => m.title && m.title.toLowerCase().includes(searchQuery.toLowerCase()));
             }
 
-            const latestMovies = movies.slice(-10).reverse();
+            // Newest first
+            movies.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            const latestMovies = movies.slice(0, 10);
 
             if (latestMovies.length === 0) {
                 grid.innerHTML = `<div class="no-movies">No movies found!</div>`;
