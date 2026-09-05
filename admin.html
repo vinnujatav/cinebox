@@ -62,7 +62,7 @@
 
         <div class="admin-grid">
             <div>
-                <!-- 1. WEBSITE CUSTOMIZATION & DUAL HEADER MEDIA OPTIONS -->
+                <!-- 1. WEBSITE CUSTOMIZATION -->
                 <div class="admin-box">
                     <h3>🎨 Website Customization & Header Background</h3>
                     <div class="form-group"><label>Website Title</label><input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox"></div>
@@ -159,6 +159,14 @@
                     <div class="form-group"><label>Poster File</label><input type="file" id="moviePosterFile" class="form-control" accept="image/*" style="padding:4px;"></div>
                     <div class="form-group"><label>OR Poster URL</label><input type="text" id="moviePosterUrl" class="form-control" placeholder="https://..."></div>
 
+                    <!-- New Featured / Latest Movie Checkbox (Unlimited) -->
+                    <div class="form-group" style="background: #262626; padding: 10px; border-radius: 5px; border: 1px solid #444;">
+                        <div class="checkbox-group" style="font-size: 13px; color: #fff;">
+                            <input type="checkbox" id="isFeaturedMovie" style="width: 16px; height: 16px; accent-var: var(--primary-color);"> 
+                            ⭐ Pin to Latest / Featured Movies (Show on Home Page)
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label style="font-weight: 600; color: #fff;">Download Links & Quality Setup</label>
                         <div class="quality-row">
@@ -191,7 +199,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
         <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -268,9 +276,10 @@
 
             list.innerHTML = movies.map((movie) => {
                 const dateStr = movie.createdAt ? new Date(movie.createdAt).toLocaleString() : 'N/A';
+                const featuredBadge = movie.isFeatured ? ' ⭐' : '';
                 return `
                     <tr>
-                        <td><b>${movie.title}</b><br><small style="color:#888;">${movie.category || ''}</small></td>
+                        <td><b>${movie.title}</b>${featuredBadge}<br><small style="color:#888;">${movie.category || ''}</small></td>
                         <td><small>${dateStr}</small></td>
                         <td class="action-btns">
                             <button class="edit-btn" onclick="editMovie('${movie.id}')">Edit</button>
@@ -335,6 +344,7 @@
             const language = document.getElementById('movieLang').value;
             const duration = document.getElementById('movieDuration').value;
             const cast = document.getElementById('movieCast').value;
+            const isFeatured = document.getElementById('isFeaturedMovie').checked;
             const posterUrlInput = document.getElementById('moviePosterUrl').value;
             let poster = document.getElementById('existingPoster').value;
 
@@ -353,6 +363,7 @@
             try {
                 const movieData = { 
                     title, category, description, year, language, duration, cast, poster, 
+                    isFeatured,
                     qualities, createdAt: id === "" ? Date.now() : (cachedMovies.find(m => m.id === id)?.createdAt || Date.now())
                 };
 
@@ -384,6 +395,7 @@
             document.getElementById('movieDuration').value = movie.duration || '';
             document.getElementById('movieCast').value = movie.cast || '';
             document.getElementById('existingPoster').value = movie.poster || '';
+            document.getElementById('isFeaturedMovie').checked = movie.isFeatured || false;
             
             ['480p', '720p', '1080p'].forEach(q => {
                 document.getElementById(`link${q}`).value = '';
@@ -425,6 +437,7 @@
             document.getElementById('moviePosterFile').value = '';
             document.getElementById('moviePosterUrl').value = '';
             document.getElementById('existingPoster').value = '';
+            document.getElementById('isFeaturedMovie').checked = false;
             ['480p', '720p', '1080p'].forEach(q => {
                 document.getElementById(`link${q}`).value = '';
                 document.getElementById(`size${q}`).value = '';
