@@ -18,7 +18,7 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
-
+        
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -49,29 +49,25 @@
                 if (adDoc.exists()) {
                     const ads = adDoc.data();
                     
-                    if (ads.topAdEnable && ads.topAd) {
-                        document.getElementById('topAdContainer').innerHTML = renderAdContent(ads.topAd);
-                        document.getElementById('topAdContainer').style.display = 'block';
+                    if (ads.topAdEnable && ads.topAdImg) {
+                        const container = document.getElementById('topAdContainer');
+                        container.innerHTML = `<a href="${ads.topAdLink || '#'}" target="_blank"><img src="${ads.topAdImg}" alt="Ad" style="width:100%; height:auto; display:block; max-height:90px; object-fit:cover;"></a>`;
+                        container.style.display = 'block';
                     }
-                    if (ads.middleAdEnable && ads.middleAd) {
-                        document.getElementById('middleAdContainer').innerHTML = renderAdContent(ads.middleAd);
-                        document.getElementById('middleAdContainer').style.display = 'block';
+                    if (ads.middleAdEnable && ads.middleAdImg) {
+                        const container = document.getElementById('middleAdContainer');
+                        container.innerHTML = `<a href="${ads.middleAdLink || '#'}" target="_blank"><img src="${ads.middleAdImg}" alt="Ad" style="width:100%; height:auto; display:block; max-height:90px; object-fit:cover;"></a>`;
+                        container.style.display = 'block';
                     }
-                    if (ads.bottomAdEnable && ads.bottomAd) {
-                        document.getElementById('bottomAdContainer').innerHTML = renderAdContent(ads.bottomAd);
-                        document.getElementById('bottomAdContainer').style.display = 'block';
+                    if (ads.bottomAdEnable && ads.bottomAdImg) {
+                        const container = document.getElementById('bottomAdContainer');
+                        container.innerHTML = `<a href="${ads.bottomAdLink || '#'}" target="_blank"><img src="${ads.bottomAdImg}" alt="Ad" style="width:100%; height:auto; display:block; max-height:90px; object-fit:cover;"></a>`;
+                        container.style.display = 'block';
                     }
                 }
             } catch (e) {
                 console.error("Settings load error:", e);
             }
-        }
-
-        function renderAdContent(content) {
-            if (content.startsWith('http')) {
-                return `<a href="${content}" target="_blank" style="color: #fff; text-decoration: none; font-weight: 600; display: block; width: 100%; height: 100%; line-height: 70px;">📢 Sponsored Advertisement (Click Here)</a>`;
-            }
-            return content;
         }
 
         let allMovies = [];
