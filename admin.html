@@ -4,8 +4,211 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineBox - Ultimate Advanced Admin Panel</title>
+    <style>
+        :root {
+            --primary-color: #e50914;
+            --bg-color: #141414;
+            --card-bg: #1f1f1f;
+            --text-color: #ffffff;
+            --text-muted: #b3b3b3;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; }
+        #loginSection { display: flex; align-items: center; justify-content: center; height: 100vh; background: linear-gradient(135deg, #111, #222); padding: 20px; }
+        .login-card { background-color: var(--card-bg); padding: 30px; border-radius: 8px; width: 100%; max-width: 380px; border: 1px solid #333; }
+        .login-card h2 { margin-bottom: 20px; color: var(--primary-color); text-align: center; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 13px; color: var(--text-muted); }
+        .form-control { width: 100%; padding: 8px 10px; background-color: #2a2a2a; border: 1px solid #444; border-radius: 5px; color: white; font-size: 13px; outline: none; }
+        .form-control:focus { border-color: var(--primary-color); }
+        .btn { width: 100%; padding: 10px; background-color: var(--primary-color); color: white; border: none; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .error-msg { color: var(--primary-color); text-align: center; margin-top: 10px; font-size: 13px; }
+        #adminDashboard { display: none; padding: 20px; max-width: 1100px; margin: 0 auto; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; padding-bottom: 15px; margin-bottom: 20px; }
+        .admin-header h1 { color: var(--primary-color); font-size: 20px; }
+        .logout-btn { background-color: #333; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 800px) { .admin-grid { grid-template-columns: 1fr; } }
+        .admin-box { background-color: var(--card-bg); padding: 18px; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px; }
+        .admin-box h3 { margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid #333; padding-bottom: 6px; }
+        .movie-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .movie-table th, .movie-table td { padding: 8px; text-align: left; border-bottom: 1px solid #333; font-size: 12px; }
+        .movie-table th { color: var(--text-muted); }
+        .action-btns button { padding: 4px 8px; margin-right: 4px; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; }
+        .edit-btn { background-color: #3498db; color: white; }
+        .delete-btn { background-color: #e74c3c; color: white; }
+        .checkbox-group { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 12px; color: var(--text-muted); }
+        .quality-row { background: #262626; padding: 8px; border-radius: 5px; margin-bottom: 8px; border: 1px solid #444; }
+        .ad-box-sub { background: #262626; padding: 10px; border-radius: 5px; margin-bottom: 10px; border: 1px solid #444; }
+    </style>
+</head>
+<body>
 
-    <script type="module">
+    <div id="loginSection">
+        <div class="login-card">
+            <h2>CineBox Admin</h2>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="usernameInput" class="form-control" placeholder="Admin email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="passwordInput" class="form-control" placeholder="Password">
+            </div>
+            <button class="btn" onclick="handleLogin()">Login</button>
+            <div id="errorMsg" class="error-msg"></div>
+        </div>
+    </div>
+
+    <div id="adminDashboard">
+        <div class="admin-header">
+            <h1>CineBox Control Center</h1>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+
+        <div class="admin-grid">
+            <div>
+                <!-- 1. MOVIE MANAGEMENT -->
+                <div class="admin-box" style="border: 1px solid var(--primary-color);">
+                    <h3 id="formTitle" style="color: var(--primary-color);">Add New Movie</h3>
+                    <input type="hidden" id="editMovieId">
+                    <input type="hidden" id="existingPoster">
+                    
+                    <div class="form-group">
+                        <label>Movie Title</label>
+                        <input type="text" id="movieTitle" class="form-control" placeholder="Toxic V2">
+                    </div>
+                    <div class="form-group">
+                        <label>Genre / Category</label>
+                        <input type="text" id="movieCategory" class="form-control" placeholder="Action, Crime, Drama">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="movieDesc" class="form-control" placeholder="Summary..." style="height:60px;"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <div class="form-group" style="flex:1;"><label>Year</label><input type="text" id="movieYear" class="form-control" placeholder="2026"></div>
+                        <div class="form-group" style="flex:1;"><label>Language</label><input type="text" id="movieLang" class="form-control" placeholder="Hindi"></div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <div class="form-group" style="flex:1;"><label>Duration</label><input type="text" id="movieDuration" class="form-control" placeholder="3h 02min"></div>
+                        <div class="form-group" style="flex:1;"><label>Starcast</label><input type="text" id="movieCast" class="form-control" placeholder="Yash, Nayanthara"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Poster File</label>
+                        <input type="file" id="moviePosterFile" class="form-control" accept="image/*" style="padding:4px;">
+                    </div>
+                    <div class="form-group">
+                        <label>OR Poster URL</label>
+                        <input type="text" id="moviePosterUrl" class="form-control" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="font-weight: 600; color: #fff;">Download Links by Quality</label>
+                        <div class="quality-row">
+                            <input type="text" id="link480p" class="form-control" placeholder="480p Link" style="margin-bottom:4px;">
+                            <input type="text" id="size480p" class="form-control" placeholder="Size Tag (e.g. 600mb {480p-HQCam})">
+                        </div>
+                        <div class="quality-row">
+                            <input type="text" id="link720p" class="form-control" placeholder="720p Link" style="margin-bottom:4px;">
+                            <input type="text" id="size720p" class="form-control" placeholder="Size Tag (e.g. 990mb {720p-HEVC})">
+                        </div>
+                        <div class="quality-row">
+                            <input type="text" id="link1080p" class="form-control" placeholder="1080p Link" style="margin-bottom:4px;">
+                            <input type="text" id="size1080p" class="form-control" placeholder="Size Tag (e.g. 3.5Gb {1080p-HQCam})">
+                        </div>
+                    </div>
+                    <button class="btn" id="saveMovieBtn" onclick="saveMovie()">Add Movie</button>
+                </div>
+
+                <div class="admin-box">
+                    <h3>Manage Movies Database</h3>
+                    <div style="overflow-x: auto; max-height: 250px;">
+                        <table class="movie-table">
+                            <thead><tr><th>Title</th><th>Genre</th><th>Actions</th></tr></thead>
+                            <tbody id="adminMovieList"><tr><td colspan="3" style="text-align:center;">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <!-- 2. ADVERTISEMENT MANAGER -->
+                <div class="admin-box" style="border: 1px solid #f39c12;">
+                    <h3 style="color: #f39c12;">📢 Advertisement Manager</h3>
+                    
+                    <div class="ad-box-sub">
+                        <label style="font-weight:600; color:#fff;">Home Page: Top Ad Banner</label>
+                        <input type="hidden" id="existingTopAd">
+                        <input type="file" id="topAdFile" class="form-control" accept="image/*" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="topAdUrl" class="form-control" placeholder="OR Image URL" style="margin-top:4px;">
+                        <input type="text" id="topAdLink" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                        <div class="checkbox-group"><input type="checkbox" id="topAdEnable"> Enable Top Ad</div>
+                    </div>
+
+                    <div class="ad-box-sub">
+                        <label style="font-weight:600; color:#fff;">Home Page: Middle Ad Banner</label>
+                        <input type="hidden" id="existingMidAd">
+                        <input type="file" id="middleAdFile" class="form-control" accept="image/*" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="middleAdUrl" class="form-control" placeholder="OR Image URL" style="margin-top:4px;">
+                        <input type="text" id="middleAdLink" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                        <div class="checkbox-group"><input type="checkbox" id="middleAdEnable"> Enable Middle Ad</div>
+                    </div>
+
+                    <div class="ad-box-sub">
+                        <label style="font-weight:600; color:#fff;">Home Page: Bottom Ad Banner</label>
+                        <input type="hidden" id="existingBotAd">
+                        <input type="file" id="bottomAdFile" class="form-control" accept="image/*" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="bottomAdUrl" class="form-control" placeholder="OR Image URL" style="margin-top:4px;">
+                        <input type="text" id="bottomAdLink" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                        <div class="checkbox-group"><input type="checkbox" id="bottomAdEnable"> Enable Bottom Ad</div>
+                    </div>
+
+                    <div class="ad-box-sub" style="border: 1px dashed #3498db;">
+                        <label style="font-weight:600; color:#3498db;">Movie Page: Top Ad Banner</label>
+                        <input type="hidden" id="existingMoviePageAd">
+                        <input type="file" id="moviePageAdFile" class="form-control" accept="image/*" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="moviePageAdUrl" class="form-control" placeholder="OR Image URL" style="margin-top:4px;">
+                        <input type="text" id="moviePageAdLink" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                        <div class="checkbox-group"><input type="checkbox" id="moviePageAdEnable"> Enable Movie Page Ad</div>
+                    </div>
+
+                    <button class="btn" style="background-color: #f39c12; color: #000; font-weight:700;" onclick="saveAdsSettings(); saveMoviePageAd();">Save All Advertisements</button>
+                </div>
+
+                <!-- 3. WEBSITE CUSTOMIZATION -->
+                <div class="admin-box">
+                    <h3>🎨 Website Customization</h3>
+                    <div class="form-group">
+                        <label>Website Title</label>
+                        <input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox">
+                    </div>
+                    <div class="form-group">
+                        <label>Theme Color</label>
+                        <input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 35px; padding: 2px; cursor: pointer;">
+                    </div>
+                    <div class="form-group">
+                        <label>Font Style</label>
+                        <select id="fontStyleSelect" class="form-control">
+                            <option value="Segoe UI">Segoe UI</option>
+                            <option value="Roboto">Roboto</option>
+                            <option value="Poppins">Poppins</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Favicon URL</label>
+                        <input type="text" id="siteIconInput" class="form-control" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>Footer Text</label>
+                        <input type="text" id="footerTextInput" class="form-control" placeholder="© 2026 CineBox">
+                    </div>
+                    <button class="btn" onclick="saveSiteSettings()">Save Customization</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -24,6 +227,9 @@
         const auth = getAuth(app);
 
         let selectedImageBase64 = "";
+        let topAdBase64 = "";
+        let middleAdBase64 = "";
+        let bottomAdBase64 = "";
         let moviePageAdBase64 = "";
 
         onAuthStateChanged(auth, (user) => {
@@ -95,34 +301,26 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const fileInput = document.getElementById('moviePosterFile');
-            if(fileInput) {
-                fileInput.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(uploadEvent) {
-                            selectedImageBase64 = uploadEvent.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            }
-
-            const adFileInput = document.getElementById('moviePageAdFile');
-            if(adFileInput) {
-                adFileInput.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(uploadEvent) {
-                            moviePageAdBase64 = uploadEvent.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            }
+            setupFileReader('moviePosterFile', (res) => { selectedImageBase64 = res; });
+            setupFileReader('topAdFile', (res) => { topAdBase64 = res; });
+            setupFileReader('middleAdFile', (res) => { middleAdBase64 = res; });
+            setupFileReader('bottomAdFile', (res) => { bottomAdBase64 = res; });
+            setupFileReader('moviePageAdFile', (res) => { moviePageAdBase64 = res; });
         });
+
+        function setupFileReader(elementId, callback) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                el.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) { callback(evt.target.result); };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        }
 
         window.saveMovie = async function() {
             const id = document.getElementById('editMovieId').value;
@@ -222,6 +420,7 @@
             selectedImageBase64 = "";
             document.getElementById('formTitle').innerText = "Edit Movie";
             document.getElementById('saveMovieBtn').innerText = "Update Movie";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         window.deleteMovie = async function(id) {
@@ -252,6 +451,60 @@
             selectedImageBase64 = "";
         }
 
+        window.saveAdsSettings = async function() {
+            let topImg = document.getElementById('existingTopAd').value;
+            const topUrl = document.getElementById('topAdUrl').value;
+            if (topAdBase64) topImg = topAdBase64; else if (topUrl) topImg = topUrl;
+
+            let midImg = document.getElementById('existingMidAd').value;
+            const midUrl = document.getElementById('middleAdUrl').value;
+            if (middleAdBase64) midImg = middleAdBase64; else if (midUrl) midImg = midUrl;
+
+            let botImg = document.getElementById('existingBotAd').value;
+            const botUrl = document.getElementById('bottomAdUrl').value;
+            if (bottomAdBase64) botImg = bottomAdBase64; else if (botUrl) botImg = botUrl;
+
+            const adsData = {
+                topAdImg: topImg,
+                topAdLink: document.getElementById('topAdLink').value,
+                topAdEnable: document.getElementById('topAdEnable').checked,
+
+                middleAdImg: midImg,
+                middleAdLink: document.getElementById('middleAdLink').value,
+                middleAdEnable: document.getElementById('middleAdEnable').checked,
+
+                bottomAdImg: botImg,
+                bottomAdLink: document.getElementById('bottomAdLink').value,
+                bottomAdEnable: document.getElementById('bottomAdEnable').checked
+            };
+
+            try {
+                await setDoc(doc(db, "settings", "ads"), adsData);
+                alert('Home Page Banners saved successfully!');
+            } catch (e) {
+                alert('Failed to save home ads.');
+            }
+        };
+
+        window.saveMoviePageAd = async function() {
+            let adImg = document.getElementById('existingMoviePageAd').value;
+            const adUrlInput = document.getElementById('moviePageAdUrl').value;
+            if (moviePageAdBase64) adImg = moviePageAdBase64; else if (adUrlInput) adImg = adUrlInput;
+
+            const moviePageAdData = {
+                adImg: adImg,
+                adLink: document.getElementById('moviePageAdLink').value,
+                adEnable: document.getElementById('moviePageAdEnable').checked
+            };
+
+            try {
+                await setDoc(doc(db, "settings", "moviePageAd"), moviePageAdData);
+                alert('Movie Page Top Ad saved successfully!');
+            } catch (e) {
+                alert('Failed to save movie page ad.');
+            }
+        };
+
         window.saveSiteSettings = async function() {
             const siteTitle = document.getElementById('siteTitleInput').value;
             const themeColor = document.getElementById('themeColorPicker').value;
@@ -261,60 +514,11 @@
 
             try {
                 await setDoc(doc(db, "settings", "general"), { siteTitle, themeColor, iconUrl, footerText, fontStyle });
-                alert('Website customization saved successfully!');
+                alert('Website Customization saved successfully!');
             } catch (e) {
                 alert('Failed to save settings.');
             }
         }
-
-        window.saveAdsSettings = async function() {
-            const adsData = {
-                topAdImg: document.getElementById('topAdImg').value,
-                topAdLink: document.getElementById('topAdLink').value,
-                topAdEnable: document.getElementById('topAdEnable').checked,
-
-                middleAdImg: document.getElementById('middleAdImg').value,
-                middleAdLink: document.getElementById('middleAdLink').value,
-                middleAdEnable: document.getElementById('middleAdEnable').checked,
-
-                bottomAdImg: document.getElementById('bottomAdImg').value,
-                bottomAdLink: document.getElementById('bottomAdLink').value,
-                bottomAdEnable: document.getElementById('bottomAdEnable').checked
-            };
-
-            try {
-                await setDoc(doc(db, "settings", "ads"), adsData);
-                alert('Advertisement banners saved successfully!');
-            } catch (e) {
-                alert('Failed to save ads.');
-            }
-        };
-
-        window.saveMoviePageAd = async function() {
-            let adImg = document.getElementById('existingMoviePageAd').value;
-            const adUrlInput = document.getElementById('moviePageAdUrl').value;
-            const adLink = document.getElementById('moviePageAdLink').value;
-            const adEnable = document.getElementById('moviePageAdEnable').checked;
-
-            if (moviePageAdBase64) {
-                adImg = moviePageAdBase64;
-            } else if (adUrlInput) {
-                adImg = adUrlInput;
-            }
-
-            const moviePageAdData = {
-                adImg: adImg,
-                adLink: adLink,
-                adEnable: adEnable
-            };
-
-            try {
-                await setDoc(doc(db, "settings", "moviePageAd"), moviePageAdData);
-                alert('Movie Page Advertisement saved successfully!');
-            } catch (e) {
-                alert('Failed to save movie page ad.');
-            }
-        };
 
         async function loadSettings() {
             try {
@@ -331,15 +535,18 @@
                 const adDoc = await getDoc(doc(db, "settings", "ads"));
                 if (adDoc.exists()) {
                     const data = adDoc.data();
-                    document.getElementById('topAdImg').value = data.topAdImg || '';
+                    document.getElementById('existingTopAd').value = data.topAdImg || '';
+                    document.getElementById('topAdUrl').value = data.topAdImg && data.topAdImg.startsWith('http') ? data.topAdImg : '';
                     document.getElementById('topAdLink').value = data.topAdLink || '';
                     document.getElementById('topAdEnable').checked = data.topAdEnable || false;
 
-                    document.getElementById('middleAdImg').value = data.middleAdImg || '';
+                    document.getElementById('existingMidAd').value = data.middleAdImg || '';
+                    document.getElementById('middleAdUrl').value = data.middleAdImg && data.middleAdImg.startsWith('http') ? data.middleAdImg : '';
                     document.getElementById('middleAdLink').value = data.middleAdLink || '';
                     document.getElementById('middleAdEnable').checked = data.middleAdEnable || false;
 
-                    document.getElementById('bottomAdImg').value = data.bottomAdImg || '';
+                    document.getElementById('existingBotAd').value = data.bottomAdImg || '';
+                    document.getElementById('bottomAdUrl').value = data.bottomAdImg && data.bottomAdImg.startsWith('http') ? data.bottomAdImg : '';
                     document.getElementById('bottomAdLink').value = data.bottomAdLink || '';
                     document.getElementById('bottomAdEnable').checked = data.bottomAdEnable || false;
                 }
@@ -355,200 +562,5 @@
             } catch (e) {}
         }
     </script>
-
-    <style>
-        :root {
-            --primary-color: #e50914;
-            --bg-color: #141414;
-            --card-bg: #1f1f1f;
-            --text-color: #ffffff;
-            --text-muted: #b3b3b3;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; }
-        #loginSection { display: flex; align-items: center; justify-content: center; height: 100vh; background: linear-gradient(135deg, #111, #222); padding: 20px; }
-        .login-card { background-color: var(--card-bg); padding: 30px; border-radius: 8px; width: 100%; max-width: 380px; border: 1px solid #333; }
-        .login-card h2 { margin-bottom: 20px; color: var(--primary-color); text-align: center; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--text-muted); }
-        .form-control { width: 100%; padding: 10px; background-color: #2a2a2a; border: 1px solid #444; border-radius: 5px; color: white; font-size: 14px; outline: none; }
-        .form-control:focus { border-color: var(--primary-color); }
-        .btn { width: 100%; padding: 10px; background-color: var(--primary-color); color: white; border: none; border-radius: 5px; font-size: 15px; font-weight: 600; cursor: pointer; }
-        .error-msg { color: var(--primary-color); text-align: center; margin-top: 10px; font-size: 13px; }
-        #adminDashboard { display: none; padding: 20px; max-width: 1100px; margin: 0 auto; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; padding-bottom: 15px; margin-bottom: 25px; }
-        .admin-header h1 { color: var(--primary-color); font-size: 22px; }
-        .logout-btn { background-color: #333; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
-        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 800px) { .admin-grid { grid-template-columns: 1fr; } }
-        .admin-box { background-color: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px; }
-        .admin-box h3 { margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 8px; }
-        .movie-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        .movie-table th, .movie-table td { padding: 10px; text-align: left; border-bottom: 1px solid #333; font-size: 13px; }
-        .movie-table th { color: var(--text-muted); }
-        .action-btns button { padding: 4px 8px; margin-right: 4px; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; }
-        .edit-btn { background-color: #3498db; color: white; }
-        .delete-btn { background-color: #e74c3c; color: white; }
-        .checkbox-group { display: flex; align-items: center; gap: 8px; margin-top: 5px; font-size: 13px; color: var(--text-muted); }
-        .quality-row { background: #262626; padding: 10px; border-radius: 5px; margin-bottom: 10px; border: 1px solid #444; }
-    </style>
-</head>
-<body>
-
-    <div id="loginSection">
-        <div class="login-card">
-            <h2>CineBox Admin</h2>
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="usernameInput" class="form-control" placeholder="Admin email">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="passwordInput" class="form-control" placeholder="Password">
-            </div>
-            <button class="btn" onclick="handleLogin()">Login</button>
-            <div id="errorMsg" class="error-msg"></div>
-        </div>
-    </div>
-
-    <div id="adminDashboard">
-        <div class="admin-header">
-            <h1>CineBox Control Center</h1>
-            <button class="logout-btn" onclick="handleLogout()">Logout</button>
-        </div>
-
-        <div class="admin-grid">
-            <div>
-                <!-- Website Customization -->
-                <div class="admin-box">
-                    <h3>Website Customization</h3>
-                    <div class="form-group">
-                        <label>Website Title</label>
-                        <input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox">
-                    </div>
-                    <div class="form-group">
-                        <label>Theme Color</label>
-                        <input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 38px; padding: 2px; cursor: pointer;">
-                    </div>
-                    <div class="form-group">
-                        <label>Font Style</label>
-                        <select id="fontStyleSelect" class="form-control">
-                            <option value="Segoe UI">Segoe UI</option>
-                            <option value="Roboto">Roboto</option>
-                            <option value="Poppins">Poppins</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Favicon URL</label>
-                        <input type="text" id="siteIconInput" class="form-control" placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label>Footer Text</label>
-                        <input type="text" id="footerTextInput" class="form-control" placeholder="© 2026 CineBox">
-                    </div>
-                    <button class="btn" onclick="saveSiteSettings()">Save Customization</button>
-                </div>
-
-                <!-- Dedicated Movie Details Page Top Ad Manager -->
-                <div class="admin-box" style="border: 2px dashed #3498db;">
-                    <h3 style="color: #3498db;">🎬 Movie Details Page Top Advertisement</h3>
-                    <input type="hidden" id="existingMoviePageAd">
-                    <div class="form-group">
-                        <label>Upload Ad Banner Image File</label>
-                        <input type="file" id="moviePageAdFile" class="form-control" accept="image/*" style="padding: 6px;">
-                    </div>
-                    <div class="form-group">
-                        <label>OR Ad Banner Image URL</label>
-                        <input type="text" id="moviePageAdUrl" class="form-control" placeholder="https://i.ibb.co/...">
-                    </div>
-                    <div class="form-group">
-                        <label>Ad Target Link (OnClick URL)</label>
-                        <input type="text" id="moviePageAdLink" class="form-control" placeholder="https://example.com">
-                        <div class="checkbox-group" style="margin-top:6px;">
-                            <input type="checkbox" id="moviePageAdEnable"> Enable Movie Page Top Ad
-                        </div>
-                    </div>
-                    <button class="btn" style="background-color: #3498db;" onclick="saveMoviePageAd()">Save Movie Page Ad</button>
-                </div>
-
-                <!-- Multi-Ads Section -->
-                <div class="admin-box">
-                    <h3>Home Page Advertisement Banners</h3>
-                    <div class="form-group">
-                        <label>Top Ad Image URL</label>
-                        <input type="text" id="topAdImg" class="form-control" placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label>Top Ad Link</label>
-                        <input type="text" id="topAdLink" class="form-control" placeholder="https://...">
-                        <div class="checkbox-group" style="margin-top:6px;"><input type="checkbox" id="topAdEnable"> Enable Top Ad</div>
-                    </div>
-                    <button class="btn" style="margin-top:10px;" onclick="saveAdsSettings()">Save Home Ads</button>
-                </div>
-            </div>
-
-            <div>
-                <!-- Add Movie Section -->
-                <div class="admin-box">
-                    <h3 id="formTitle">Add New Movie</h3>
-                    <input type="hidden" id="editMovieId">
-                    <input type="hidden" id="existingPoster">
-                    <div class="form-group">
-                        <label>Movie Title</label>
-                        <input type="text" id="movieTitle" class="form-control" placeholder="Toxic V2">
-                    </div>
-                    <div class="form-group">
-                        <label>Genre</label>
-                        <input type="text" id="movieCategory" class="form-control" placeholder="Action, Crime">
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="movieDesc" class="form-control" style="height:60px;"></textarea>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <div class="form-group" style="flex:1;"><label>Year</label><input type="text" id="movieYear" class="form-control" placeholder="2026"></div>
-                        <div class="form-group" style="flex:1;"><label>Language</label><input type="text" id="movieLang" class="form-control" placeholder="Hindi"></div>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <div class="form-group" style="flex:1;"><label>Duration</label><input type="text" id="movieDuration" class="form-control" placeholder="3h 02min"></div>
-                        <div class="form-group" style="flex:1;"><label>Starcast</label><input type="text" id="movieCast" class="form-control" placeholder="Yash, Nayanthara"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Poster File</label>
-                        <input type="file" id="moviePosterFile" class="form-control" accept="image/*" style="padding:6px;">
-                    </div>
-                    <div class="form-group">
-                        <label>OR Poster URL</label>
-                        <input type="text" id="moviePosterUrl" class="form-control" placeholder="https://...">
-                    </div>
-
-                    <div class="form-group">
-                        <label style="font-weight: 600; color: #fff;">Download Links by Quality</label>
-                        <div class="quality-row">
-                            <input type="text" id="link480p" class="form-control" placeholder="480p Link" style="margin-bottom:4px;">
-                            <input type="text" id="size480p" class="form-control" placeholder="480p Size Tag (e.g. 600mb {480p-HQCam})">
-                        </div>
-                        <div class="quality-row">
-                            <input type="text" id="link720p" class="form-control" placeholder="720p Link" style="margin-bottom:4px;">
-                            <input type="text" id="size720p" class="form-control" placeholder="Size Tag (e.g. 990mb {720p-HEVC})">
-                        </div>
-                        <div class="quality-row">
-                            <input type="text" id="link1080p" class="form-control" placeholder="1080p Link" style="margin-bottom:4px;">
-                            <input type="text" id="size1080p" class="form-control" placeholder="Size Tag (e.g. 3.5Gb {1080p-HQCam})">
-                        </div>
-                    </div>
-                    <button class="btn" id="saveMovieBtn" onclick="saveMovie()">Add Movie</button>
-                </div>
-
-                <div class="admin-box">
-                    <h3>Manage Movies</h3>
-                    <table class="movie-table">
-                        <thead><tr><th>Title</th><th>Genre</th><th>Actions</th></tr></thead>
-                        <tbody id="adminMovieList"><tr><td colspan="3" style="text-align:center;">Loading...</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
