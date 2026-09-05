@@ -36,7 +36,6 @@
                     if (data.footerText) { document.getElementById('footerText').innerText = data.footerText; }
                     if (data.fontStyle) { document.documentElement.style.setProperty('--font-family', data.fontStyle); }
 
-                    // Render Header Background Media if enabled for Home Page
                     if (data.headerHomeEnable && data.headerMedia) {
                         const bgContainer = document.getElementById('headerBgMedia');
                         if (data.headerMedia.includes('data:video') || data.headerMedia.endsWith('.mp4') || data.headerMedia.includes('video')) {
@@ -107,7 +106,13 @@
                 movies = movies.filter(m => m.title && m.title.toLowerCase().includes(searchQuery.toLowerCase()));
             }
 
-            movies.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            // Sort: Featured (isFeatured == true) first, then by newest (createdAt)
+            movies.sort((a, b) => {
+                if (a.isFeatured && !b.isFeatured) return -1;
+                if (!a.isFeatured && b.isFeatured) return 1;
+                return (b.createdAt || 0) - (a.createdAt || 0);
+            });
+
             const latestMovies = movies.slice(0, 10);
 
             if (latestMovies.length === 0) {
