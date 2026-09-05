@@ -1,957 +1,460 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBox - Admin Panel</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-<title>CineBox Admin Panel</title>
+        // TODO: Replace with your actual Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
+            authDomain: "cinebox-9011f.firebaseapp.com",
+            projectId: "cinebox-9011f",
+            storageBucket: "cinebox-9011f.firebasestorage.app",
+            messagingSenderId: "134449166678",
+            appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
+        };
 
-<style>
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
+        // Check active session automatically
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                showDashboard();
+            } else {
+                handleLogoutUI();
+            }
+        });
 
-body{
-font-family:Arial,sans-serif;
-background:#0f1115;
-color:#fff;
-min-height:100vh;
-}
+        window.handleLogin = async function() {
+            const emailInput = document.getElementById('usernameInput').value; // Yahan apna Firebase wala Email dalein
+            const passInput = document.getElementById('passwordInput').value; // Yahan Password dalein
+            
+            try {
+                // Firebase Auth se sign in karein
+                await signInWithEmailAndPassword(auth, emailInput, passInput);
+                showDashboard();
+            } catch (error) {
+                console.error(error);
+                document.getElementById('errorMsg').innerText = 'Invalid Email or Password!';
+            }
+        }
 
-.hidden{
-display:none !important;
-}
+        window.handleLogout = async function() {
+            try {
+                await signOut(auth);
+                handleLogoutUI();
+            } catch (error) {
+                console.error(error);
+            }
+        }
 
-/* LOGIN */
+        function showDashboard() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            loadAdminMovies();
+            
+            const savedColor = localStorage.getItem('cinebox_theme_color');
+            if(savedColor) {
+                document.getElementById('themeColorPicker').value = savedColor;
+                document.documentElement.style.setProperty('--primary-color', savedColor);
+            }
+        }
 
-#loginPage{
-min-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:20px;
-background:#0f1115;
-}
+        function handleLogoutUI() {
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'flex';
+        }
 
-.loginBox{
-width:100%;
-max-width:400px;
-background:#181b22;
-padding:30px;
-border-radius:16px;
-box-shadow:0 10px 40px rgba(0,0,0,.5);
-}
+        let cachedMovies = [];
 
-.loginBox h1{
-text-align:center;
-margin-bottom:10px;
-color:#ff3b30;
-}
+        window.loadAdminMovies = async function() {
+            const list = document.getElementById('adminMovieList');
+            list.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#b3b3b3;">Loading...</td></tr>`;
+            try {
+                const querySnapshot = await getDocs(collection(db, "movies"));
+                cachedMovies = [];
+                querySnapshot.forEach((documentSnapshot) => {
+                    cachedMovies.push({ id: documentSnapshot.id, ...documentSnapshot.data() });
+                });
 
-.loginBox p{
-text-align:center;
-color:#aaa;
-margin-bottom:25px;
-}
+                if (cachedMovies.length === 0) {
+                    list.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#b3b3b3;">No movies added yet.</td></tr>`;
+                    return;
+                }
 
-input,textarea,select{
-width:100%;
-padding:13px;
-margin-top:8px;
-margin-bottom:15px;
-border:none;
-border-radius:8px;
-background:#252a33;
-color:#fff;
-outline:none;
-}
+                list.innerHTML = cachedMovies.map((movie) => `
+                    <tr>
+                        <td>${movie.title}</td>
+                        <td>${movie.category}</td>
+                        <td class="action-btns">
+                            <button class="edit-btn" onclick="editMovie('${movie.id}')">Edit</button>
+                            <button class="delete-btn" onclick="deleteMovie('${movie.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error loading movies.</td></tr>`;
+            }
+        }
 
-textarea{
-min-height:100px;
-resize:vertical;
-}
+        window.saveMovie = async function() {
+            const id = document.getElementById('editMovieId').value;
+            const title = document.getElementById('movieTitle').value;
+            const category = document.getElementById('movieCategory').value;
+            const poster = document.getElementById('moviePoster').value;
+            const link = document.getElementById('movieLink').value;
 
-button{
-border:none;
-border-radius:8px;
-padding:12px 18px;
-cursor:pointer;
-font-weight:bold;
-}
+            if (!title || !poster || !link) {
+                alert('Please fill all fields!');
+                return;
+            }
 
-.loginBtn{
-width:100%;
-background:#e50914;
-color:#fff;
-font-size:16px;
-}
+            try {
+                if (id === "") {
+                    // Add new movie to Firestore
+                    await addDoc(collection(db, "movies"), { title, category, poster, link, createdAt: Date.now() });
+                    alert('Movie added successfully!');
+                } else {
+                    // Update existing movie in Firestore
+                    const movieRef = doc(db, "movies", id);
+                    await updateDoc(movieRef, { title, category, poster, link });
+                    document.getElementById('editMovieId').value = "";
+                    document.getElementById('formTitle').innerText = "Add New Movie";
+                    document.getElementById('saveMovieBtn').innerText = "Add Movie";
+                    alert('Movie updated successfully!');
+                }
 
-.loginBtn:active{
-transform:scale(.98);
-}
+                clearForm();
+                loadAdminMovies();
+            } catch (error) {
+                console.error("Error saving movie: ", error);
+                alert("Failed to save movie.");
+            }
+        }
 
-.status{
-margin-top:15px;
-padding:10px;
-border-radius:8px;
-display:none;
-font-size:14px;
-}
+        window.editMovie = function(id) {
+            const movie = cachedMovies.find(m => m.id === id);
+            if (!movie) return;
 
-/* ADMIN */
+            document.getElementById('editMovieId').value = movie.id;
+            document.getElementById('movieTitle').value = movie.title;
+            document.getElementById('movieCategory').value = movie.category;
+            document.getElementById('moviePoster').value = movie.poster;
+            document.getElementById('movieLink').value = movie.link;
 
-#adminApp{
-min-height:100vh;
-}
+            document.getElementById('formTitle').innerText = "Edit Movie";
+            document.getElementById('saveMovieBtn').innerText = "Update Movie";
+        }
 
-header{
-background:#181b22;
-padding:15px 20px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-position:sticky;
-top:0;
-z-index:10;
-}
+        window.deleteMovie = async function(id) {
+            if (confirm('Are you sure you want to delete this movie?')) {
+                try {
+                    await deleteDoc(doc(db, "movies", id));
+                    loadAdminMovies();
+                    alert('Movie deleted successfully!');
+                } catch (error) {
+                    console.error("Error deleting movie: ", error);
+                    alert("Failed to delete movie.");
+                }
+            }
+        }
 
-header h1{
-font-size:22px;
-color:#ff3b30;
-}
+        function clearForm() {
+            document.getElementById('movieTitle').value = '';
+            document.getElementById('moviePoster').value = '';
+            document.getElementById('movieLink').value = '';
+        }
 
-.logoutBtn{
-background:#333943;
-color:#fff;
-}
+        window.saveTheme = function() {
+            const color = document.getElementById('themeColorPicker').value;
+            localStorage.setItem('cinebox_theme_color', color);
+            document.documentElement.style.setProperty('--primary-color', color);
+            alert('Theme color updated successfully!');
+        }
+    </script>
 
-.container{
-max-width:1100px;
-margin:auto;
-padding:20px;
-}
+    <style>
+        :root {
+            --primary-color: #e50914;
+            --bg-color: #141414;
+            --card-bg: #1f1f1f;
+            --text-color: #ffffff;
+            --text-muted: #b3b3b3;
+        }
 
-.nav{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-bottom:25px;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-.nav button{
-background:#252a33;
-color:#fff;
-}
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
 
-.nav button.active{
-background:#e50914;
-}
+        #loginSection {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #111, #222);
+        }
 
-.section{
-display:none;
-}
+        .login-card {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
 
-.section.active{
-display:block;
-}
+        .login-card h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+        }
 
-.card{
-background:#181b22;
-padding:20px;
-border-radius:12px;
-margin-bottom:20px;
-}
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-.card h2{
-margin-bottom:20px;
-}
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
 
-.saveBtn{
-background:#e50914;
-color:#fff;
-}
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
 
-.cancelBtn{
-background:#444;
-color:#fff;
-margin-left:8px;
-}
+        .form-control:focus {
+            border-color: var(--primary-color);
+        }
 
-.movieItem{
-background:#252a33;
-padding:15px;
-border-radius:10px;
-margin-bottom:12px;
-display:flex;
-justify-content:space-between;
-gap:15px;
-align-items:center;
-}
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-.movieInfo{
-flex:1;
-}
+        .btn:hover {
+            opacity: 0.9;
+        }
 
-.movieInfo h3{
-margin-bottom:6px;
-}
+        .error-msg {
+            color: var(--primary-color);
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
 
-.movieInfo p{
-color:#aaa;
-font-size:13px;
-}
+        #adminDashboard {
+            display: none;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-.movieActions{
-display:flex;
-gap:8px;
-}
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #222;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
 
-.editBtn{
-background:#1976d2;
-color:white;
-}
+        .admin-header h1 {
+            color: var(--primary-color);
+            font-size: 26px;
+        }
 
-.deleteBtn{
-background:#d32f2f;
-color:white;
-}
+        .logout-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-@media(max-width:600px){
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
 
-.movieItem{
-flex-direction:column;
-align-items:stretch;
-}
+        @media (max-width: 768px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
-.movieActions{
-width:100%;
-}
+        .admin-box {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin-box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+        }
 
-.movieActions button{
-flex:1;
-}
+        .admin-box h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
 
-}
+        .movie-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
 
-</style>
+        .movie-table th, .movie-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+            font-size: 14px;
+        }
 
+        .movie-table th {
+            color: var(--text-muted);
+        }
+
+        .action-btns button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .edit-btn { background-color: #3498db; color: white; }
+        .delete-btn { background-color: #e74c3c; color: white; }
+    </style>
 </head>
-
 <body>
 
-
-<!-- LOGIN PAGE -->
-
-<div id="loginPage">
-
-<div class="loginBox">
-
-<h1>🎬 CineBox</h1>
-
-<p>Admin Panel Login</p>
-
-<form id="loginForm">
-
-<label>Email</label>
-
-<input
-type="email"
-id="email"
-placeholder="Admin Email"
-required
->
-
-<label>Password</label>
-
-<input
-type="password"
-id="password"
-placeholder="Password"
-required
->
-
-<button
-type="submit"
-class="loginBtn"
-id="loginButton"
->
-Login
-</button>
-
-</form>
-
-<div
-id="loginStatus"
-class="status"
-></div>
-
-</div>
-
-</div>
-
-
-<!-- ADMIN APP -->
-
-<div
-id="adminApp"
-class="hidden"
->
-
-<header>
-
-<h1>🎬 CineBox Admin</h1>
-
-<button
-class="logoutBtn"
-id="logoutButton"
->
-Logout
-</button>
-
-</header>
-
-
-<div class="container">
-
-
-<!-- NAVIGATION -->
-
-<div class="nav">
-
-<button
-class="active"
-data-section="moviesSection"
->
-Movies
-</button>
-
-<button
-data-section="websiteSection"
->
-Website Settings
-</button>
-
-<button
-data-section="adsSection"
->
-Ads Settings
-</button>
-
-</div>
-
-
-<!-- MOVIES -->
-
-<div
-id="moviesSection"
-class="section active"
->
-
-<div class="card">
-
-<h2>🎬 Add / Edit Movie</h2>
-
-<input
-type="hidden"
-id="movieId"
->
-
-<label>Movie Name</label>
-
-<input
-type="text"
-id="movieTitle"
-placeholder="Movie name"
->
-
-<label>Poster Image URL</label>
-
-<input
-type="url"
-id="moviePoster"
-placeholder="https://..."
->
-
-<label>Movie Description</label>
-
-<textarea
-id="movieDescription"
-placeholder="Movie description"
-></textarea>
-
-<label>Download Link</label>
-
-<input
-type="url"
-id="movieDownload"
-placeholder="https://..."
->
-
-<label>Category</label>
-
-<select id="movieCategory">
-
-<option value="Bollywood">
-Bollywood
-</option>
-
-<option value="Hollywood">
-Hollywood
-</option>
-
-<option value="South">
-South
-</option>
-
-<option value="Web Series">
-Web Series
-</option>
-
-</select>
-
-<button
-class="saveBtn"
-id="saveMovieButton"
->
-Save Movie
-</button>
-
-<button
-class="cancelBtn hidden"
-id="cancelMovieButton"
->
-Cancel
-</button>
-
-<div
-id="movieStatus"
-class="status"
-></div>
-
-</div>
-
-
-<div class="card">
-
-<h2>📽️ Movies List</h2>
-
-<div id="moviesList">
-
-Loading movies...
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- WEBSITE SETTINGS -->
-
-<div
-id="websiteSection"
-class="section"
->
-
-<div class="card">
-
-<h2>🌐 Website Settings</h2>
-
-<label>Website Name</label>
-
-<input
-type="text"
-id="siteName"
-placeholder="CineBox"
->
-
-<label>Website Description</label>
-
-<textarea
-id="siteDescription"
-placeholder="Website description"
-></textarea>
-
-<label>Notice / Announcement</label>
-
-<textarea
-id="siteNotice"
-placeholder="Latest announcement..."
-></textarea>
-
-<button
-class="saveBtn"
-id="saveWebsiteButton"
->
-Save Website Settings
-</button>
-
-<div
-id="websiteStatus"
-class="status"
-></div>
-
-</div>
-
-</div>
-
-
-<!-- ADS SETTINGS -->
-
-<div
-id="adsSection"
-class="section"
->
-
-<div class="card">
-
-<h2>📢 Ads Settings</h2>
-
-<label>
-Top Image Ad
-</label>
-
-<select id="topImageAdEnabled">
-
-<option value="true">
-Enabled
-</option>
-
-<option value="false">
-Disabled
-</option>
-
-</select>
-
-<label>
-Top Image Ad URL
-</label>
-
-<input
-type="url"
-id="topImageAdUrl"
-placeholder="https://..."
->
-
-<button
-class="saveBtn"
-id="saveAdsButton"
->
-Save Ads Settings
-</button>
-
-<div
-id="adsStatus"
-class="status"
-></div>
-
-</div>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-<!-- FIREBASE -->
-
-<script type="module">
-
-import {
-initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getAuth,
-signInWithEmailAndPassword,
-signOut,
-onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import {
-getFirestore,
-collection,
-addDoc,
-getDocs,
-doc,
-getDoc,
-updateDoc,
-deleteDoc,
-setDoc,
-serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-/* FIREBASE CONFIG */
-
-const firebaseConfig = {
-
-apiKey: "apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
-
-authDomain: "cinebox-9011f.firebaseapp.com",
-
-projectId: "cinebox-9011f",
-
-storageBucket: "cinebox-9011f.firebasestorage.app",
-
-messagingSenderId: "134449166678",
-
-appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
-
-};
-
-
-const app =
-initializeApp(firebaseConfig);
-
-const auth =
-getAuth(app);
-
-const db =
-getFirestore(app);
-
-
-/* ADMIN UID */
-
-const ADMIN_UID =
-"tZRY6ChN91Z3AC4HPbkfi78OXOC3";
-
-
-/* ELEMENTS */
-
-const loginPage =
-document.getElementById("loginPage");
-
-const adminApp =
-document.getElementById("adminApp");
-
-const loginForm =
-document.getElementById("loginForm");
-
-const logoutButton =
-document.getElementById("logoutButton");
-
-const loginStatus =
-document.getElementById("loginStatus");
-
-
-/* STATUS FUNCTION */
-
-function showStatus(
-id,
-message,
-success=true
-){
-
-const el =
-document.getElementById(id);
-
-if(!el) return;
-
-el.textContent =
-message;
-
-el.style.display =
-"block";
-
-el.style.background =
-success
-? "#164d2b"
-: "#5a1c1c";
-
-}
-
-
-/* AUTH STATE */
-
-onAuthStateChanged(
-auth,
-(user)=>{
-
-if(user){
-
-if(user.uid === ADMIN_UID){
-
-loginPage.classList.add("hidden");
-
-adminApp.classList.remove("hidden");
-
-loadMovies();
-
-loadWebsiteSettings();
-
-loadAdsSettings();
-
-}else{
-
-signOut(auth);
-
-showStatus(
-"loginStatus",
-"❌ You are not authorized as admin.",
-false
-);
-
-}
-
-}else{
-
-loginPage.classList.remove("hidden");
-
-adminApp.classList.add("hidden");
-
-}
-
-});
-
-
-/* LOGIN */
-
-loginForm.addEventListener(
-"submit",
-async (e)=>{
-
-e.preventDefault();
-
-const email =
-document.getElementById("email").value.trim();
-
-const password =
-document.getElementById("password").value;
-
-const button =
-document.getElementById("loginButton");
-
-button.disabled =
-true;
-
-button.textContent =
-"Logging in...";
-
-showStatus(
-"loginStatus",
-"Logging in...",
-true
-);
-
-try{
-
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
-
-}catch(error){
-
-console.error(
-"LOGIN ERROR:",
-error
-);
-
-showStatus(
-"loginStatus",
-"❌ " + error.message,
-false
-);
-
-button.disabled =
-false;
-
-button.textContent =
-"Login";
-
-}
-
-});
-
-
-/* LOGOUT */
-
-logoutButton.addEventListener(
-"click",
-async ()=>{
-
-try{
-
-await signOut(auth);
-
-}catch(error){
-
-console.error(error);
-
-}
-
-});
-
-
-/* NAVIGATION */
-
-document.querySelectorAll(
-".nav button"
-).forEach(
-button=>{
-
-button.addEventListener(
-"click",
-()=>{
-
-document.querySelectorAll(
-".nav button"
-).forEach(
-b=>b.classList.remove("active")
-);
-
-document.querySelectorAll(
-".section"
-).forEach(
-s=>s.classList.remove("active")
-);
-
-button.classList.add("active");
-
-document.getElementById(
-button.dataset.section
-).classList.add("active");
-
-}
-
-);
-
-}
-);
-
-
-/* MOVIES */
-
-const moviesRef =
-collection(db,"movies");
-
-
-async function loadMovies(){
-
-const list =
-document.getElementById("moviesList");
-
-list.innerHTML =
-"Loading movies...";
-
-try{
-
-const snapshot =
-await getDocs(moviesRef);
-
-if(snapshot.empty){
-
-list.innerHTML =
-"No movies added yet.";
-
-return;
-
-}
-
-list.innerHTML = "";
-
-snapshot.forEach(
-movie=>{
-
-const data =
-movie.data();
-
-const div =
-document.createElement("div");
-
-div.className =
-"movieItem";
-
-div.innerHTML = `
-
-<div class="movieInfo">
-
-<h3>
-${escapeHtml(data.title || "Untitled")}
-</h3>
-
-<p>
-${escapeHtml(data.category || "")}
-</p>
-
-</div>
-
-<div class="movieActions">
-
-<button
-class="editBtn"
-data-id="${movie.id}"
->
-Edit
-</button>
-
-<button
-class="deleteBtn"
-data-id="${movie.id}"
->
-Delete
-</button>
-
-</div>
-
-`;
-
-list.appendChild(div);
-
-});
-
-document.querySelectorAll(
-".editBtn"
-).forEach(
-button=>{
-
-button.addEventListener(
-"click",
-()=>editMovie(button.dataset.id)
-);
-
-});
-
-document.querySelectorAll(
-".deleteBtn"
-).forEach(
-button=>{
-
-button.addEventListener(
-"click",
-()=>deleteMovie(button.dataset.id)
-);
-
-});
-
-}catch(error){
-
-console.error(error);
-
-list.innerHTML =
-"❌ Error loading movies: "
-+ error.message;
-
-}
-
-}
-
-
-function escapeHtml(text){
-
-return String(text)
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;")
-.replaceAll("'","&#039;");
-
-}
+    <!-- Login Screen -->
+    <div id="loginSection">
+        <div class="login-card">
+            <h2>CineBox Admin</h2>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="usernameInput" class="form-control" placeholder="Enter your Firebase auth email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="passwordInput" class="form-control" placeholder="Enter password">
+            </div>
+            <button class="btn" onclick="handleLogin()">Login</button>
+            <div id="errorMsg" class="error-msg"></div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard">
+        <div class="admin-header">
+            <h1>CineBox Control Center</h1>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+
+        <div class="admin-grid">
+            <!-- Left Column: Add/Edit Movie & Theme Customizer -->
+            <div>
+                <div class="admin-box">
+                    <h3 id="formTitle">Add New Movie</h3>
+                    <input type="hidden" id="editMovieId">
+                    <div class="form-group">
+                        <label>Movie Title</label>
+                        <input type="text" id="movieTitle" class="form-control" placeholder="e.g. Avatar 2">
+                    </div>
+                    <div class="form-group">
+                        <label>Category / Genre</label>
+                        <select id="movieCategory" class="form-control">
+                            <option value="Action">Action</option>
+                            <option value="Comedy">Comedy</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Sci-Fi">Sci-Fi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Poster Image Link</label>
+                        <input type="text" id="moviePoster" class="form-control" placeholder="https://example.com/poster.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Download Link</label>
+                        <input type="text" id="movieLink" class="form-control" placeholder="https://example.com/download">
+                    </div>
+                    <button class="btn" id="saveMovieBtn" onclick="saveMovie()">Add Movie</button>
+                </div>
+
+                <div class="admin-box">
+                    <h3>Theme Customizer</h3>
+                    <div class="form-group">
+                        <label>Poster / Accent Theme Color</label>
+                        <input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 40px; padding: 2px; cursor: pointer;">
+                    </div>
+                    <button class="btn" onclick="saveTheme()">Apply Theme</button>
+                </div>
+            </div>
+
+            <!-- Right Column: Movie Management List -->
+            <div>
+                <div class="admin-box">
+                    <h3>Manage Movies Database</h3>
+                    <div style="overflow-x: auto;">
+                        <table class="movie-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminMovieList">
+                                <!-- Loaded dynamically from Firebase -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
