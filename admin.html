@@ -62,7 +62,7 @@
 
         <div class="admin-grid">
             <div>
-                <!-- 1. WEBSITE CUSTOMIZATION -->
+                <!-- 1. WEBSITE CUSTOMIZATION & DUAL HEADER MEDIA OPTIONS -->
                 <div class="admin-box">
                     <h3>🎨 Website Customization & Header Background</h3>
                     <div class="form-group"><label>Website Title</label><input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox"></div>
@@ -80,7 +80,12 @@
                         <input type="hidden" id="existingHeaderMedia">
                         <input type="file" id="headerMediaFile" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
                         <input type="text" id="headerMediaUrl" class="form-control" placeholder="OR Media URL (.jpg, .mp4)" style="margin-top:4px;">
-                        <div class="checkbox-group" style="margin-top:6px;"><input type="checkbox" id="headerMediaEnable"> Enable Header Background Media</div>
+                        
+                        <div style="margin-top: 8px; border-top: 1px solid #444; padding-top: 6px;">
+                            <label style="font-size:11px; color:#aaa; margin-bottom:4px;">Where to show Header Background?</label>
+                            <div class="checkbox-group"><input type="checkbox" id="headerHomeEnable"> Show on Home Page</div>
+                            <div class="checkbox-group" style="margin-top:4px;"><input type="checkbox" id="headerMovieEnable"> Show on Movie Details Page</div>
+                        </div>
                     </div>
 
                     <button class="btn" style="margin-top:10px;" onclick="saveSiteSettings()">Save Customization</button>
@@ -466,7 +471,8 @@
             const generalData = {
                 siteTitle, themeColor, iconUrl, footerText, fontStyle,
                 headerMedia,
-                headerMediaEnable: document.getElementById('headerMediaEnable').checked
+                headerHomeEnable: document.getElementById('headerHomeEnable').checked,
+                headerMovieEnable: document.getElementById('headerMovieEnable').checked
             };
 
             try {
@@ -488,7 +494,8 @@
 
                     document.getElementById('existingHeaderMedia').value = data.headerMedia || '';
                     document.getElementById('headerMediaUrl').value = (data.headerMedia && data.headerMedia.startsWith('http')) ? data.headerMedia : '';
-                    document.getElementById('headerMediaEnable').checked = data.headerMediaEnable || false;
+                    document.getElementById('headerHomeEnable').checked = data.headerHomeEnable || false;
+                    document.getElementById('headerMovieEnable').checked = data.headerMovieEnable || false;
                 }
 
                 const adDoc = await getDoc(doc(db, "settings", "advancedAds"));
