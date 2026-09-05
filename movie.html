@@ -31,11 +31,11 @@
             }
 
             try {
-                // Load general settings for header media background
+                // Load general settings and check headerMovieEnable checkbox
                 const configDoc = await getDoc(doc(db, "settings", "general"));
                 if (configDoc.exists()) {
                     const data = configDoc.data();
-                    if (data.headerMediaEnable && data.headerMedia) {
+                    if (data.headerMovieEnable && data.headerMedia) {
                         const bgContainer = document.getElementById('headerBgMedia');
                         if (data.headerMedia.includes('data:video') || data.headerMedia.endsWith('.mp4') || data.headerMedia.includes('video')) {
                             bgContainer.innerHTML = `<video src="${data.headerMedia}" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:1; opacity:0.6;"></video>`;
