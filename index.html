@@ -93,8 +93,8 @@
             try {
                 const querySnapshot = await getDocs(collection(db, "movies"));
                 allMovies = [];
-                querySnapshot.forEach((docSnap) => {
-                    allMovies.push({ id: docSnap.id, ...docSnap.data() });
+                querySnapshot.forEach((doc) => {
+                    allMovies.push({ id: doc.id, ...doc.data() });
                 });
                 renderMovies();
             } catch (error) {
