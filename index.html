@@ -92,7 +92,7 @@
             let movies = [...allMovies];
 
             if (currentCategory !== 'All') {
-                movies = movies.filter(m => m.category && m.category.toLowerCase() === currentCategory.toLowerCase());
+                movies = movies.filter(m => m.category && m.category.toLowerCase().includes(currentCategory.toLowerCase()));
             }
 
             if (searchQuery.trim() !== '') {
@@ -115,7 +115,7 @@
                             <div class="movie-meta">
                                 <span>${movie.year || '2026'}</span> • <span>${movie.language || 'Hindi'}</span>
                             </div>
-                            <span class="movie-category">${movie.category}</span>
+                            <span class="movie-category">${movie.category ? movie.category.split(',')[0] : 'Movie'}</span>
                         </div>
                         <span class="download-btn">View Details</span>
                     </div>
