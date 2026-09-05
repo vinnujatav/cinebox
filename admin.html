@@ -47,14 +47,8 @@
     <div id="loginSection">
         <div class="login-card">
             <h2>CineBox Admin</h2>
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="usernameInput" class="form-control" placeholder="Admin email">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="passwordInput" class="form-control" placeholder="Password">
-            </div>
+            <div class="form-group"><label>Email Address</label><input type="email" id="usernameInput" class="form-control" placeholder="Admin email"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="passwordInput" class="form-control" placeholder="Password"></div>
             <button class="btn" onclick="handleLogin()">Login</button>
             <div id="errorMsg" class="error-msg"></div>
         </div>
@@ -68,118 +62,124 @@
 
         <div class="admin-grid">
             <div>
-                <!-- 1. WEBSITE CUSTOMIZATION (Sabse Upar) -->
+                <!-- 1. WEBSITE CUSTOMIZATION -->
                 <div class="admin-box">
                     <h3>🎨 Website Customization</h3>
-                    <div class="form-group">
-                        <label>Website Title</label>
-                        <input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox">
-                    </div>
-                    <div class="form-group">
-                        <label>Theme Color</label>
-                        <input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 35px; padding: 2px; cursor: pointer;">
-                    </div>
-                    <div class="form-group">
-                        <label>Font Style</label>
+                    <div class="form-group"><label>Website Title</label><input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox"></div>
+                    <div class="form-group"><label>Theme Color</label><input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 35px; padding: 2px; cursor: pointer;"></div>
+                    <div class="form-group"><label>Font Style</label>
                         <select id="fontStyleSelect" class="form-control">
-                            <option value="Segoe UI">Segoe UI</option>
-                            <option value="Roboto">Roboto</option>
-                            <option value="Poppins">Poppins</option>
+                            <option value="Segoe UI">Segoe UI</option><option value="Roboto">Roboto</option><option value="Poppins">Poppins</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Favicon URL</label>
-                        <input type="text" id="siteIconInput" class="form-control" placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label>Footer Text</label>
-                        <input type="text" id="footerTextInput" class="form-control" placeholder="© 2026 CineBox">
-                    </div>
+                    <div class="form-group"><label>Favicon URL</label><input type="text" id="siteIconInput" class="form-control" placeholder="https://..."></div>
+                    <div class="form-group"><label>Footer Text</label><input type="text" id="footerTextInput" class="form-control" placeholder="© 2026 CineBox"></div>
                     <button class="btn" onclick="saveSiteSettings()">Save Customization</button>
                 </div>
 
-                <!-- 2. ADVERTISEMENT MANAGER (Uske Baad) -->
+                <!-- 2. ADVANCED ADVERTISEMENT MANAGER -->
                 <div class="admin-box" style="border: 1px solid #f39c12;">
-                    <h3 style="color: #f39c12;">📢 Advertisement Manager</h3>
+                    <h3 style="color: #f39c12;">📢 Advanced Advertisement Manager</h3>
                     
                     <div class="ad-box-sub">
-                        <label style="font-weight:600; color:#fff;">Home Page: Top Ad Banner</label>
-                        <input type="hidden" id="existingTopAd">
-                        <input type="file" id="topAdFile" class="form-control" accept="image/*" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="topAdUrl" class="form-control" placeholder="OR Image URL" style="margin-top:4px;">
-                        <input type="text" id="topAdLink" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
-                        <div class="checkbox-group"><input type="checkbox" id="topAdEnable"> Enable Top Ad</div>
+                        <label style="font-weight:600; color:#fff;">Home: Top Ad (Image/Video)</label>
+                        <input type="file" id="adFile_top" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="adUrl_top" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
+                        <input type="text" id="adLink_top" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                        <div style="display:flex; gap:5px; margin-top:4px;">
+                            <input type="text" id="adHeight_top" class="form-control" placeholder="Height">
+                            <input type="text" id="adWidth_top" class="form-control" placeholder="Width">
+                        </div>
+                        <div class="checkbox-group"><input type="checkbox" id="adEnable_top"> Enable Top Ad</div>
                     </div>
 
                     <div class="ad-box-sub">
-                        <label style="font-weight:600; color:#fff;">Home Page: Middle Ad Banner</label>
-                        <input type="hidden" id="existingMidAd">
-                        <input type="file" id="middleAdFile" class="form-control" accept="image/*" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="middleAdUrl" class="form-control" placeholder="OR Image URL" style="margin-top:4px;">
-                        <input type="text" id="middleAdLink" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
-                        <div class="checkbox-group"><input type="checkbox" id="middleAdEnable"> Enable Middle Ad</div>
+                        <label style="font-weight:600; color:#fff;">Home: Middle Ad (Image/Video)</label>
+                        <input type="file" id="adFile_middle" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="adUrl_middle" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
+                        <input type="text" id="adLink_middle" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                        <div style="display:flex; gap:5px; margin-top:4px;">
+                            <input type="text" id="adHeight_middle" class="form-control" placeholder="Height">
+                            <input type="text" id="adWidth_middle" class="form-control" placeholder="Width">
+                        </div>
+                        <div class="checkbox-group"><input type="checkbox" id="adEnable_middle"> Enable Middle Ad</div>
                     </div>
 
                     <div class="ad-box-sub">
-                        <label style="font-weight:600; color:#fff;">Home Page: Bottom Ad Banner</label>
-                        <input type="hidden" id="existingBotAd">
-                        <input type="file" id="bottomAdFile" class="form-control" accept="image/*" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="bottomAdUrl" class="form-control" placeholder="OR Image URL" style="margin-top:4px;">
-                        <input type="text" id="bottomAdLink" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
-                        <div class="checkbox-group"><input type="checkbox" id="bottomAdEnable"> Enable Bottom Ad</div>
+                        <label style="font-weight:600; color:#fff;">Home: Bottom Ad (Image/Video)</label>
+                        <input type="file" id="adFile_bottom" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="adUrl_bottom" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
+                        <input type="text" id="adLink_bottom" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                        <div style="display:flex; gap:5px; margin-top:4px;">
+                            <input type="text" id="adHeight_bottom" class="form-control" placeholder="Height">
+                            <input type="text" id="adWidth_bottom" class="form-control" placeholder="Width">
+                        </div>
+                        <div class="checkbox-group"><input type="checkbox" id="adEnable_bottom"> Enable Bottom Ad</div>
                     </div>
 
                     <div class="ad-box-sub" style="border: 1px dashed #3498db;">
-                        <label style="font-weight:600; color:#3498db;">Movie Page: Top Ad Banner</label>
-                        <input type="hidden" id="existingMoviePageAd">
-                        <input type="file" id="moviePageAdFile" class="form-control" accept="image/*" style="padding:4px; margin-top:4px;">
-                        <input type="text" id="moviePageAdUrl" class="form-control" placeholder="OR Image URL" style="margin-top:4px;">
-                        <input type="text" id="moviePageAdLink" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
-                        <div class="checkbox-group"><input type="checkbox" id="moviePageAdEnable"> Enable Movie Page Ad</div>
+                        <label style="font-weight:600; color:#3498db;">Movie Page: Top Ad</label>
+                        <input type="file" id="adFile_movieTop" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="adUrl_movieTop" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
+                        <input type="text" id="adLink_movieTop" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                        <div style="display:flex; gap:5px; margin-top:4px;">
+                            <input type="text" id="adHeight_movieTop" class="form-control" placeholder="Height">
+                            <input type="text" id="adWidth_movieTop" class="form-control" placeholder="Width">
+                        </div>
+                        <div class="checkbox-group"><input type="checkbox" id="adEnable_movieTop"> Enable Movie Page Top Ad</div>
                     </div>
 
-                    <button class="btn" style="background-color: #f39c12; color: #000; font-weight:700;" onclick="saveAdsSettings(); saveMoviePageAd();">Save All Advertisements</button>
+                    <div class="ad-box-sub" style="border: 1px dashed #3498db;">
+                        <label style="font-weight:600; color:#3498db;">Movie Page: Middle Ad</label>
+                        <input type="file" id="adFile_movieMid" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="adUrl_movieMid" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
+                        <input type="text" id="adLink_movieMid" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                        <div style="display:flex; gap:5px; margin-top:4px;">
+                            <input type="text" id="adHeight_movieMid" class="form-control" placeholder="Height">
+                            <input type="text" id="adWidth_movieMid" class="form-control" placeholder="Width">
+                        </div>
+                        <div class="checkbox-group"><input type="checkbox" id="adEnable_movieMid"> Enable Movie Page Middle Ad</div>
+                    </div>
+
+                    <div class="ad-box-sub" style="border: 1px dashed #3498db;">
+                        <label style="font-weight:600; color:#3498db;">Movie Page: Bottom Ad</label>
+                        <input type="file" id="adFile_movieBot" class="form-control" accept="image/*,video/mp4" style="padding:4px; margin-top:4px;">
+                        <input type="text" id="adUrl_movieBot" class="form-control" placeholder="OR Media URL" style="margin-top:4px;">
+                        <input type="text" id="adLink_movieBot" class="form-control" placeholder="Target Link URL" style="margin-top:4px;">
+                        <div style="display:flex; gap:5px; margin-top:4px;">
+                            <input type="text" id="adHeight_movieBot" class="form-control" placeholder="Height">
+                            <input type="text" id="adWidth_movieBot" class="form-control" placeholder="Width">
+                        </div>
+                        <div class="checkbox-group"><input type="checkbox" id="adEnable_movieBot"> Enable Movie Page Bottom Ad</div>
+                    </div>
+
+                    <button class="btn" style="background-color: #f39c12; color: #000; font-weight:700;" onclick="saveAllAdsSettings()">Save All Advertisements</button>
                 </div>
             </div>
 
             <div>
-                <!-- 3. MOVIE MANAGEMENT (Sabse Niche / Akhiri Section) -->
+                <!-- 3. MOVIE MANAGEMENT -->
                 <div class="admin-box" style="border: 1px solid var(--primary-color);">
                     <h3 id="formTitle" style="color: var(--primary-color);">Add New Movie</h3>
                     <input type="hidden" id="editMovieId">
                     <input type="hidden" id="existingPoster">
                     
-                    <div class="form-group">
-                        <label>Movie Title</label>
-                        <input type="text" id="movieTitle" class="form-control" placeholder="Toxic V2">
-                    </div>
-                    <div class="form-group">
-                        <label>Genre / Category</label>
-                        <input type="text" id="movieCategory" class="form-control" placeholder="Action, Crime, Drama">
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="movieDesc" class="form-control" placeholder="Summary..." style="height:60px;"></textarea>
-                    </div>
+                    <div class="form-group"><label>Movie Title</label><input type="text" id="movieTitle" class="form-control" placeholder="Toxic V2"></div>
+                    <div class="form-group"><label>Genre / Category</label><input type="text" id="movieCategory" class="form-control" placeholder="Action, Crime, Drama"></div>
+                    <div class="form-group"><label>Description</label><textarea id="movieDesc" class="form-control" placeholder="Summary..." style="height:60px;"></textarea></div>
                     <div style="display: flex; gap: 10px;">
-                        <div class="form-group" style="flex:1;"><label>Year</label><input type="text" id="movieYear" class="form-control" placeholder="2026"></div>
+                        <div class="form-group" style="flex:1;"><label>Release Year</label><input type="text" id="movieYear" class="form-control" placeholder="2026"></div>
                         <div class="form-group" style="flex:1;"><label>Language</label><input type="text" id="movieLang" class="form-control" placeholder="Hindi"></div>
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <div class="form-group" style="flex:1;"><label>Duration</label><input type="text" id="movieDuration" class="form-control" placeholder="3h 02min"></div>
                         <div class="form-group" style="flex:1;"><label>Starcast</label><input type="text" id="movieCast" class="form-control" placeholder="Yash, Nayanthara"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Poster File</label>
-                        <input type="file" id="moviePosterFile" class="form-control" accept="image/*" style="padding:4px;">
-                    </div>
-                    <div class="form-group">
-                        <label>OR Poster URL</label>
-                        <input type="text" id="moviePosterUrl" class="form-control" placeholder="https://...">
-                    </div>
+                    <div class="form-group"><label>Poster File</label><input type="file" id="moviePosterFile" class="form-control" accept="image/*" style="padding:4px;"></div>
+                    <div class="form-group"><label>OR Poster URL</label><input type="text" id="moviePosterUrl" class="form-control" placeholder="https://..."></div>
 
                     <div class="form-group">
-                        <label style="font-weight: 600; color: #fff;">Download Links by Quality</label>
+                        <label style="font-weight: 600; color: #fff;">Download Links & Quality Setup</label>
                         <div class="quality-row">
                             <input type="text" id="link480p" class="form-control" placeholder="480p Link" style="margin-bottom:4px;">
                             <input type="text" id="size480p" class="form-control" placeholder="Size Tag (e.g. 600mb {480p-HQCam})">
@@ -198,9 +198,12 @@
 
                 <div class="admin-box">
                     <h3>Manage Movies Database</h3>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <input type="text" id="adminSearchInput" class="form-control" placeholder="🔍 Search movie by title or date..." oninput="filterAdminMovies()">
+                    </div>
                     <div style="overflow-x: auto; max-height: 250px;">
                         <table class="movie-table">
-                            <thead><tr><th>Title</th><th>Genre</th><th>Actions</th></tr></thead>
+                            <thead><tr><th>Title</th><th>Date / Time</th><th>Actions</th></tr></thead>
                             <tbody id="adminMovieList"><tr><td colspan="3" style="text-align:center;">Loading...</td></tr></tbody>
                         </table>
                     </div>
@@ -221,23 +224,15 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
         let selectedImageBase64 = "";
-        let topAdBase64 = "";
-        let middleAdBase64 = "";
-        let bottomAdBase64 = "";
-        let moviePageAdBase64 = "";
+        let adBase64Map = {};
 
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                showDashboard();
-            } else {
-                handleLogoutUI();
-            }
+            if (user) { showDashboard(); } else { handleLogoutUI(); }
         });
 
         window.handleLogin = async function() {
@@ -246,15 +241,10 @@
             try {
                 await signInWithEmailAndPassword(auth, emailInput, passInput);
                 showDashboard();
-            } catch (error) {
-                document.getElementById('errorMsg').innerText = 'Invalid Email or Password!';
-            }
+            } catch (error) { document.getElementById('errorMsg').innerText = 'Invalid Email or Password!'; }
         }
 
-        window.handleLogout = async function() {
-            await signOut(auth);
-            handleLogoutUI();
-        }
+        window.handleLogout = async function() { await signOut(auth); handleLogoutUI(); }
 
         function showDashboard() {
             document.getElementById('loginSection').style.display = 'none';
@@ -279,33 +269,51 @@
                 querySnapshot.forEach((docSnap) => {
                     cachedMovies.push({ id: docSnap.id, ...docSnap.data() });
                 });
-
-                if (cachedMovies.length === 0) {
-                    list.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#b3b3b3;">No movies added yet.</td></tr>`;
-                    return;
-                }
-
-                list.innerHTML = cachedMovies.map((movie) => `
-                    <tr>
-                        <td>${movie.title}</td>
-                        <td>${movie.category}</td>
-                        <td class="action-btns">
-                            <button class="edit-btn" onclick="editMovie('${movie.id}')">Edit</button>
-                            <button class="delete-btn" onclick="deleteMovie('${movie.id}')">Delete</button>
-                        </td>
-                    </tr>
-                `).join('');
+                renderAdminMovieList(cachedMovies);
             } catch (err) {
                 list.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error loading movies.</td></tr>`;
             }
         }
 
+        function renderAdminMovieList(movies) {
+            const list = document.getElementById('adminMovieList');
+            if (movies.length === 0) {
+                list.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#b3b3b3;">No movies found.</td></tr>`;
+                return;
+            }
+            movies.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            list.innerHTML = movies.map((movie) => {
+                const dateStr = movie.createdAt ? new Date(movie.createdAt).toLocaleString() : 'N/A';
+                return `
+                    <tr>
+                        <td><b>${movie.title}</b><br><small style="color:#888;">${movie.category || ''}</small></td>
+                        <td><small>${dateStr}</small></td>
+                        <td class="action-btns">
+                            <button class="edit-btn" onclick="editMovie('${movie.id}')">Edit</button>
+                            <button class="delete-btn" onclick="deleteMovie('${movie.id}')">Del</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.filterAdminMovies = function() {
+            const query = document.getElementById('adminSearchInput').value.toLowerCase();
+            const filtered = cachedMovies.filter(m => 
+                (m.title && m.title.toLowerCase().includes(query)) || 
+                (m.category && m.category.toLowerCase().includes(query)) ||
+                (m.createdAt && new Date(m.createdAt).toLocaleString().toLowerCase().includes(query))
+            );
+            renderAdminMovieList(filtered);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             setupFileReader('moviePosterFile', (res) => { selectedImageBase64 = res; });
-            setupFileReader('topAdFile', (res) => { topAdBase64 = res; });
-            setupFileReader('middleAdFile', (res) => { middleAdBase64 = res; });
-            setupFileReader('bottomAdFile', (res) => { bottomAdBase64 = res; });
-            setupFileReader('moviePageAdFile', (res) => { moviePageAdBase64 = res; });
+            const adKeys = ['top', 'middle', 'bottom', 'movieTop', 'movieMid', 'movieBot'];
+            adKeys.forEach(key => {
+                setupFileReader(`adFile_${key}`, (res) => { adBase64Map[key] = res; });
+            });
         });
 
         function setupFileReader(elementId, callback) {
@@ -334,35 +342,22 @@
             const posterUrlInput = document.getElementById('moviePosterUrl').value;
             let poster = document.getElementById('existingPoster').value;
 
-            if (selectedImageBase64) {
-                poster = selectedImageBase64;
-            } else if (posterUrlInput) {
-                poster = posterUrlInput;
-            }
+            if (selectedImageBase64) { poster = selectedImageBase64; } 
+            else if (posterUrlInput) { poster = posterUrlInput; }
 
-            if (!title || !poster) {
-                alert('Please fill Title and Poster!');
-                return;
-            }
+            if (!title || !poster) { alert('Please fill Title and Poster!'); return; }
 
             const qualities = [];
-            const l480 = document.getElementById('link480p').value;
-            const s480 = document.getElementById('size480p').value;
-            if (l480) qualities.push({ quality: '480p', link: l480, size: s480 || '' });
-
-            const l720 = document.getElementById('link720p').value;
-            const s720 = document.getElementById('size720p').value;
-            if (l720) qualities.push({ quality: '720p', link: l720, size: s720 || '' });
-
-            const l1080 = document.getElementById('link1080p').value;
-            const s1080 = document.getElementById('size1080p').value;
-            if (l1080) qualities.push({ quality: '1080p', link: l1080, size: s1080 || '' });
+            ['480p', '720p', '1080p'].forEach(q => {
+                const link = document.getElementById(`link${q}`).value;
+                const size = document.getElementById(`size${q}`).value;
+                if (link) qualities.push({ quality: q, link, size: size || '' });
+            });
 
             try {
                 const movieData = { 
                     title, category, description, year, language, duration, cast, poster, 
-                    qualities: qualities, 
-                    createdAt: Date.now() 
+                    qualities, createdAt: id === "" ? Date.now() : (cachedMovies.find(m => m.id === id)?.createdAt || Date.now())
                 };
 
                 if (id === "") {
@@ -377,9 +372,7 @@
                 }
                 clearForm();
                 loadAdminMovies();
-            } catch (error) {
-                alert("Failed to save movie.");
-            }
+            } catch (error) { alert("Failed to save movie."); }
         }
 
         window.editMovie = function(id) {
@@ -396,23 +389,16 @@
             document.getElementById('movieCast').value = movie.cast || '';
             document.getElementById('existingPoster').value = movie.poster || '';
             
-            document.getElementById('link480p').value = ''; document.getElementById('size480p').value = '';
-            document.getElementById('link720p').value = ''; document.getElementById('size720p').value = '';
-            document.getElementById('link1080p').value = ''; document.getElementById('size1080p').value = '';
+            ['480p', '720p', '1080p'].forEach(q => {
+                document.getElementById(`link${q}`).value = '';
+                document.getElementById(`size${q}`).value = '';
+            });
 
             if (movie.qualities && Array.isArray(movie.qualities)) {
                 movie.qualities.forEach(q => {
-                    if (q.quality === '480p') {
-                        document.getElementById('link480p').value = q.link || '';
-                        document.getElementById('size480p').value = q.size || '';
-                    }
-                    if (q.quality === '720p') {
-                        document.getElementById('link720p').value = q.link || '';
-                        document.getElementById('size720p').value = q.size || '';
-                    }
-                    if (q.quality === '1080p') {
-                        document.getElementById('link1080p').value = q.link || '';
-                        document.getElementById('size1080p').value = q.size || '';
+                    if (document.getElementById(`link${q.quality}`)) {
+                        document.getElementById(`link${q.quality}`).value = q.link || '';
+                        document.getElementById(`size${q.quality}`).value = q.size || '';
                     }
                 });
             }
@@ -429,9 +415,7 @@
                     await deleteDoc(doc(db, "movies", id));
                     loadAdminMovies();
                     alert('Movie deleted successfully!');
-                } catch (error) {
-                    alert("Failed to delete movie.");
-                }
+                } catch (error) { alert("Failed to delete movie."); }
             }
         }
 
@@ -445,64 +429,34 @@
             document.getElementById('moviePosterFile').value = '';
             document.getElementById('moviePosterUrl').value = '';
             document.getElementById('existingPoster').value = '';
-            document.getElementById('link480p').value = ''; document.getElementById('size480p').value = '';
-            document.getElementById('link720p').value = ''; document.getElementById('size720p').value = '';
-            document.getElementById('link1080p').value = ''; document.getElementById('size1080p').value = '';
+            ['480p', '720p', '1080p'].forEach(q => {
+                document.getElementById(`link${q}`).value = '';
+                document.getElementById(`size${q}`).value = '';
+            });
             selectedImageBase64 = "";
         }
 
-        window.saveAdsSettings = async function() {
-            let topImg = document.getElementById('existingTopAd').value;
-            const topUrl = document.getElementById('topAdUrl').value;
-            if (topAdBase64) topImg = topAdBase64; else if (topUrl) topImg = topUrl;
+        window.saveAllAdsSettings = async function() {
+            const adKeys = ['top', 'middle', 'bottom', 'movieTop', 'movieMid', 'movieBot'];
+            const adsData = {};
 
-            let midImg = document.getElementById('existingMidAd').value;
-            const midUrl = document.getElementById('middleAdUrl').value;
-            if (middleAdBase64) midImg = middleAdBase64; else if (midUrl) midImg = midUrl;
+            adKeys.forEach(key => {
+                let media = document.getElementById(`existingAd_${key}`)?.value || '';
+                const url = document.getElementById(`adUrl_${key}`).value;
+                if (adBase64Map[key]) { media = adBase64Map[key]; } 
+                else if (url) { media = url; }
 
-            let botImg = document.getElementById('existingBotAd').value;
-            const botUrl = document.getElementById('bottomAdUrl').value;
-            if (bottomAdBase64) botImg = bottomAdBase64; else if (botUrl) botImg = botUrl;
-
-            const adsData = {
-                topAdImg: topImg,
-                topAdLink: document.getElementById('topAdLink').value,
-                topAdEnable: document.getElementById('topAdEnable').checked,
-
-                middleAdImg: midImg,
-                middleAdLink: document.getElementById('middleAdLink').value,
-                middleAdEnable: document.getElementById('middleAdEnable').checked,
-
-                bottomAdImg: botImg,
-                bottomAdLink: document.getElementById('bottomAdLink').value,
-                bottomAdEnable: document.getElementById('bottomAdEnable').checked
-            };
+                adsData[`${key}Media`] = media;
+                adsData[`${key}Link`] = document.getElementById(`adLink_${key}`).value;
+                adsData[`${key}Height`] = document.getElementById(`adHeight_${key}`).value;
+                adsData[`${key}Width`] = document.getElementById(`adWidth_${key}`).value;
+                adsData[`${key}Enable`] = document.getElementById(`adEnable_${key}`).checked;
+            });
 
             try {
-                await setDoc(doc(db, "settings", "ads"), adsData);
-                alert('Home Page Banners saved successfully!');
-            } catch (e) {
-                alert('Failed to save home ads.');
-            }
-        };
-
-        window.saveMoviePageAd = async function() {
-            let adImg = document.getElementById('existingMoviePageAd').value;
-            const adUrlInput = document.getElementById('moviePageAdUrl').value;
-            if (moviePageAdBase64) adImg = moviePageAdBase64; else if (adUrlInput) adImg = adUrlInput;
-
-            const moviePageAdData = {
-                adImg: adImg,
-                adLink: document.getElementById('moviePageAdLink').value,
-                adEnable: document.getElementById('moviePageAdEnable').checked
-            };
-
-            try {
-                await setDoc(doc(db, "settings", "moviePageAd"), moviePageAdData);
-                alert('Movie Page Top Ad saved successfully!');
-            } catch (e) {
-                alert('Failed to save movie page ad.');
-            }
+                await setDoc(doc(db, "settings", "advancedAds"), adsData);
+                alert('All Advertisements saved successfully!');
+            } catch (e) { alert('Failed to save advertisements.'); }
         };
 
         window.saveSiteSettings = async function() {
@@ -515,9 +469,7 @@
             try {
                 await setDoc(doc(db, "settings", "general"), { siteTitle, themeColor, iconUrl, footerText, fontStyle });
                 alert('Website Customization saved successfully!');
-            } catch (e) {
-                alert('Failed to save settings.');
-            }
+            } catch (e) { alert('Failed to save settings.'); }
         }
 
         async function loadSettings() {
@@ -532,32 +484,35 @@
                     document.getElementById('fontStyleSelect').value = data.fontStyle || 'Segoe UI';
                 }
 
-                const adDoc = await getDoc(doc(db, "settings", "ads"));
+                const adDoc = await getDoc(doc(db, "settings", "advancedAds"));
                 if (adDoc.exists()) {
                     const data = adDoc.data();
-                    document.getElementById('existingTopAd').value = data.topAdImg || '';
-                    document.getElementById('topAdUrl').value = data.topAdImg && data.topAdImg.startsWith('http') ? data.topAdImg : '';
-                    document.getElementById('topAdLink').value = data.topAdLink || '';
-                    document.getElementById('topAdEnable').checked = data.topAdEnable || false;
-
-                    document.getElementById('existingMidAd').value = data.middleAdImg || '';
-                    document.getElementById('middleAdUrl').value = data.middleAdImg && data.middleAdImg.startsWith('http') ? data.middleAdImg : '';
-                    document.getElementById('middleAdLink').value = data.middleAdLink || '';
-                    document.getElementById('middleAdEnable').checked = data.middleAdEnable || false;
-
-                    document.getElementById('existingBotAd').value = data.bottomAdImg || '';
-                    document.getElementById('bottomAdUrl').value = data.bottomAdImg && data.bottomAdImg.startsWith('http') ? data.bottomAdImg : '';
-                    document.getElementById('bottomAdLink').value = data.bottomAdLink || '';
-                    document.getElementById('bottomAdEnable').checked = data.bottomAdEnable || false;
-                }
-
-                const movieAdDoc = await getDoc(doc(db, "settings", "moviePageAd"));
-                if (movieAdDoc.exists()) {
-                    const data = movieAdDoc.data();
-                    document.getElementById('existingMoviePageAd').value = data.adImg || '';
-                    document.getElementById('moviePageAdUrl').value = data.adImg && data.adImg.startsWith('http') ? data.adImg : '';
-                    document.getElementById('moviePageAdLink').value = data.adLink || '';
-                    document.getElementById('moviePageAdEnable').checked = data.adEnable || false;
+                    const adKeys = ['top', 'middle', 'bottom', 'movieTop', 'movieMid', 'movieBot'];
+                    adKeys.forEach(key => {
+                        let hiddenField = document.getElementById(`existingAd_${key}`);
+                        if (!hiddenField) {
+                            hiddenField = document.createElement('input');
+                            hiddenField.type = 'hidden';
+                            hiddenField.id = `existingAd_${key}`;
+                            document.body.appendChild(hiddenField);
+                        }
+                        hiddenField.value = data[`${key}Media`] || '';
+                        if (document.getElementById(`adUrl_${key}`)) {
+                            document.getElementById(`adUrl_${key}`).value = (data[`${key}Media`] && data[`${key}Media`].startsWith('http')) ? data[`${key}Media`] : '';
+                        }
+                        if (document.getElementById(`adLink_${key}`)) {
+                            document.getElementById(`adLink_${key}`).value = data[`${key}Link`] || '';
+                        }
+                        if (document.getElementById(`adHeight_${key}`)) {
+                            document.getElementById(`adHeight_${key}`).value = data[`${key}Height`] || '';
+                        }
+                        if (document.getElementById(`adWidth_${key}`)) {
+                            document.getElementById(`adWidth_${key}`).value = data[`${key}Width`] || '';
+                        }
+                        if (document.getElementById(`adEnable_${key}`)) {
+                            document.getElementById(`adEnable_${key}`).checked = data[`${key}Enable`] || false;
+                        }
+                    });
                 }
             } catch (e) {}
         }
