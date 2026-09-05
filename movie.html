@@ -30,7 +30,6 @@
             }
 
             try {
-                // Fetch Movie Page Ads from Firestore
                 const adDoc = await getDoc(doc(db, "settings", "advancedAds"));
                 if (adDoc.exists()) {
                     const ads = adDoc.data();
@@ -39,7 +38,6 @@
                     renderAd('movieBotAdContainer', ads.movieBotMedia, ads.movieBotLink, ads.movieBotHeight, ads.movieBotWidth, ads.movieBotEnable);
                 }
 
-                // Load Current Movie Data
                 const docRef = doc(db, "movies", movieId);
                 const docSnap = await getDoc(docRef);
 
@@ -55,7 +53,6 @@
                     document.getElementById('movieCast').innerText = movie.cast || 'Not Available';
                     document.getElementById('movieDesc').innerText = movie.description || 'No description available.';
 
-                    // Quality Buttons Rendering with custom colors
                     const linksContainer = document.getElementById('qualityLinksContainer');
                     let linksHTML = '';
 
@@ -74,7 +71,6 @@
                     }
                     linksContainer.innerHTML = linksHTML;
 
-                    // Load Related Movies
                     loadRelatedMovies(movie.category, movieId);
 
                 } else {
@@ -147,7 +143,7 @@
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
         header { background-color: rgba(20, 20, 20, 0.95); padding: 12px 20px; text-align: center; border-bottom: 2px solid #222; position: sticky; top: 0; z-index: 1000; }
         .logo-area { font-size: 24px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; text-decoration: none; }
-        .ad-banner { width: 100%; max-width: 750px; min-height: 60px; background-color: transparent; display: none; align-items: center; justify-content: center; margin: 10px auto; border-radius: 4px; overflow: hidden; text-align: center; border: none !important; }
+        .ad-banner { width: 100%; max-width: 750px; background-color: transparent; display: none; align-items: center; justify-content: center; margin: 10px auto; border-radius: 4px; overflow: hidden; text-align: center; border: none !important; }
         
         .container { max-width: 750px; margin: 10px auto; padding: 10px; flex: 1; width: 100%; }
         .movie-box { background-color: var(--card-bg); border-radius: 6px; overflow: hidden; border: 1px solid #333; padding: 15px; margin-bottom: 20px; }
@@ -188,7 +184,6 @@
         <a href="index.html" class="logo-area">CineBox</a>
     </header>
 
-    <!-- Movie Page Top Ad -->
     <div class="ad-banner" id="movieTopAdContainer"></div>
 
     <div class="container" id="movieDetailContainer">
@@ -209,13 +204,11 @@
                 <tr><td class="info-label">Description:</td><td class="info-val desc-hl" id="movieDesc">--</td></tr>
             </table>
 
-            <!-- Movie Page Middle Ad -->
             <div class="ad-banner" id="movieMidAdContainer" style="margin: 15px 0;"></div>
 
             <div class="download-heading">DOWNLOAD THIS MOVIE</div>
             <div class="quality-links" id="qualityLinksContainer"></div>
 
-            <!-- Movie Page Bottom Ad -->
             <div class="ad-banner" id="movieBotAdContainer" style="margin: 15px 0;"></div>
 
             <div class="related-section-title">RELATED MOVIES</div>
