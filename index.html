@@ -41,7 +41,13 @@
 
                 const adDoc = await getDoc(doc(db, "settings", "ads"));
                 if (adDoc.exists() && adDoc.data().adCode) {
-                    document.getElementById('adContainer').innerHTML = adDoc.data().adCode;
+                    const adUrl = adDoc.data().adCode;
+                    // Converts the link into a clickable banner view
+                    document.getElementById('adContainer').innerHTML = `
+                        <a href="${adUrl}" target="_blank" style="color: #fff; text-decoration: none; font-weight: 600; display: block; width: 100%; height: 100%; line-height: 70px; background: rgba(255,255,255,0.05);">
+                            📢 Sponsored Advertisement (Click Here)
+                        </a>
+                    `;
                 }
             } catch (e) {
                 console.error("Settings load error:", e);
