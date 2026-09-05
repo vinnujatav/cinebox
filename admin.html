@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineBox - Advanced Admin Panel</title>
+    <title>CineBox - Ultimate Advanced Admin Panel</title>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -22,6 +22,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
+
+        let selectedImageBase64 = "";
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -91,6 +93,22 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('moviePosterFile');
+            if(fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(uploadEvent) {
+                            selectedImageBase64 = uploadEvent.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
         window.saveMovie = async function() {
             const id = document.getElementById('editMovieId').value;
             const title = document.getElementById('movieTitle').value;
@@ -98,11 +116,18 @@
             const description = document.getElementById('movieDesc').value;
             const year = document.getElementById('movieYear').value;
             const language = document.getElementById('movieLang').value;
-            const poster = document.getElementById('moviePoster').value;
             const link = document.getElementById('movieLink').value;
+            const posterUrlInput = document.getElementById('moviePosterUrl').value;
+            let poster = document.getElementById('existingPoster').value;
+
+            if (selectedImageBase64) {
+                poster = selectedImageBase64;
+            } else if (posterUrlInput) {
+                poster = posterUrlInput;
+            }
 
             if (!title || !poster || !link) {
-                alert('Please fill required fields (Title, Poster, Link)!');
+                alert('Please fill Title, Poster (Upload or URL), and Download Link!');
                 return;
             }
 
@@ -135,8 +160,9 @@
             document.getElementById('movieDesc').value = movie.description || '';
             document.getElementById('movieYear').value = movie.year || '';
             document.getElementById('movieLang').value = movie.language || '';
-            document.getElementById('moviePoster').value = movie.poster;
+            document.getElementById('existingPoster').value = movie.poster || '';
             document.getElementById('movieLink').value = movie.link;
+            selectedImageBase64 = "";
 
             document.getElementById('formTitle').innerText = "Edit Movie";
             document.getElementById('saveMovieBtn').innerText = "Update Movie";
@@ -159,31 +185,49 @@
             document.getElementById('movieDesc').value = '';
             document.getElementById('movieYear').value = '';
             document.getElementById('movieLang').value = '';
-            document.getElementById('moviePoster').value = '';
+            document.getElementById('moviePosterFile').value = '';
+            document.getElementById('moviePosterUrl').value = '';
+            document.getElementById('existingPoster').value = '';
             document.getElementById('movieLink').value = '';
+            selectedImageBase64 = "";
         }
 
+        // Save General Website Settings
         window.saveSiteSettings = async function() {
             const siteTitle = document.getElementById('siteTitleInput').value;
             const themeColor = document.getElementById('themeColorPicker').value;
             const iconUrl = document.getElementById('siteIconInput').value;
+            const footerText = document.getElementById('footerTextInput').value;
+            const fontStyle = document.getElementById('fontStyleSelect').value;
 
             try {
-                await setDoc(doc(db, "settings", "general"), { siteTitle, themeColor, iconUrl });
+                await setDoc(doc(db, "settings", "general"), { siteTitle, themeColor, iconUrl, footerText, fontStyle });
                 alert('Website customization saved successfully!');
             } catch (e) {
                 alert('Failed to save settings.');
             }
         }
 
-        // Save Advertisement Link
-        window.saveAdCode = async function() {
-            const adCode = document.getElementById('adCodeInput').value;
+        // Save Multi-Ads Settings
+        window.saveAdsSettings = async function() {
+            const topAd = document.getElementById('topAdInput').value;
+            const topAdEnable = document.getElementById('topAdEnable').checked;
+            
+            const middleAd = document.getElementById('middleAdInput').value;
+            const middleAdEnable = document.getElementById('middleAdEnable').checked;
+            
+            const bottomAd = document.getElementById('bottomAdInput').value;
+            const bottomAdEnable = document.getElementById('bottomAdEnable').checked;
+
             try {
-                await setDoc(doc(db, "settings", "ads"), { adCode });
-                alert('Advertisement link saved successfully!');
+                await setDoc(doc(db, "settings", "ads"), {
+                    topAd, topAdEnable,
+                    middleAd, middleAdEnable,
+                    bottomAd, bottomAdEnable
+                });
+                alert('Advertisement settings saved successfully!');
             } catch (e) {
-                alert('Failed to save ad link.');
+                alert('Failed to save ads settings.');
             }
         }
 
@@ -195,11 +239,21 @@
                     document.getElementById('siteTitleInput').value = data.siteTitle || 'CineBox';
                     document.getElementById('themeColorPicker').value = data.themeColor || '#e50914';
                     document.getElementById('siteIconInput').value = data.iconUrl || '';
+                    document.getElementById('footerTextInput').value = data.footerText || '© 2026 CineBox. All Rights Reserved.';
+                    document.getElementById('fontStyleSelect').value = data.fontStyle || 'Segoe UI';
                 }
 
                 const adDoc = await getDoc(doc(db, "settings", "ads"));
                 if (adDoc.exists()) {
-                    document.getElementById('adCodeInput').value = adDoc.data().adCode || '';
+                    const data = adDoc.data();
+                    document.getElementById('topAdInput').value = data.topAd || '';
+                    document.getElementById('topAdEnable').checked = data.topAdEnable || false;
+
+                    document.getElementById('middleAdInput').value = data.middleAd || '';
+                    document.getElementById('middleAdEnable').checked = data.middleAdEnable || false;
+
+                    document.getElementById('bottomAdInput').value = data.bottomAd || '';
+                    document.getElementById('bottomAdEnable').checked = data.bottomAdEnable || false;
                 }
             } catch (e) {}
         }
@@ -239,11 +293,11 @@
         .action-btns button { padding: 4px 8px; margin-right: 4px; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; }
         .edit-btn { background-color: #3498db; color: white; }
         .delete-btn { background-color: #e74c3c; color: white; }
+        .checkbox-group { display: flex; align-items: center; gap: 8px; margin-top: 5px; font-size: 13px; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-    <!-- Login Screen -->
     <div id="loginSection">
         <div class="login-card">
             <h2>CineBox Admin</h2>
@@ -260,7 +314,6 @@
         </div>
     </div>
 
-    <!-- Admin Dashboard -->
     <div id="adminDashboard">
         <div class="admin-header">
             <h1>CineBox Control Center</h1>
@@ -269,8 +322,9 @@
 
         <div class="admin-grid">
             <div>
+                <!-- Website Customization Box -->
                 <div class="admin-box">
-                    <h3>Website Customization</h3>
+                    <h3>Website Customization (Theme, Font & Footer)</h3>
                     <div class="form-group">
                         <label>Website Name / Title</label>
                         <input type="text" id="siteTitleInput" class="form-control" placeholder="CineBox">
@@ -280,25 +334,64 @@
                         <input type="color" id="themeColorPicker" class="form-control" value="#e50914" style="height: 38px; padding: 2px; cursor: pointer;">
                     </div>
                     <div class="form-group">
-                        <label>Favicon / Icon Image Link</label>
+                        <label>Font Style</label>
+                        <select id="fontStyleSelect" class="form-control">
+                            <option value="Segoe UI">Segoe UI</option>
+                            <option value="Roboto">Roboto</option>
+                            <option value="Poppins">Poppins</option>
+                            <option value="Montserrat">Montserrat</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Favicon / Icon URL</label>
                         <input type="text" id="siteIconInput" class="form-control" placeholder="https://.../icon.png">
+                    </div>
+                    <div class="form-group">
+                        <label>Copyright / Footer Description</label>
+                        <input type="text" id="footerTextInput" class="form-control" placeholder="© 2026 CineBox. All Rights Reserved.">
                     </div>
                     <button class="btn" onclick="saveSiteSettings()">Save Customization</button>
                 </div>
 
-                <!-- Advertisement Manager (Only Link Input) -->
+                <!-- Multi-Advertisement Manager -->
                 <div class="admin-box">
-                    <h3>Advertisement Manager</h3>
+                    <h3>Multi-Advertisement Slots (Top, Middle, Bottom)</h3>
+                    
+                    <!-- Top Ad -->
                     <div class="form-group">
-                        <label>Advertisement Link (URL)</label>
-                        <input type="text" id="adCodeInput" class="form-control" placeholder="https://example.com/ad-link">
+                        <label>Top Ad Link / Script</label>
+                        <input type="text" id="topAdInput" class="form-control" placeholder="https://... or HTML code">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="topAdEnable"> Enable Top Ad
+                        </div>
                     </div>
-                    <button class="btn" onclick="saveAdCode()">Save Advertisement Link</button>
+
+                    <!-- Middle Ad -->
+                    <div class="form-group" style="margin-top:15px;">
+                        <label>Middle Ad Link / Script</label>
+                        <input type="text" id="middleAdInput" class="form-control" placeholder="https://... or HTML code">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="middleAdEnable"> Enable Middle Ad
+                        </div>
+                    </div>
+
+                    <!-- Bottom Ad -->
+                    <div class="form-group" style="margin-top:15px;">
+                        <label>Bottom Ad Link / Script</label>
+                        <input type="text" id="bottomAdInput" class="form-control" placeholder="https://... or HTML code">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="bottomAdEnable"> Enable Bottom Ad
+                        </div>
+                    </div>
+
+                    <button class="btn" style="margin-top:10px;" onclick="saveAdsSettings()">Save Advertisements</button>
                 </div>
 
+                <!-- Movie Manager Box -->
                 <div class="admin-box">
                     <h3 id="formTitle">Add New Movie</h3>
                     <input type="hidden" id="editMovieId">
+                    <input type="hidden" id="existingPoster">
                     <div class="form-group">
                         <label>Movie Title</label>
                         <input type="text" id="movieTitle" class="form-control" placeholder="e.g. Avatar 2">
@@ -328,8 +421,12 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Poster Image Link</label>
-                        <input type="text" id="moviePoster" class="form-control" placeholder="https://...">
+                        <label>Upload Poster Image File</label>
+                        <input type="file" id="moviePosterFile" class="form-control" accept="image/*" style="padding: 6px;">
+                    </div>
+                    <div class="form-group">
+                        <label>OR Poster Image URL</label>
+                        <input type="text" id="moviePosterUrl" class="form-control" placeholder="https://...">
                     </div>
                     <div class="form-group">
                         <label>Download Link</label>
