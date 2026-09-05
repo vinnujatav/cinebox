@@ -17,6 +17,7 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -159,7 +160,7 @@
         .related-poster { width: 50px; height: 65px; object-fit: cover; border-radius: 3px; background: #111; }
         .related-info { display: flex; flex-direction: column; gap: 4px; }
         .related-title { font-size: 13px; font-weight: 600; color: #3498db; }
-        .related_cat { font-size: 11px; background: #2c3e50; color: #ecf0f1; padding: 2px 6px; border-radius: 3px; width: fit-content; }
+        .related-cat { font-size: 11px; background: #2c3e50; color: #ecf0f1; padding: 2px 6px; border-radius: 3px; width: fit-content; }
 
         .error-msg { text-align: center; color: var(--text-muted); padding: 30px; font-size: 14px; }
         footer { background-color: #0d0d0d; text-align: center; padding: 12px; color: var(--text-muted); font-size: 12px; border-top: 1px solid #222; }
@@ -171,7 +172,6 @@
         <a href="index.html" class="logo-area">CineBox</a>
     </header>
 
-    <!-- Alag se banaya gaya Movie Page Top Advertisement Banner -->
     <div class="ad-banner" id="topAdContainer"></div>
 
     <div class="container" id="movieDetailContainer">
