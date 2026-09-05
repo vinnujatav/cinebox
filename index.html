@@ -18,7 +18,6 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -36,7 +35,6 @@
                     if (data.footerText) { document.getElementById('footerText').innerText = data.footerText; }
                     if (data.fontStyle) { document.documentElement.style.setProperty('--font-family', data.fontStyle); }
 
-                    // Render Home Header Background Media (Image or Video)
                     if (data.headerHomeEnable && data.homeHeaderMedia) {
                         const bgContainer = document.getElementById('headerBgMedia');
                         if (data.homeHeaderMedia.includes('data:video') || data.homeHeaderMedia.endsWith('.mp4') || data.homeHeaderMedia.includes('video')) {
@@ -46,7 +44,6 @@
                         }
                     }
 
-                    // Render Footer Social Icons & Links
                     if(data.socials && Array.isArray(data.socials)) {
                         const socialContainer = document.getElementById('footerSocialIcons');
                         let iconsHTML = data.socials.map(s => {
@@ -96,8 +93,8 @@
             try {
                 const querySnapshot = await getDocs(collection(db, "movies"));
                 allMovies = [];
-                querySnapshot.forEach((doc) => {
-                    allMovies.push({ id: doc.id, ...doc.data() });
+                querySnapshot.forEach((docSnap) => {
+                    allMovies.push({ id: docSnap.id, ...docSnap.data() });
                 });
                 renderMovies();
             } catch (error) {
@@ -117,7 +114,6 @@
                 movies = movies.filter(m => m.title && m.title.toLowerCase().includes(searchQuery.toLowerCase()));
             }
 
-            // Sort: Featured/Latest (isFeatured == true) first, then by newest timestamp
             movies.sort((a, b) => {
                 if (a.isFeatured && !b.isFeatured) return -1;
                 if (!a.isFeatured && b.isFeatured) return 1;
