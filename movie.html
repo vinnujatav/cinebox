@@ -31,7 +31,7 @@
             }
 
             try {
-                // Load general settings and check headerMovieEnable checkbox
+                // Load general settings and check headerMovieEnable for background media
                 const configDoc = await getDoc(doc(db, "settings", "general"));
                 if (configDoc.exists()) {
                     const data = configDoc.data();
@@ -45,6 +45,7 @@
                     }
                 }
 
+                // Load Movie Page Ads
                 const adDoc = await getDoc(doc(db, "settings", "advancedAds"));
                 if (adDoc.exists()) {
                     const ads = adDoc.data();
@@ -230,7 +231,7 @@
                 <img id="moviePoster" src="" alt="Poster" class="detail-poster">
             </div>
 
-            <div class="file-info-bar">👉 Movie Info 👈</div>
+            <div class="file-info-bar">👉 File Info 👈</div>
 
             <table class="info-table">
                 <tr><td class="info-label">Name:</td><td class="info-val title-hl" id="movieTitleText">Loading...</td></tr>
