@@ -35,6 +35,7 @@
                     if (data.footerText) { document.getElementById('footerText').innerText = data.footerText; }
                     if (data.fontStyle) { document.documentElement.style.setProperty('--font-family', data.fontStyle); }
 
+                    // Render Home Header Background Media (Image or Video)
                     if (data.headerHomeEnable && data.homeHeaderMedia) {
                         const bgContainer = document.getElementById('headerBgMedia');
                         if (data.homeHeaderMedia.includes('data:video') || data.homeHeaderMedia.endsWith('.mp4') || data.homeHeaderMedia.includes('video')) {
@@ -44,6 +45,7 @@
                         }
                     }
 
+                    // Render Footer Social Icons & Links
                     if(data.socials && Array.isArray(data.socials)) {
                         const socialContainer = document.getElementById('footerSocialIcons');
                         let iconsHTML = data.socials.map(s => {
@@ -114,6 +116,7 @@
                 movies = movies.filter(m => m.title && m.title.toLowerCase().includes(searchQuery.toLowerCase()));
             }
 
+            // Sort: Featured/Latest (isFeatured == true) first, then by newest timestamp
             movies.sort((a, b) => {
                 if (a.isFeatured && !b.isFeatured) return -1;
                 if (!a.isFeatured && b.isFeatured) return 1;
