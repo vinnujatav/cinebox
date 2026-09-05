@@ -17,7 +17,6 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -31,15 +30,13 @@
             }
 
             try {
-                // Fetch Dedicated Movie Page Top Ad from Firestore
-                const movieAdDoc = await getDoc(doc(db, "settings", "moviePageAd"));
-                if (movieAdDoc.exists()) {
-                    const adData = movieAdDoc.data();
-                    if (adData.adEnable && adData.adImg) {
-                        const topAd = document.getElementById('topAdContainer');
-                        topAd.innerHTML = `<a href="${adData.adLink || '#'}" target="_blank"><img src="${adData.adImg}" alt="Ad" style="width:100%; height:auto; display:block; max-height:90px; object-fit:cover;"></a>`;
-                        topAd.style.display = 'block';
-                    }
+                // Fetch Movie Page Ads from Firestore
+                const adDoc = await getDoc(doc(db, "settings", "advancedAds"));
+                if (adDoc.exists()) {
+                    const ads = adDoc.data();
+                    renderAd('movieTopAdContainer', ads.movieTopMedia, ads.movieTopLink, ads.movieTopHeight, ads.movieTopWidth, ads.movieTopEnable);
+                    renderAd('movieMidAdContainer', ads.movieMidMedia, ads.movieMidLink, ads.movieMidHeight, ads.movieMidWidth, ads.movieMidEnable);
+                    renderAd('movieBotAdContainer', ads.movieBotMedia, ads.movieBotLink, ads.movieBotHeight, ads.movieBotWidth, ads.movieBotEnable);
                 }
 
                 // Load Current Movie Data
@@ -58,7 +55,7 @@
                     document.getElementById('movieCast').innerText = movie.cast || 'Not Available';
                     document.getElementById('movieDesc').innerText = movie.description || 'No description available.';
 
-                    // Quality Buttons Rendering
+                    // Quality Buttons Rendering with custom colors
                     const linksContainer = document.getElementById('qualityLinksContainer');
                     let linksHTML = '';
 
@@ -89,6 +86,27 @@
             }
         }
 
+        function renderAd(containerId, media, link, height, width, enable) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            if (enable && media) {
+                let content = '';
+                const hStyle = height ? `height:${height};` : 'height:auto;';
+                const wStyle = width ? `width:${width};` : 'width:100%;';
+                
+                if (media.includes('data:video') || media.endsWith('.mp4') || media.includes('video')) {
+                    content = `<video src="${media}" autoplay muted loop playsinline style="${hStyle} ${wStyle} object-fit:cover; display:block;"></video>`;
+                } else {
+                    content = `<img src="${media}" alt="Ad" style="${hStyle} ${wStyle} object-fit:cover; display:block;">`;
+                }
+
+                container.innerHTML = `<a href="${link || '#'}" target="_blank" style="display:block;">${content}</a>`;
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
         async function loadRelatedMovies(currentCategory, currentId) {
             try {
                 const querySnapshot = await getDocs(collection(db, "movies"));
@@ -111,9 +129,7 @@
                 });
 
                 relatedContainer.innerHTML = html || `<div style="padding:10px; color:#b3b3b3; text-align:center;">No related movies found.</div>`;
-            } catch (e) {
-                console.error("Error loading related movies", e);
-            }
+            } catch (e) { console.error("Error loading related movies", e); }
         }
 
         document.addEventListener('DOMContentLoaded', loadMovieDetails);
@@ -131,7 +147,7 @@
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
         header { background-color: rgba(20, 20, 20, 0.95); padding: 12px 20px; text-align: center; border-bottom: 2px solid #222; position: sticky; top: 0; z-index: 1000; }
         .logo-area { font-size: 24px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; text-decoration: none; }
-        .ad-banner { width: 100%; max-width: 750px; min-height: 60px; background-color: #222; border: 1px dashed #444; display: none; align-items: center; justify-content: center; color: var(--text-muted); font-size: 12px; margin: 10px auto; border-radius: 4px; overflow: hidden; text-align: center; }
+        .ad-banner { width: 100%; max-width: 750px; min-height: 60px; background-color: transparent; display: none; align-items: center; justify-content: center; margin: 10px auto; border-radius: 4px; overflow: hidden; text-align: center; border: none !important; }
         
         .container { max-width: 750px; margin: 10px auto; padding: 10px; flex: 1; width: 100%; }
         .movie-box { background-color: var(--card-bg); border-radius: 6px; overflow: hidden; border: 1px solid #333; padding: 15px; margin-bottom: 20px; }
@@ -172,7 +188,8 @@
         <a href="index.html" class="logo-area">CineBox</a>
     </header>
 
-    <div class="ad-banner" id="topAdContainer"></div>
+    <!-- Movie Page Top Ad -->
+    <div class="ad-banner" id="movieTopAdContainer"></div>
 
     <div class="container" id="movieDetailContainer">
         <div class="movie-box">
@@ -180,41 +197,26 @@
                 <img id="moviePoster" src="" alt="Poster" class="detail-poster">
             </div>
 
-            <div class="file-info-bar">👉 Movie Info 👈</div>
+            <div class="file-info-bar">👉 File Info 👈</div>
 
             <table class="info-table">
-                <tr>
-                    <td class="info-label">Name:</td>
-                    <td class="info-val title-hl" id="movieTitleText">Loading...</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Genre:</td>
-                    <td class="info-val genre-hl" id="movieGenre">--</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Duration:</td>
-                    <td class="info-val" id="movieDuration">--</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Release Date:</td>
-                    <td class="info-val" id="movieYear">--</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Language:</td>
-                    <td class="info-val" id="movieLang">--</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Starcast:</td>
-                    <td class="info-val" id="movieCast">--</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Description:</td>
-                    <td class="info-val desc-hl" id="movieDesc">--</td>
-                </tr>
+                <tr><td class="info-label">Name:</td><td class="info-val title-hl" id="movieTitleText">Loading...</td></tr>
+                <tr><td class="info-label">Genre:</td><td class="info-val genre-hl" id="movieGenre">--</td></tr>
+                <tr><td class="info-label">Duration:</td><td class="info-val" id="movieDuration">--</td></tr>
+                <tr><td class="info-label">Release Date:</td><td class="info-val" id="movieYear">--</td></tr>
+                <tr><td class="info-label">Language:</td><td class="info-val" id="movieLang">--</td></tr>
+                <tr><td class="info-label">Starcast:</td><td class="info-val" id="movieCast">--</td></tr>
+                <tr><td class="info-label">Description:</td><td class="info-val desc-hl" id="movieDesc">--</td></tr>
             </table>
+
+            <!-- Movie Page Middle Ad -->
+            <div class="ad-banner" id="movieMidAdContainer" style="margin: 15px 0;"></div>
 
             <div class="download-heading">DOWNLOAD THIS MOVIE</div>
             <div class="quality-links" id="qualityLinksContainer"></div>
+
+            <!-- Movie Page Bottom Ad -->
+            <div class="ad-banner" id="movieBotAdContainer" style="margin: 15px 0;"></div>
 
             <div class="related-section-title">RELATED MOVIES</div>
             <div class="related-list" id="relatedMoviesList">
