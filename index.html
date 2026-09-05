@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineBox - Movie Download Hub</title>
+    <title id="pageTitle">CineBox - Movie Download Hub</title>
+    <link id="siteFavicon" rel="icon" type="image/x-icon" href="">
     
-    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Apna Firebase configuration yahan dalein
         const firebaseConfig = {
             apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
             authDomain: "cinebox-9011f.firebaseapp.com",
@@ -23,10 +22,30 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Load Theme from Admin Customization
-        const savedColor = localStorage.getItem('cinebox_theme_color');
-        if(savedColor) {
-            document.documentElement.style.setProperty('--primary-color', savedColor);
+        async function loadSiteSettings() {
+            try {
+                const configDoc = await getDoc(doc(db, "settings", "general"));
+                if (configDoc.exists()) {
+                    const data = configDoc.data();
+                    if (data.siteTitle) {
+                        document.getElementById('brandTitle').innerText = data.siteTitle;
+                        document.getElementById('pageTitle').innerText = data.siteTitle;
+                    }
+                    if (data.themeColor) {
+                        document.documentElement.style.setProperty('--primary-color', data.themeColor);
+                    }
+                    if (data.iconUrl) {
+                        document.getElementById('siteFavicon').href = data.iconUrl;
+                    }
+                }
+
+                const adDoc = await getDoc(doc(db, "settings", "ads"));
+                if (adDoc.exists() && adDoc.data().adCode) {
+                    document.getElementById('adContainer').innerHTML = adDoc.data().adCode;
+                }
+            } catch (e) {
+                console.error("Settings load error:", e);
+            }
         }
 
         let allMovies = [];
@@ -42,8 +61,7 @@
                 });
                 renderMovies();
             } catch (error) {
-                console.error("Error fetching movies: ", error);
-                document.getElementById('moviesGrid').innerHTML = `<div class="no-movies">Failed to load movies from database.</div>`;
+                document.getElementById('moviesGrid').innerHTML = `<div class="no-movies">Failed to load movies.</div>`;
             }
         }
 
@@ -51,17 +69,14 @@
             const grid = document.getElementById('moviesGrid');
             let movies = [...allMovies];
 
-            // Filter by category
             if (currentCategory !== 'All') {
                 movies = movies.filter(m => m.category && m.category.toLowerCase() === currentCategory.toLowerCase());
             }
 
-            // Filter by search query
             if (searchQuery.trim() !== '') {
                 movies = movies.filter(m => m.title && m.title.toLowerCase().includes(searchQuery.toLowerCase()));
             }
 
-            // Limit to latest 10 movies
             const latestMovies = movies.slice(-10).reverse();
 
             if (latestMovies.length === 0) {
@@ -71,10 +86,13 @@
 
             grid.innerHTML = latestMovies.map(movie => `
                 <div class="movie-card">
-                    <img src="${movie.poster}" alt="${movie.title}" class="movie-poster" onerror="this.src='https://via.placeholder.com/200x280/222/fff?text=No+Image'">
+                    <img src="${movie.poster}" alt="${movie.title}" class="movie-poster" onerror="this.src='https://via.placeholder.com/150x220/222/fff?text=No+Image'">
                     <div class="movie-info">
                         <div>
                             <div class="movie-title" title="${movie.title}">${movie.title}</div>
+                            <div class="movie-meta">
+                                <span>${movie.year || '2026'}</span> • <span>${movie.language || 'Hindi'}</span>
+                            </div>
                             <span class="movie-category">${movie.category}</span>
                         </div>
                         <a href="${movie.link}" target="_blank" class="download-btn">Download Now</a>
@@ -83,8 +101,8 @@
             `).join('');
         }
 
-        // Event listeners after DOM load
         document.addEventListener('DOMContentLoaded', () => {
+            loadSiteSettings();
             fetchMoviesFromFirebase();
 
             document.querySelectorAll('.category-btn').forEach(btn => {
@@ -112,215 +130,35 @@
             --text-muted: #b3b3b3;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            background-color: rgba(20, 20, 20, 0.95);
-            padding: 20px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            border-bottom: 2px solid #222;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo-area {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--primary-color);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .search-bar {
-            width: 100%;
-            max-width: 600px;
-            padding: 12px 20px;
-            border-radius: 30px;
-            border: 1px solid #333;
-            background-color: #262626;
-            color: white;
-            font-size: 16px;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        .search-bar:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
-        }
-
-        .ad-banner {
-            width: 100%;
-            max-width: 728px;
-            height: 90px;
-            background-color: #222;
-            border: 1px dashed #444;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 14px;
-            margin: 15px auto 0 auto;
-            border-radius: 6px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            flex: 1;
-            width: 100%;
-        }
-
-        .categories {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-            scrollbar-width: thin;
-        }
-
-        .category-btn {
-            background-color: #262626;
-            color: var(--text-color);
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            white-space: nowrap;
-            transition: 0.2s;
-        }
-
-        .category-btn:hover, .category-btn.active {
-            background-color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        .section-title {
-            font-size: 22px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            border-left: 4px solid var(--primary-color);
-            padding-left: 10px;
-        }
-
-        .movies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .movie-card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .movie-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(229, 9, 20, 0.2);
-        }
-
-        .movie-poster {
-            width: 100%;
-            height: 280px;
-            object-fit: cover;
-            background-color: #2b2b2b;
-        }
-
-        .movie-info {
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex: 1;
-            justify-content: space-between;
-        }
-
-        .movie-title {
-            font-size: 16px;
-            font-weight: 600;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .movie-category {
-            font-size: 12px;
-            color: var(--text-muted);
-            background: #2a2a2a;
-            padding: 2px 8px;
-            border-radius: 4px;
-            width: fit-content;
-        }
-
-        .download-btn {
-            display: block;
-            text-align: center;
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            padding: 8px;
-            border-page-radius: 4px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 600;
-            transition: opacity 0.2s;
-            margin-top: 5px;
-        }
-
-        .download-btn:hover {
-            opacity: 0.9;
-        }
-
-        .no-movies {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-            font-size: 16px;
-        }
-
-        footer {
-            background-color: #0d0d0d;
-            text-align: center;
-            padding: 20px;
-            color: var(--text-muted);
-            font-size: 14px;
-            border-top: 1px solid #222;
-            margin-top: auto;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
+        header { background-color: rgba(20, 20, 20, 0.95); padding: 15px 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; border-bottom: 2px solid #222; position: sticky; top: 0; z-index: 1000; }
+        .logo-area { font-size: 28px; font-weight: 800; color: var(--primary-color); letter-spacing: 1px; text-transform: uppercase; }
+        .search-bar { width: 100%; max-width: 500px; padding: 10px 18px; border-radius: 25px; border: 1px solid #333; background-color: #262626; color: white; font-size: 15px; outline: none; }
+        .ad-banner { width: 100%; max-width: 728px; min-height: 70px; background-color: #222; border: 1px dashed #444; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; margin: 10px auto 0 auto; border-radius: 6px; overflow: hidden; text-align: center; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px 12px; flex: 1; width: 100%; }
+        .categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
+        .category-btn { background-color: #262626; color: var(--text-color); border: none; padding: 6px 14px; border-radius: 15px; cursor: pointer; font-size: 13px; white-space: nowrap; }
+        .category-btn:hover, .category-btn.active { background-color: var(--primary-color); font-weight: 600; }
+        .section-title { font-size: 18px; margin-bottom: 15px; font-weight: 600; border-left: 4px solid var(--primary-color); padding-left: 8px; }
+        .movies-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .movie-card { background-color: var(--card-bg); border-radius: 6px; overflow: hidden; box-shadow: 0 3px 8px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
+        .movie-poster { width: 100%; height: 190px; object-fit: cover; background-color: #2b2b2b; }
+        .movie-info { padding: 10px; display: flex; flex-direction: column; gap: 6px; flex: 1; justify-content: space-between; }
+        .movie-title { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .movie-meta { font-size: 11px; color: var(--text-muted); }
+        .movie-category { font-size: 10px; color: var(--text-muted); background: #2a2a2a; padding: 2px 6px; border-radius: 3px; width: fit-content; margin-top: 2px; }
+        .download-btn { display: block; text-align: center; background-color: var(--primary-color); color: white; text-decoration: none; padding: 6px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-top: 4px; }
+        .no-movies { grid-column: 1 / -1; text-align: center; padding: 30px; color: var(--text-muted); font-size: 14px; }
+        footer { background-color: #0d0d0d; text-align: center; padding: 15px; color: var(--text-muted); font-size: 13px; border-top: 1px solid #222; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo-area" id="brandTitle">CineBox</div>
-        <input type="text" id="searchInput" class="search-bar" placeholder="Search movies by title...">
-        <div class="ad-banner">Advertisement Space (728x90)</div>
+        <input type="text" id="searchInput" class="search-bar" placeholder="Search movies...">
+        <div class="ad-banner" id="adContainer">Advertisement Space (728x90)</div>
     </header>
 
     <div class="container">
@@ -335,7 +173,6 @@
 
         <div class="section-title">Latest 10 Movies</div>
         <div class="movies-grid" id="moviesGrid">
-            <!-- Movies will load dynamically from Firebase -->
             <div class="no-movies">Loading movies...</div>
         </div>
     </div>
