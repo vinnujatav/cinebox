@@ -1,481 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CineBox</title>
-
-<style>
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
-
-body{
-font-family:Arial,Helvetica,sans-serif;
-background:#0b0b0f;
-color:#fff;
-min-height:100vh;
-}
-
-header{
-background:#111116;
-border-bottom:1px solid #222;
-padding:15px 20px;
-position:sticky;
-top:0;
-z-index:50;
-}
-
-.header-inner{
-max-width:1200px;
-margin:auto;
-display:flex;
-align-items:center;
-gap:20px;
-justify-content:space-between;
-}
-
-.logo{
-font-size:26px;
-font-weight:bold;
-color:#e50914;
-white-space:nowrap;
-}
-
-.search-box{
-flex:1;
-max-width:500px;
-}
-
-.search-box input{
-width:100%;
-padding:12px 16px;
-border:none;
-outline:none;
-border-radius:25px;
-background:#202027;
-color:#fff;
-font-size:15px;
-}
-
-.hero{
-max-width:1200px;
-margin:30px auto;
-padding:45px 25px;
-text-align:center;
-border-radius:18px;
-background:linear-gradient(135deg,#191923,#101015);
-}
-
-.hero h1{
-font-size:38px;
-margin-bottom:12px;
-}
-
-.hero p{
-color:#aaa;
-font-size:16px;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-padding:0 20px 40px;
-}
-
-.section-title{
-font-size:24px;
-margin:30px 0 18px;
-}
-
-.categories{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-}
-
-.category{
-background:#1c1c24;
-border:1px solid #292933;
-padding:9px 15px;
-border-radius:20px;
-cursor:pointer;
-color:#ddd;
-}
-
-.category:hover{
-background:#e50914;
-color:#fff;
-}
-
-.movie-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
-gap:18px;
-}
-
-.movie-card{
-background:#15151b;
-border-radius:12px;
-overflow:hidden;
-cursor:pointer;
-border:1px solid #24242c;
-transition:.2s;
-}
-
-.movie-card:hover{
-transform:translateY(-4px);
-border-color:#e50914;
-}
-
-.movie-card img{
-width:100%;
-height:250px;
-object-fit:cover;
-display:block;
-background:#222;
-}
-
-.movie-info{
-padding:12px;
-}
-
-.movie-title{
-font-size:16px;
-font-weight:bold;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-
-.movie-meta{
-margin-top:7px;
-color:#999;
-font-size:13px;
-}
-
-.loading,
-.empty,
-.error{
-text-align:center;
-padding:35px 10px;
-color:#aaa;
-}
-
-.error{
-color:#ff7777;
-}
-
-/* ADS */
-
-.ad-section{
-display:none;
-margin:25px auto;
-max-width:1200px;
-padding:0 15px;
-}
-
-.ad-section.active{
-display:block;
-}
-
-.ad-item{
-margin-bottom:15px;
-text-align:center;
-}
-
-.ad-image{
-width:100%;
-max-height:350px;
-object-fit:cover;
-border-radius:10px;
-display:block;
-}
-
-.ad-video{
-width:100%;
-max-height:400px;
-border-radius:10px;
-background:#000;
-display:block;
-}
-
-/* MODAL */
-
-.modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.85);
-z-index:100;
-overflow-y:auto;
-padding:30px 15px;
-}
-
-.modal.show{
-display:block;
-}
-
-.modal-box{
-max-width:700px;
-margin:auto;
-background:#17171e;
-border-radius:16px;
-overflow:hidden;
-position:relative;
-}
-
-.modal-poster{
-width:100%;
-max-height:420px;
-object-fit:cover;
-display:block;
-}
-
-.modal-content{
-padding:22px;
-}
-
-.modal-content h2{
-font-size:28px;
-margin-bottom:10px;
-}
-
-.modal-meta{
-color:#999;
-margin-bottom:15px;
-}
-
-.modal-description{
-color:#ddd;
-line-height:1.6;
-margin-bottom:20px;
-}
-
-.download-btn{
-display:inline-block;
-background:#e50914;
-color:#fff;
-text-decoration:none;
-padding:13px 24px;
-border-radius:8px;
-font-weight:bold;
-}
-
-.close-btn{
-position:absolute;
-right:15px;
-top:15px;
-width:38px;
-height:38px;
-border:none;
-border-radius:50%;
-background:rgba(0,0,0,.75);
-color:#fff;
-font-size:22px;
-cursor:pointer;
-z-index:2;
-}
-
-footer{
-margin-top:40px;
-padding:25px 20px;
-background:#111116;
-text-align:center;
-color:#888;
-line-height:1.6;
-}
-
-.notice{
-margin-top:10px;
-color:#aaa;
-font-size:13px;
-}
-
-@media(max-width:600px){
-
-.header-inner{
-flex-direction:column;
-gap:12px;
-}
-
-.search-box{
-max-width:none;
-width:100%;
-}
-
-.hero{
-margin:20px 10px;
-padding:35px 18px;
-}
-
-.hero h1{
-font-size:29px;
-}
-
-.container{
-padding-left:12px;
-padding-right:12px;
-}
-
-.movie-grid{
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-}
-
-.movie-card img{
-height:220px;
-}
-
-}
-</style>
-</head>
-
-<body>
-
-<header>
-<div class="header-inner">
-
-<div class="logo" id="logoText">
-CineBox
-</div>
-
-<div class="search-box">
-<input
-type="search"
-id="searchInput"
-placeholder="Search movies..."
->
-</div>
-
-</div>
-</header>
-
-<!-- TOP AD -->
-<div id="topAd" class="ad-section">
-<div id="topAdContent"></div>
-</div>
-
-<section class="hero">
-
-<h1 id="homeTitle">
-Latest Movies
-</h1>
-
-<p id="homeSubtitle">
-Find your favourite movies on CineBox
-</p>
-
-</section>
-
-<div class="container">
-
-<h2 class="section-title">
-Categories
-</h2>
-
-<div id="categories" class="categories">
-<div class="category">
-All
-</div>
-</div>
-
-<h2 class="section-title">
-Latest Movies
-</h2>
-
-<div id="movieList" class="movie-grid">
-
-<div class="loading">
-Loading movies...
-</div>
-
-</div>
-
-<!-- MIDDLE AD -->
-<div id="middleAd" class="ad-section">
-<div id="middleAdContent"></div>
-</div>
-
-</div>
-
-<!-- BOTTOM AD -->
-<div id="bottomAd" class="ad-section">
-<div id="bottomAdContent"></div>
-</div>
-
-<footer>
-
-<div id="footerText">
-© CineBox
-</div>
-
-<div id="aboutText" class="notice"></div>
-
-</footer>
-
-<!-- MOVIE MODAL -->
-
-<div id="movieModal" class="modal">
-
-<div class="modal-box">
-
-<button
-class="close-btn"
-id="closeModal">
-×
-</button>
-
-<img
-id="modalPoster"
-class="modal-poster"
-src=""
-alt="Movie poster"
->
-
-<div class="modal-content">
-
-<h2 id="modalTitle">
-Movie
-</h2>
-
-<div id="modalMeta" class="modal-meta"></div>
-
-<div
-id="modalDescription"
-class="modal-description">
-</div>
-
-<a
-id="downloadButton"
-class="download-btn"
-href="#"
-target="_blank"
-rel="noopener noreferrer">
-⬇️ Download
-</a>
-
-</div>
-</div>
-</div>
-
-<script type="module">
-
-import {
-initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-getDocs,
-doc,
-getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBox - Movie Download Hub</title>
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // TODO: Replace with your actual Firebase configuration
+        const firebaseConfig = {
   apiKey: "AIzaSyCdrs9-P25DinXf0RZc0mqQeBiu5Gk4l2M",
   authDomain: "cinebox-9011f.firebaseapp.com",
   projectId: "cinebox-9011f",
@@ -484,687 +20,327 @@ const firebaseConfig = {
   appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
 };
 
-const app =
-initializeApp(firebaseConfig);
-
-const db =
-getFirestore(app);
-
-let movies=[];
-let selectedCategory="all";
-
-function escapeHtml(value){
-
-return String(value || "")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
-}
-
-async function loadWebsiteSettings(){
-
-try{
-
-const snap =
-await getDoc(
-doc(db,"settings","website")
-);
-
-if(!snap.exists()) return;
-
-const data=snap.data();
-
-if(data.siteName){
-
-document.title=data.siteName;
-
-document.getElementById(
-"logoText"
-).innerText=data.siteName;
-
-}
-
-if(data.homeTitle){
-
-document.getElementById(
-"homeTitle"
-).innerText=data.homeTitle;
-
-}
-
-if(data.homeSubtitle){
-
-document.getElementById(
-"homeSubtitle"
-).innerText=data.homeSubtitle;
-
-}
-
-if(data.backgroundColor){
-
-document.body.style.background=
-data.backgroundColor;
-
-}
-
-if(data.footerText){
-
-document.getElementById(
-"footerText"
-).innerText=data.footerText;
-
-}
-
-if(data.aboutText){
-
-document.getElementById(
-"aboutText"
-).innerHTML=data.aboutText;
-
-}
-
-if(data.categories){
-
-loadCategories(
-data.categories
-);
-
-}
-
-}catch(error){
-
-console.error(
-"Website settings error:",
-error
-);
-
-}
-
-}
-
-function loadCategories(text){
-
-const container=
-document.getElementById(
-"categories"
-);
-
-container.innerHTML="";
-
-addCategory(
-container,
-"All",
-"all"
-);
-
-String(text)
-.split(",")
-.map(x=>x.trim())
-.filter(Boolean)
-.forEach(category=>{
-
-addCategory(
-container,
-category,
-category
-);
-
-});
-
-}
-
-function addCategory(
-container,
-text,
-value
-){
-
-const button=
-document.createElement("div");
-
-button.className="category";
-
-button.innerText=text;
-
-button.addEventListener(
-"click",
-()=>{
-
-selectedCategory=
-value.toLowerCase();
-
-renderMovies();
-
-}
-);
-
-container.appendChild(button);
-
-}
-
-async function loadMovies(){
-
-const movieList=
-document.getElementById(
-"movieList"
-);
-
-try{
-
-const snapshot=
-await getDocs(
-collection(db,"movies")
-);
-
-movies=
-snapshot.docs.map(item=>({
-id:item.id,
-...item.data()
-}));
-
-movies.sort((a,b)=>{
-
-const aTime=
-a.createdAt?.seconds || 0;
-
-const bTime=
-b.createdAt?.seconds || 0;
-
-return bTime-aTime;
-
-});
-
-movies=movies.slice(0,10);
-
-renderMovies();
-
-}catch(error){
-
-console.error(
-"Movies error:",
-error
-);
-
-movieList.innerHTML=
-`<div class="error">
-❌ Movies load nahi ho rahi.<br><br>
-${escapeHtml(error.message)}
-</div>`;
-
-}
-
-}
-
-function renderMovies(){
-
-const movieList=
-document.getElementById(
-"movieList"
-);
-
-const search=
-document.getElementById(
-"searchInput"
-).value
-.trim()
-.toLowerCase();
-
-const filtered=
-movies.filter(movie=>{
-
-const title=
-movie.title ||
-movie.name ||
-"";
-
-const genre=
-movie.genre ||
-movie.category ||
-"";
-
-return (
-
-title.toLowerCase()
-.includes(search)
-
-&&
-
-(
-selectedCategory==="all"
-||
-genre.toLowerCase()
-.includes(selectedCategory)
-)
-
-);
-
-});
-
-if(!filtered.length){
-
-movieList.innerHTML=
-`<div class="empty">
-😔 No movies found.
-</div>`;
-
-return;
-
-}
-
-movieList.innerHTML=
-filtered.map(movie=>{
-
-const title=
-movie.title ||
-movie.name ||
-"Untitled";
-
-const poster=
-movie.poster ||
-movie.posterUrl ||
-movie.image ||
-"";
-
-const year=
-movie.year || "";
-
-const genre=
-movie.genre ||
-movie.category ||
-"";
-
-const language=
-movie.language || "";
-
-return `
-
-<div
-class="movie-card"
-data-id="${escapeHtml(movie.id)}">
-
-<img
-src="${escapeHtml(poster)}"
-alt="${escapeHtml(title)}"
-loading="lazy">
-
-<div class="movie-info">
-
-<div class="movie-title">
-${escapeHtml(title)}
-</div>
-
-<div class="movie-meta">
-${escapeHtml(year)}
-${year && genre ? " • " : ""}
-${escapeHtml(genre)}
-</div>
-
-<div class="movie-meta">
-${escapeHtml(language)}
-</div>
-
-</div>
-</div>
-
-`;
-
-}).join("");
-
-document.querySelectorAll(
-".movie-card"
-).forEach(card=>{
-
-card.addEventListener(
-"click",
-()=>{
-
-const movie=
-movies.find(
-item=>item.id===card.dataset.id
-);
-
-if(movie) openMovie(movie);
-
-}
-);
-
-});
-
-}
-
-function openMovie(movie){
-
-const title=
-movie.title ||
-movie.name ||
-"Untitled";
-
-const poster=
-movie.poster ||
-movie.posterUrl ||
-movie.image ||
-"";
-
-const year=
-movie.year || "";
-
-const genre=
-movie.genre ||
-movie.category ||
-"";
-
-const language=
-movie.language || "";
-
-const quality=
-movie.quality || "";
-
-const description=
-movie.description ||
-"No description available.";
-
-const downloadUrl=
-movie.downloadUrl ||
-movie.downloadURL ||
-movie.download ||
-"";
-
-document.getElementById(
-"modalTitle"
-).innerText=title;
-
-document.getElementById(
-"modalPoster"
-).src=poster;
-
-document.getElementById(
-"modalMeta"
-).innerText=
-[
-year,
-genre,
-language,
-quality
-]
-.filter(Boolean)
-.join(" • ");
-
-document.getElementById(
-"modalDescription"
-).innerText=
-description;
-
-const button=
-document.getElementById(
-"downloadButton"
-);
-
-if(downloadUrl){
-
-button.href=downloadUrl;
-button.style.display="inline-block";
-
-}else{
-
-button.style.display="none";
-
-}
-
-document.getElementById(
-"movieModal"
-).classList.add("show");
-
-}
-
-function closeMovie(){
-
-document.getElementById(
-"movieModal"
-).classList.remove("show");
-
-}
-
-document.getElementById(
-"closeModal"
-).addEventListener(
-"click",
-closeMovie
-);
-
-document.getElementById(
-"movieModal"
-).addEventListener(
-"click",
-event=>{
-
-if(event.target.id==="movieModal"){
-closeMovie();
-}
-
-});
-
-document.getElementById(
-"searchInput"
-).addEventListener(
-"input",
-renderMovies
-);
-
-/* =========================
-   PART 2 — ADS + START
-   ========================= */
-
-/* ---------- IMAGE AD ---------- */
-function createImageAd(url, clickUrl) {
-  if (!url) return "";
-
-  const image = `
-    <img
-      class="ad-image"
-      src="${escapeHtml(url)}"
-      alt="Advertisement"
-      loading="lazy"
-      onerror="this.closest('.ad-item').style.display='none'"
-    >
-  `;
-
-  if (clickUrl) {
-    return `
-      <div class="ad-item">
-        <a
-          href="${escapeHtml(clickUrl)}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          ${image}
-        </a>
-      </div>
-    `;
-  }
-
-  return `
-    <div class="ad-item">
-      ${image}
-    </div>
-  `;
-}
-
-
-/* ---------- VIDEO AD ---------- */
-function createVideoAd(url, clickUrl) {
-  if (!url) return "";
-
-  const video = `
-    <video
-      class="ad-video"
-      controls
-      muted
-      playsinline
-      preload="metadata"
-      onerror="this.closest('.ad-item').style.display='none'"
-    >
-      <source src="${escapeHtml(url)}" type="video/mp4">
-      Your browser does not support video.
-    </video>
-  `;
-
-  if (clickUrl) {
-    return `
-      <div class="ad-item">
-        <a
-          href="${escapeHtml(clickUrl)}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          ${video}
-        </a>
-      </div>
-    `;
-  }
-
-  return `
-    <div class="ad-item">
-      ${video}
-    </div>
-  `;
-}
-
-
-/* ---------- RENDER AD POSITION ---------- */
-function renderAdPosition(position, data) {
-
-  const box = document.getElementById(position + "Ad");
-
-  if (!box) return;
-
-  box.innerHTML = "";
-
-  if (!data || data.enabled !== true) {
-    box.classList.remove("active");
-    return;
-  }
-
-  let html = "";
-
-  /* IMAGE */
-  if (
-    data[position + "ImageAdEnabled"] === true &&
-    data[position + "ImageAdUrl"]
-  ) {
-    html += createImageAd(
-      data[position + "ImageAdUrl"],
-      data[position + "ImageAdClickUrl"]
-    );
-  }
-
-  /* VIDEO */
-  if (
-    data[position + "VideoAdEnabled"] === true &&
-    data[position + "VideoAdUrl"]
-  ) {
-    html += createVideoAd(
-      data[position + "VideoAdUrl"],
-      data[position + "VideoAdClickUrl"]
-    );
-  }
-
-  if (html) {
-    box.innerHTML = html;
-    box.classList.add("active");
-  } else {
-    box.classList.remove("active");
-  }
-}
-
-
-/* ---------- LOAD AD SETTINGS ---------- */
-async function loadAdSettings() {
-
-  try {
-
-    const snap = await getDoc(
-      doc(db, "settings", "ads")
-    );
-
-    if (!snap.exists()) {
-
-      console.log("Advertisement settings not found.");
-
-      document
-        .querySelectorAll(".ad-section")
-        .forEach(box => {
-          box.classList.remove("active");
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Load Theme from Firebase or LocalStorage fallback
+        const savedColor = localStorage.getItem('cinebox_theme_color');
+        if(savedColor) {
+            document.documentElement.style.setProperty('--primary-color', savedColor);
+        }
+
+        let allMovies = [];
+        let currentCategory = 'All';
+        let searchQuery = '';
+
+        async function fetchMoviesFromFirebase() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "movies"));
+                allMovies = [];
+                querySnapshot.forEach((doc) => {
+                    allMovies.push({ id: doc.id, ...doc.data() });
+                });
+                renderMovies();
+            } catch (error) {
+                console.error("Error fetching movies: ", error);
+                document.getElementById('moviesGrid').innerHTML = `<div class="no-movies">Failed to load movies from database.</div>`;
+            }
+        }
+
+        window.renderMovies = function() {
+            const grid = document.getElementById('moviesGrid');
+            let movies = [...allMovies];
+
+            // Filter by category
+            if (currentCategory !== 'All') {
+                movies = movies.filter(m => m.category && m.category.toLowerCase() === currentCategory.toLowerCase());
+            }
+
+            // Filter by search query
+            if (searchQuery.trim() !== '') {
+                movies = movies.filter(m => m.title && m.title.toLowerCase().includes(searchQuery.toLowerCase()));
+            }
+
+            // Limit to latest 10 movies (Assuming added in order or reverse order)
+            const latestMovies = movies.slice(-10).reverse();
+
+            if (latestMovies.length === 0) {
+                grid.innerHTML = `<div class="no-movies">No movies found!</div>`;
+                return;
+            }
+
+            grid.innerHTML = latestMovies.map(movie => `
+                <div class="movie-card">
+                    <img src="${movie.poster}" alt="${movie.title}" class="movie-poster" onerror="this.src='https://via.placeholder.com/200x280/222/fff?text=No+Image'">
+                    <div class="movie-info">
+                        <div>
+                            <div class="movie-title" title="${movie.title}">${movie.title}</div>
+                            <span class="movie-category">${movie.category}</span>
+                        </div>
+                        <a href="${movie.link}" target="_blank" class="download-btn">Download Now</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Event listeners after DOM load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchMoviesFromFirebase();
+
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentCategory = e.target.getAttribute('data-category');
+                    renderMovies();
+                });
+            });
+
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                renderMovies();
+            });
         });
+    </script>
 
-      return;
-    }
+    <style>
+        :root {
+            --primary-color: #e50914;
+            --bg-color: #141414;
+            --card-bg: #1f1f1f;
+            --text-color: #ffffff;
+            --text-muted: #b3b3b3;
+        }
 
-    const data = snap.data();
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    console.log("Advertisement settings:", data);
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* TOP */
-    renderAdPosition("top", data);
+        header {
+            background-color: rgba(20, 20, 20, 0.95);
+            padding: 20px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #222;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-    /* MIDDLE */
-    renderAdPosition("middle", data);
+        .logo-area {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-    /* BOTTOM */
-    renderAdPosition("bottom", data);
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: 1px solid #333;
+            background-color: #262626;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
 
-  } catch (error) {
+        .search-bar:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
+        }
 
-    console.error(
-      "Advertisement loading error:",
-      error
-    );
+        .ad-banner {
+            width: 100%;
+            max-width: 728px;
+            height: 90px;
+            background-color: #222;
+            border: 1px dashed #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin: 15px auto 0 auto;
+            border-radius: 6px;
+        }
 
-    document
-      .querySelectorAll(".ad-section")
-      .forEach(box => {
-        box.classList.remove("active");
-      });
-  }
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            flex: 1;
+            width: 100%;
+        }
 
+        .categories {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            scrollbar-width: thin;
+        }
 
-/* ---------- START WEBSITE ---------- */
-async function start() {
+        .category-btn {
+            background-color: #262626;
+            color: var(--text-color);
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
 
-  try {
+        .category-btn:hover, .category-btn.active {
+            background-color: var(--primary-color);
+            font-weight: 600;
+        }
 
-    console.log("CineBox starting...");
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+        }
 
-    /* Website settings */
-    await loadWebsiteSettings();
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
 
-    /* Advertisements */
-    await loadAdSettings();
+        .movie-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* Movies */
-    await loadMovies();
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(229, 9, 20, 0.2);
+        }
 
-    console.log("CineBox loaded successfully.");
+        .movie-poster {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            background-color: #2b2b2b;
+        }
 
-  } catch (error) {
+        .movie-info {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            justify-content: space-between;
+        }
 
-    console.error(
-      "Website loading error:",
-      error
-    );
+        .movie-title {
+            font-size: 16px;
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
-  }
+        .movie-category {
+            font-size: 12px;
+            color: var(--text-muted);
+            background: #2a2a2a;
+            padding: 2px 8px;
+            border-radius: 4px;
+            width: fit-content;
+        }
 
-}
+        .download-btn {
+            display: block;
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+            margin-top: 5px;
+        }
 
+        .download-btn:hover {
+            opacity: 0.9;
+        }
 
-/* ---------- START ---------- */
-start();
+        .no-movies {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 16px;
+        }
 
-</script>
+        footer {
+            background-color: #0d0d0d;
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid #222;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
 
+    <header>
+        <div class="logo-area" id="brandTitle">CineBox</div>
+        <input type="text" id="searchInput" class="search-bar" placeholder="Search movies by title...">
+        <div class="ad-banner">Advertisement Space (728x90)</div>
+    </header>
+
+    <div class="container">
+        <div class="categories" id="categoryContainer">
+            <button class="category-btn active" data-category="All">All</button>
+            <button class="category-btn" data-category="Action">Action</button>
+            <button class="category-btn" data-category="Comedy">Comedy</button>
+            <button class="category-btn" data-category="Horror">Horror</button>
+            <button class="category-btn" data-category="Romance">Romance</button>
+            <button class="category-btn" data-category="Sci-Fi">Sci-Fi</button>
+        </div>
+
+        <div class="section-title">Latest 10 Movies</div>
+        <div class="movies-grid" id="moviesGrid">
+            <!-- Loading from Firebase -->
+            <div class="no-movies">Loading movies...</div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 CineBox. All Rights Reserved.
+    </footer>
 </body>
 </html>
