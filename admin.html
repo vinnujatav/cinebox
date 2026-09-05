@@ -38,6 +38,7 @@
         .edit-btn { background-color: #3498db; color: white; }
         .delete-btn { background-color: #e74c3c; color: white; }
         .checkbox-group { display: flex; align-items: center; gap: 8px; margin-top: 5px; font-size: 13px; color: var(--text-muted); }
+        .quality-row { background: #262626; padding: 10px; border-radius: 5px; margin-bottom: 10px; border: 1px solid #444; }
     </style>
 </head>
 <body>
@@ -173,10 +174,30 @@
                         <label>OR Poster Image URL</label>
                         <input type="text" id="moviePosterUrl" class="form-control" placeholder="https://...">
                     </div>
+
+                    <!-- Quality Links Section -->
                     <div class="form-group">
-                        <label>Download Link</label>
-                        <input type="text" id="movieLink" class="form-control" placeholder="https://...">
+                        <label style="font-weight: 600; color: #fff; margin-bottom: 8px;">Download Links by Quality</label>
+                        
+                        <div class="quality-row">
+                            <label>480p Quality Link & Size</label>
+                            <input type="text" id="link480p" class="form-control" placeholder="Download Link (https://...)" style="margin-bottom:6px;">
+                            <input type="text" id="size480p" class="form-control" placeholder="Size (e.g. 400MB)">
+                        </div>
+
+                        <div class="quality-row">
+                            <label>720p Quality Link & Size</label>
+                            <input type="text" id="link720p" class="form-control" placeholder="Download Link (https://...)" style="margin-bottom:6px;">
+                            <input type="text" id="size720p" class="form-control" placeholder="Size (e.g. 950MB)">
+                        </div>
+
+                        <div class="quality-row">
+                            <label>1080p Quality Link & Size</label>
+                            <input type="text" id="link1080p" class="form-control" placeholder="Download Link (https://...)" style="margin-bottom:6px;">
+                            <input type="text" id="size1080p" class="form-control" placeholder="Size (e.g. 2.1GB)">
+                        </div>
                     </div>
+
                     <button class="btn" id="saveMovieBtn" onclick="saveMovie()">Add Movie</button>
                 </div>
             </div>
@@ -215,7 +236,7 @@
             messagingSenderId: "134449166678",
             appId: "1:134449166678:web:6370c97d19b27c48a83ef7"
         };
-            
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
@@ -313,7 +334,6 @@
             const description = document.getElementById('movieDesc').value;
             const year = document.getElementById('movieYear').value;
             const language = document.getElementById('movieLang').value;
-            const link = document.getElementById('movieLink').value;
             const posterUrlInput = document.getElementById('moviePosterUrl').value;
             let poster = document.getElementById('existingPoster').value;
 
@@ -323,13 +343,32 @@
                 poster = posterUrlInput;
             }
 
-            if (!title || !poster || !link) {
-                alert('Please fill Title, Poster, and Download Link!');
+            if (!title || !poster) {
+                alert('Please fill Title and Poster!');
                 return;
             }
 
+            // Collecting quality links array
+            const qualities = [];
+            const l480 = document.getElementById('link480p').value;
+            const s480 = document.getElementById('size480p').value;
+            if (l480) qualities.push({ quality: '480p', link: l480, size: s480 || '' });
+
+            const l720 = document.getElementById('link720p').value;
+            const s720 = document.getElementById('size720p').value;
+            if (l720) qualities.push({ quality: '720p', link: l720, size: s720 || '' });
+
+            const l1080 = document.getElementById('link1080p').value;
+            const s1080 = document.getElementById('size1080p').value;
+            if (l1080) qualities.push({ quality: '1080p', link: l1080, size: s1080 || '' });
+
             try {
-                const movieData = { title, category, description, year, language, poster, link, createdAt: Date.now() };
+                const movieData = { 
+                    title, category, description, year, language, poster, 
+                    qualities: qualities, 
+                    createdAt: Date.now() 
+                };
+
                 if (id === "") {
                     await addDoc(collection(db, "movies"), movieData);
                     alert('Movie added successfully!');
@@ -358,9 +397,31 @@
             document.getElementById('movieYear').value = movie.year || '';
             document.getElementById('movieLang').value = movie.language || '';
             document.getElementById('existingPoster').value = movie.poster || '';
-            document.getElementById('movieLink').value = movie.link;
-            selectedImageBase64 = "";
+            
+            // Reset fields
+            document.getElementById('link480p').value = ''; document.getElementById('size480p').value = '';
+            document.getElementById('link720p').value = ''; document.getElementById('size720p').value = '';
+            document.getElementById('link1080p').value = ''; document.getElementById('size1080p').value = '';
 
+            // Populate quality fields if available
+            if (movie.qualities && Array.isArray(movie.qualities)) {
+                movie.qualities.forEach(q => {
+                    if (q.quality === '480p') {
+                        document.getElementById('link480p').value = q.link || '';
+                        document.getElementById('size480p').value = q.size || '';
+                    }
+                    if (q.quality === '720p') {
+                        document.getElementById('link720p').value = q.link || '';
+                        document.getElementById('size720p').value = q.size || '';
+                    }
+                    if (q.quality === '1080p') {
+                        document.getElementById('link1080p').value = q.link || '';
+                        document.getElementById('size1080p').value = q.size || '';
+                    }
+                });
+            }
+
+            selectedImageBase64 = "";
             document.getElementById('formTitle').innerText = "Edit Movie";
             document.getElementById('saveMovieBtn').innerText = "Update Movie";
         }
@@ -385,7 +446,9 @@
             document.getElementById('moviePosterFile').value = '';
             document.getElementById('moviePosterUrl').value = '';
             document.getElementById('existingPoster').value = '';
-            document.getElementById('movieLink').value = '';
+            document.getElementById('link480p').value = ''; document.getElementById('size480p').value = '';
+            document.getElementById('link720p').value = ''; document.getElementById('size720p').value = '';
+            document.getElementById('link1080p').value = ''; document.getElementById('size1080p').value = '';
             selectedImageBase64 = "";
         }
 
